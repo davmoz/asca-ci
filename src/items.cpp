@@ -818,7 +818,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				it.reflectchancephysical = pugi::cast<int32_t>(valueAttribute.value());
 				break;
 			}
-
+			//comments
 			case ITEM_PARSE_WORTH: {
 				it.worth = pugi::cast<int32_t>(valueAttribute.value());
 				break;
