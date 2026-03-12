@@ -22,9 +22,9 @@
 #include "tools.h"
 #include "configmanager.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
-void printXMLError(const std::string& where, const std::string& fileName, const pugi::xml_parse_result& result)
+void printXMLError(std::string_view where, const std::string& fileName, const pugi::xml_parse_result& result)
 {
 	std::cout << '[' << where << "] Failed to load " << fileName << ": " << result.description() << std::endl;
 
@@ -119,7 +119,7 @@ static void processSHA1MessageBlock(const uint8_t* messageBlock, uint32_t* H)
 	H[4] += E;
 }
 
-std::string transformToSHA1(const std::string& input)
+std::string transformToSHA1(std::string_view input)
 {
 	uint32_t H[] = {
 		0x67452301,
@@ -186,7 +186,7 @@ std::string transformToSHA1(const std::string& input)
 	return std::string(hexstring, 40);
 }
 
-std::string generateToken(const std::string& key, uint32_t ticks)
+std::string generateToken(std::string_view key, uint32_t ticks)
 {
 	// generate message from ticks
 	std::string message(8, 0);
@@ -231,7 +231,7 @@ std::string generateToken(const std::string& key, uint32_t ticks)
 	return message;
 }
 
-void replaceString(std::string& str, const std::string& sought, const std::string& replacement)
+void replaceString(std::string& str, std::string_view sought, const std::string& replacement)
 {
 	size_t pos = 0;
 	size_t start = 0;
@@ -271,17 +271,17 @@ std::string asUpperCaseString(std::string source)
 	return source;
 }
 
-StringVector explodeString(const std::string& inString, const std::string& separator, int32_t limit/* = -1*/)
+StringVector explodeString(std::string_view inString, std::string_view separator, int32_t limit/* = -1*/)
 {
 	StringVector returnVector;
-	std::string::size_type start = 0, end = 0;
+	std::string_view::size_type start = 0, end = 0;
 
-	while (--limit != -1 && (end = inString.find(separator, start)) != std::string::npos) {
-		returnVector.push_back(inString.substr(start, end - start));
+	while (--limit != -1 && (end = inString.find(separator, start)) != std::string_view::npos) {
+		returnVector.emplace_back(inString.substr(start, end - start));
 		start = end + separator.size();
 	}
 
-	returnVector.push_back(inString.substr(start));
+	returnVector.emplace_back(inString.substr(start));
 	return returnVector;
 }
 
@@ -390,7 +390,7 @@ std::string formatDateShort(time_t time)
 	return {buffer, 11};
 }
 
-Direction getDirection(const std::string& string)
+Direction getDirection(std::string_view string)
 {
 	Direction direction = DIRECTION_NORTH;
 
@@ -869,7 +869,7 @@ std::string ucwords(std::string str)
 	return str;
 }
 
-bool booleanString(const std::string& str)
+bool booleanString(std::string_view str)
 {
 	if (str.empty()) {
 		return false;
@@ -949,7 +949,7 @@ uint8_t clientFluidToServer(uint8_t clientFluid)
 	return clientToServerFluidMap[clientFluid];
 }
 
-itemAttrTypes stringToItemAttribute(const std::string& str)
+itemAttrTypes stringToItemAttribute(std::string_view str)
 {
 	if (str == "aid") {
 		return ITEM_ATTRIBUTE_ACTIONID;
@@ -1003,17 +1003,13 @@ itemAttrTypes stringToItemAttribute(const std::string& str)
 	return ITEM_ATTRIBUTE_NONE;
 }
 
-std::string getFirstLine(const std::string& str)
+std::string getFirstLine(std::string_view str)
 {
-	std::string firstLine;
-	firstLine.reserve(str.length());
-	for (const char c : str) {
-		if (c == '\n') {
-			break;
-		}
-		firstLine.push_back(c);
+	auto pos = str.find('\n');
+	if (pos != std::string_view::npos) {
+		return std::string(str.substr(0, pos));
 	}
-	return firstLine;
+	return std::string(str);
 }
 
 const char* getReturnMessage(ReturnValue value)
@@ -1240,9 +1236,9 @@ int64_t OTSYS_TIME()
 	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-SpellGroup_t stringToSpellGroup(const std::string& value)
+SpellGroup_t stringToSpellGroup(std::string_view value)
 {
-	std::string tmpStr = asLowerCaseString(value);
+	std::string tmpStr = asLowerCaseString(std::string(value));
 	if (tmpStr == "attack" || tmpStr == "1") {
 		return SPELLGROUP_ATTACK;
 	} else if (tmpStr == "healing" || tmpStr == "2") {
