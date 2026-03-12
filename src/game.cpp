@@ -370,6 +370,18 @@ void Game::internalGetPosition(Item* item, Position& pos, uint8_t& stackpos)
 
 Creature* Game::getCreatureByID(uint32_t id)
 {
+	// Creature ID ranges (defined by starting autoID values):
+	//   Players:  0x10000000 .. (playerAutoID - 1)   [see player.cpp]
+	//   Monsters: 0x40000000 .. (monsterAutoID - 1)  [see monster.cpp]
+	//   NPCs:     0x80000000 .. (npcAutoID - 1)      [see npc.cpp]
+	//
+	// This lookup relies on autoIDs only incrementing and the ranges never
+	// overlapping. If a range were exhausted (wrap-around) or if IDs were
+	// reassigned, this would silently return the wrong creature type.
+	// The <= comparison against the *current* autoID counter means IDs
+	// allocated in the future would also match, which is intentional but
+	// fragile -- there is no validation that the ID actually belongs to
+	// the expected map.
 	if (id <= Player::playerAutoID) {
 		return getPlayerByID(id);
 	} else if (id <= Monster::monsterAutoID) {

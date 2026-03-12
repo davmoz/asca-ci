@@ -91,6 +91,10 @@ bool IOLoginData::loginserverAuthentication(const std::string& name, const std::
 		return false;
 	}
 
+	// TODO (Issue #101): SHA1 is cryptographically weak and vulnerable to brute-force
+	// and collision attacks. Migrate password storage to bcrypt, scrypt, or Argon2id.
+	// This requires a schema migration and a re-hash-on-login strategy for existing
+	// accounts (verify old SHA1 hash, then replace with the stronger hash).
 	if (transformToSHA1(password) != result->getString("password")) {
 		return false;
 	}
@@ -138,6 +142,7 @@ uint32_t IOLoginData::gameworldAuthentication(const std::string& accountName, co
 		}
 	}
 
+	// TODO (Issue #101): SHA1 is cryptographically weak -- see loginserverAuthentication above.
 	if (transformToSHA1(password) != result->getString("password")) {
 		return 0;
 	}

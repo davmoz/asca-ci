@@ -161,7 +161,11 @@ class ScriptEnvironment
 		//for npc scripts
 		Npc* curNpc = nullptr;
 
-		//temporary item list
+		// WARNING: tempItems is a static multimap shared across all ScriptEnvironment
+		// instances. TFS 1.3 runs Lua scripts on the main dispatcher thread only, so
+		// concurrent access does not occur in practice. However, if the architecture
+		// ever moves to multi-threaded script execution, this static member will need
+		// synchronization (e.g., a std::mutex guard) to avoid data races.
 		static std::multimap<ScriptEnvironment*, Item*> tempItems;
 
 		//local item map

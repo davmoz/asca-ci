@@ -753,6 +753,16 @@ void Combat::doTargetCombat(Creature* caster, Creature* target, CombatDamage& da
 	if (casterPlayer) {
 		if (damage.primary.value < 0 || damage.secondary.value < 0) {
 			Player* targetPlayer = target ? target->getPlayer() : nullptr;
+			// TODO (Issue #60): PvP damage halving is applied before crit/leech
+			// checks, which means crit and leech operate on the already-halved
+			// values. Consider restructuring so that:
+			//   1. Raw damage is computed first
+			//   2. Crit multiplier is applied to raw damage
+			//   3. PvP scaling is applied after crit
+			//   4. Leech is computed from the final damage actually dealt
+			// This ordering would be more intuitive and consistent with how
+			// doAreaCombat handles the same sequence. The current behavior
+			// under-values crits and leech in PvP.
 			if (targetPlayer && targetPlayer->getSkull() != SKULL_BLACK) {
 				damage.primary.value /= 2;
 				damage.secondary.value /= 2;

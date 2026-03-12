@@ -727,12 +727,18 @@ bool ProtocolGame::canSee(int32_t x, int32_t y, int32_t z) const
 void ProtocolGame::parseChannelInvite(NetworkMessage& msg)
 {
 	const std::string name = msg.getString();
+	if (name.empty() || name.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerChannelInvite, player->getID(), name);
 }
 
 void ProtocolGame::parseChannelExclude(NetworkMessage& msg)
 {
 	const std::string name = msg.getString();
+	if (name.empty() || name.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerChannelExclude, player->getID(), name);
 }
 
@@ -751,6 +757,9 @@ void ProtocolGame::parseCloseChannel(NetworkMessage& msg)
 void ProtocolGame::parseOpenPrivateChannel(NetworkMessage& msg)
 {
 	const std::string receiver = msg.getString();
+	if (receiver.empty() || receiver.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerOpenPrivateChannel, player->getID(), receiver);
 }
 
@@ -800,6 +809,21 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 	newOutfit.lookFeet = msg.getByte();
 	newOutfit.lookAddons = msg.getByte();
 	newOutfit.lookMount = msg.get<uint16_t>();
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Validate color values are within the allowed palette range (0-132)
+	if (newOutfit.lookHead > 132 || newOutfit.lookBody > 132 ||
+	    newOutfit.lookLegs > 132 || newOutfit.lookFeet > 132) {
+		return;
+	}
+
+	// Validate addons bitmask (only bits 0 and 1 are valid)
+	if (newOutfit.lookAddons > 3) {
+		return;
+	}
+
 	addGameTask(&Game::playerChangeOutfit, player->getID(), newOutfit);
 }
 
@@ -864,6 +888,14 @@ void ProtocolGame::parseThrow(NetworkMessage& msg)
 	Position toPos = msg.getPosition();
 	uint8_t count = msg.getByte();
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (count == 0) {
+		return;
+	}
+
 	if (toPos != fromPos) {
 		addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerMoveThing, player->getID(), fromPos, spriteId, fromStackpos, toPos, count);
 	}
@@ -893,6 +925,9 @@ void ProtocolGame::parseSay(NetworkMessage& msg)
 		case TALKTYPE_PRIVATE_TO:
 		case TALKTYPE_PRIVATE_RED_TO:
 			receiver = msg.getString();
+			if (receiver.empty() || receiver.length() > 255) {
+				return;
+			}
 			channelId = 0;
 			break;
 
@@ -906,8 +941,12 @@ void ProtocolGame::parseSay(NetworkMessage& msg)
 			break;
 	}
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
 	const std::string text = msg.getString();
-	if (text.length() > 255) {
+	if (text.empty() || text.length() > 255) {
 		return;
 	}
 
@@ -959,6 +998,15 @@ void ProtocolGame::parseTextWindow(NetworkMessage& msg)
 {
 	uint32_t windowTextId = msg.get<uint32_t>();
 	const std::string newText = msg.getString();
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit writable text to prevent oversized payloads
+	if (newText.length() > 8192) {
+		return;
+	}
+
 	addGameTask(&Game::playerWriteItem, player->getID(), windowTextId, newText);
 }
 
@@ -1155,6 +1203,21 @@ void ProtocolGame::parseMarketCreateOffer(NetworkMessage& msg)
 	uint16_t amount = msg.get<uint16_t>();
 	uint32_t price = msg.get<uint32_t>();
 	bool anonymous = (msg.getByte() != 0);
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Validate market offer parameters
+	if (amount == 0 || price == 0) {
+		return;
+	}
+
+	// Type must be buy (0) or sell (1)
+	if (type > 1) {
+		return;
+	}
+
 	addGameTask(&Game::playerCreateMarketOffer, player->getID(), type, spriteId, amount, price, anonymous);
 }
 
@@ -1170,6 +1233,15 @@ void ProtocolGame::parseMarketAcceptOffer(NetworkMessage& msg)
 	uint32_t timestamp = msg.get<uint32_t>();
 	uint16_t counter = msg.get<uint16_t>();
 	uint16_t amount = msg.get<uint16_t>();
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (amount == 0) {
+		return;
+	}
+
 	addGameTask(&Game::playerAcceptMarketOffer, player->getID(), timestamp, counter, amount);
 }
 
