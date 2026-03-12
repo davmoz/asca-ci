@@ -318,7 +318,7 @@ local function harvestCrop(player, item, target, toPosition)
 	-- Feedback
 	plotPos:sendMagicEffect(HARVEST_EFFECT)
 	local totalYield = yield + bonusYield
-	local seasonName = ({"Winter", "Spring", "Summer", "Autumn"})[Farming.getCurrentSeason()] or "Unknown"
+	local seasonName = ({"Spring", "Summer", "Autumn", "Winter"})[Farming.getCurrentSeason()] or "Unknown"
 	player:sendTextMessage(MESSAGE_INFO_DESCR,
 		"[Farming] You harvested " .. totalYield .. "x " .. seed.name ..
 		"! (Season: " .. seasonName ..

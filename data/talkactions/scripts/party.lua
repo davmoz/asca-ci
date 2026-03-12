@@ -11,10 +11,22 @@
 
 function onSay(player, words, param)
 	if words == "!party" then
+		if not PartyEnhanced then
+			player:sendTextMessage(MESSAGE_STATUS_SMALL, "Party system is not available.")
+			return false
+		end
 		return handlePartyCommand(player, param)
 	elseif words == "!dungeon" then
+		if not WeeklyDungeons then
+			player:sendTextMessage(MESSAGE_STATUS_SMALL, "Dungeon system is not available.")
+			return false
+		end
 		return handleDungeonCommand(player, param)
 	elseif words == "!house" then
+		if not HousingEnhanced then
+			player:sendTextMessage(MESSAGE_STATUS_SMALL, "Housing system is not available.")
+			return false
+		end
 		return handleHouseCommand(player, param)
 	end
 	return false

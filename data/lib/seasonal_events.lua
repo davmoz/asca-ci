@@ -160,12 +160,12 @@ SeasonalEvents.EVENTS = {
 -- ============================================================================
 
 SeasonalEvents.STORAGE = {
-	ACTIVE_EVENT_PREFIX = 50000,   -- Base storage for active event tracking
-	GIFT_COOLDOWN = 50100,         -- Daily gift cooldown per player
-	EGG_COUNT = 50101,             -- Easter egg count per player
-	EGG_DAILY_COUNT = 50102,       -- Daily egg pickup count
-	ANNIVERSARY_TOKENS = 50103,    -- Anniversary token count
-	PRESTIGE_XP_TRACKING = 50104   -- XP tracking for prestige
+	ACTIVE_EVENT_PREFIX = 63000,   -- Base storage for active event tracking
+	GIFT_COOLDOWN = 63100,         -- Daily gift cooldown per player
+	EGG_COUNT = 63101,             -- Easter egg count per player
+	EGG_DAILY_COUNT = 63102,       -- Daily egg pickup count
+	ANNIVERSARY_TOKENS = 63103,    -- Anniversary token count
+	PRESTIGE_XP_TRACKING = 63104   -- XP tracking for prestige
 }
 
 -- ============================================================================
@@ -212,15 +212,26 @@ function SeasonalEvents.isEventActive(eventKey)
 	return SeasonalEvents.isDateInRange(event, now.month, now.day)
 end
 
---- Get all currently active events
+--- Get all currently active events (cached for 60 seconds)
 -- @return table: list of {key, event} pairs for active events
+SeasonalEvents._activeEventsCache = nil
+SeasonalEvents._activeEventsCacheTime = 0
+
 function SeasonalEvents.getActiveEvents()
+	local now = os.time()
+	if SeasonalEvents._activeEventsCache and (now - SeasonalEvents._activeEventsCacheTime) < 60 then
+		return SeasonalEvents._activeEventsCache
+	end
+
 	local activeEvents = {}
 	for key, event in pairs(SeasonalEvents.EVENTS) do
 		if SeasonalEvents.isEventActive(key) then
 			table.insert(activeEvents, { key = key, event = event })
 		end
 	end
+
+	SeasonalEvents._activeEventsCache = activeEvents
+	SeasonalEvents._activeEventsCacheTime = now
 	return activeEvents
 end
 

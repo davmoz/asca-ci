@@ -155,8 +155,11 @@ function HousingEnhanced.changeFloor(player, floorKey)
 
 	-- Persist the choice using a storage value keyed by a position hash
 	local pos = player:getPosition()
-	local posHash = (pos.x * 10000 + pos.y) % 100
-	player:setStorageValue(HousingEnhanced.STORAGE_FLOOR_BASE + posHash, floorData.id)
+	local posKey = pos.x .. "_" .. pos.y
+	if not HousingEnhanced._floorStorage then
+		HousingEnhanced._floorStorage = {}
+	end
+	HousingEnhanced._floorStorage[posKey] = floorData.id
 
 	-- Apply visual via ground item swap
 	local ground = tile:getGround()

@@ -42,9 +42,7 @@ function handleTasks(player, param)
 			return false
 		end
 		local success, msg = TaskSystem.acceptTask(player, taskId)
-		if not success then
-			player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, msg)
-		end
+		player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, msg or (success and "Task accepted!" or "Failed to accept task."))
 		return false
 	end
 
@@ -56,9 +54,7 @@ function handleTasks(player, param)
 			return false
 		end
 		local success, msg = TaskSystem.cancelTask(player, taskId)
-		if not success then
-			player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, msg)
-		end
+		player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, msg or (success and "Task cancelled." or "Failed to cancel task."))
 		return false
 	end
 

@@ -171,7 +171,8 @@ end
 function Crafting.checkCooldown(player, storageKey, cooldownMs)
 	local lastTime = player:getStorageValue(storageKey)
 	if lastTime > 0 then
-		local elapsed = (os.mtime() - lastTime)
+		local now = os.mtime and os.mtime() or (os.time() * 1000)
+		local elapsed = (now - lastTime)
 		if elapsed < cooldownMs then
 			local remaining = math.ceil((cooldownMs - elapsed) / 1000)
 			player:sendCancelMessage("You must wait " .. remaining .. " seconds before doing that again.")
@@ -183,7 +184,8 @@ end
 
 --- Set the cooldown timestamp for a crafting action.
 function Crafting.setCooldown(player, storageKey)
-	player:setStorageValue(storageKey, os.mtime())
+	local now = os.mtime and os.mtime() or (os.time() * 1000)
+	player:setStorageValue(storageKey, now)
 end
 
 -- ============================================================================
