@@ -67,10 +67,10 @@ void Connection::close(bool force)
 	ConnectionManager::getInstance().releaseConnection(shared_from_this());
 
 	std::lock_guard<std::recursive_mutex> lockClass(connectionLock);
-	if (closed) {
+	if (connectionState == CONNECTION_STATE_CLOSED) {
 		return;
 	}
-	closed = true;
+	connectionState = CONNECTION_STATE_CLOSED;
 
 	if (protocol) {
 		g_dispatcher.addTask(
@@ -141,7 +141,7 @@ void Connection::parseHeader(const boost::system::error_code& error)
 	if (error) {
 		close(FORCE_CLOSE);
 		return;
-	} else if (closed) {
+	} else if (connectionState == CONNECTION_STATE_CLOSED) {
 		return;
 	}
 
@@ -194,7 +194,7 @@ void Connection::parsePacket(const boost::system::error_code& error)
 	if (error) {
 		close(FORCE_CLOSE);
 		return;
-	} else if (closed) {
+	} else if (connectionState == CONNECTION_STATE_CLOSED) {
 		return;
 	}
 
@@ -254,7 +254,7 @@ void Connection::parsePacket(const boost::system::error_code& error)
 void Connection::send(const OutputMessage_ptr& msg)
 {
 	std::lock_guard<std::recursive_mutex> lockClass(connectionLock);
-	if (closed) {
+	if (connectionState == CONNECTION_STATE_CLOSED) {
 		return;
 	}
 
@@ -313,7 +313,7 @@ void Connection::onWriteOperation(const boost::system::error_code& error)
 
 	if (!messageQueue.empty()) {
 		internalSend(messageQueue.front());
-	} else if (closed) {
+	} else if (connectionState == CONNECTION_STATE_CLOSED) {
 		closeSocket();
 	}
 }
