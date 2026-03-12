@@ -37159,6 +37159,12 @@
 		<attribute key="description" value="A mystical altar used for enchanting equipment with painite crystals." />
 	</item>
 
+	<!-- Enchanted Crystal Dust (30799) -->
+	<item id="30799" article="an" name="enchanted crystal dust">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="Fine crystal dust used in advanced enchanting." />
+	</item>
+
 	<!-- ==================== Phase 3: Legendary Items ==================== -->
 
 	<!-- Legendary Swords (30700-30702) -->

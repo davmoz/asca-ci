@@ -337,6 +337,10 @@ bool CombatSpell::castSpell(Creature* creature)
 
 bool CombatSpell::castSpell(Creature* creature, Creature* target)
 {
+	if (!target) {
+		return false;
+	}
+
 	if (scripted) {
 		LuaVariant var;
 
@@ -1034,6 +1038,10 @@ bool InstantSpell::playerCastInstant(Player* player, std::string& param)
 
 bool InstantSpell::canThrowSpell(const Creature* creature, const Creature* target) const
 {
+	if (!creature || !target) {
+		return false;
+	}
+
 	const Position& fromPos = creature->getPosition();
 	const Position& toPos = target->getPosition();
 	if (fromPos.z != toPos.z ||

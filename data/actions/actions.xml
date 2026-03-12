@@ -336,6 +336,18 @@
 	<action fromid="18488" toid="18492" script="other/skill_trainer.lua" />
 	<action itemid="20252" script="other/bed_modification_kits.lua" />
 
+	<!-- Crafting Station (generic handler for direct station interaction) -->
+	<action itemid="2555" script="crafting_station.lua" />  <!-- Anvil -->
+	<action itemid="2556" script="crafting_station.lua" />  <!-- Anvil (variant) -->
+	<action itemid="30421" script="crafting_station.lua" /> <!-- Custom Crafting Anvil -->
+
+	<!-- Mining Nodes (direct right-click interaction on ore nodes) -->
+	<action itemid="8637" script="mining_node.lua" />  <!-- Copper ore node -->
+	<action itemid="8638" script="mining_node.lua" />  <!-- Iron ore node -->
+	<action itemid="8639" script="mining_node.lua" />  <!-- Silver ore node -->
+	<action itemid="8640" script="mining_node.lua" />  <!-- Gold ore node -->
+	<action itemid="8641" script="mining_node.lua" />  <!-- Mithril ore node -->
+
 	<!-- Phase 5: Weekly Dungeon Entrances (actionid 9001-9005) -->
 	<action actionid="9001" script="dungeon_entrance.lua" />
 	<action actionid="9002" script="dungeon_entrance.lua" />

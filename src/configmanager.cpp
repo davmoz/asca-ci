@@ -47,6 +47,10 @@ std::string getGlobalString(lua_State* L, const char* identifier, const char* de
 	return ret;
 }
 
+// Returns a numeric config value from Lua state. Caller is responsible for
+// ensuring the value is within a valid range for its intended use.
+// Port numbers should be in [0, 65535], timeouts/delays should be non-negative,
+// rates should typically be >= 0, player counts should be >= 0.
 int32_t getGlobalNumber(lua_State* L, const char* identifier, const int32_t defaultValue = 0)
 {
 	lua_getglobal(L, identifier);
@@ -55,9 +59,22 @@ int32_t getGlobalNumber(lua_State* L, const char* identifier, const int32_t defa
 		return defaultValue;
 	}
 
-	int32_t val = lua_tonumber(L, -1);
+	double raw = lua_tonumber(L, -1);
 	lua_pop(L, 1);
-	return val;
+
+	// Clamp to int32_t range to prevent undefined behavior from out-of-range casts
+	if (raw > static_cast<double>(std::numeric_limits<int32_t>::max())) {
+		std::cout << "[Warning - getGlobalNumber] Value for '" << identifier
+		          << "' exceeds INT32_MAX, clamping." << std::endl;
+		return std::numeric_limits<int32_t>::max();
+	}
+	if (raw < static_cast<double>(std::numeric_limits<int32_t>::min())) {
+		std::cout << "[Warning - getGlobalNumber] Value for '" << identifier
+		          << "' is below INT32_MIN, clamping." << std::endl;
+		return std::numeric_limits<int32_t>::min();
+	}
+
+	return static_cast<int32_t>(raw);
 }
 
 bool getGlobalBoolean(lua_State* L, const char* identifier, const bool defaultValue)

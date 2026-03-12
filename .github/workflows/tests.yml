@@ -26,6 +26,9 @@ jobs:
       - name: Run Lua tests
         run: lua tests/lua/run_tests.lua
 
+      - name: Validate lib loading references
+        run: lua tests/lua/run_tests.lua lib_loading
+
   xml-validation:
     name: XML Validation
     runs-on: ubuntu-latest

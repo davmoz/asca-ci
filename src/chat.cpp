@@ -56,7 +56,9 @@ void PrivateChatChannel::invitePlayer(const Player& player, Player& invitePlayer
 	player.sendTextMessage(MESSAGE_INFO_DESCR, ss.str());
 
 	for (const auto& it : users) {
-		it.second->sendChannelEvent(id, invitePlayer.getName(), CHANNELEVENT_INVITE);
+		if (it.second) {
+			it.second->sendChannelEvent(id, invitePlayer.getName(), CHANNELEVENT_INVITE);
+		}
 	}
 }
 
@@ -75,14 +77,18 @@ void PrivateChatChannel::excludePlayer(const Player& player, Player& excludePlay
 	excludePlayer.sendClosePrivate(id);
 
 	for (const auto& it : users) {
-		it.second->sendChannelEvent(id, excludePlayer.getName(), CHANNELEVENT_EXCLUDE);
+		if (it.second) {
+			it.second->sendChannelEvent(id, excludePlayer.getName(), CHANNELEVENT_EXCLUDE);
+		}
 	}
 }
 
 void PrivateChatChannel::closeChannel() const
 {
 	for (const auto& it : users) {
-		it.second->sendClosePrivate(id);
+		if (it.second) {
+			it.second->sendClosePrivate(id);
+		}
 	}
 }
 
@@ -106,7 +112,9 @@ bool ChatChannel::addUser(Player& player)
 
 	if (!publicChannel) {
 		for (const auto& it : users) {
-			it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_JOIN);
+			if (it.second) {
+				it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_JOIN);
+			}
 		}
 	}
 
@@ -125,7 +133,9 @@ bool ChatChannel::removeUser(const Player& player)
 
 	if (!publicChannel) {
 		for (const auto& it : users) {
-			it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_LEAVE);
+			if (it.second) {
+				it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_LEAVE);
+			}
 		}
 	}
 
@@ -140,7 +150,9 @@ bool ChatChannel::hasUser(const Player& player) {
 void ChatChannel::sendToAll(const std::string& message, SpeakClasses type) const
 {
 	for (const auto& it : users) {
-		it.second->sendChannelMessage("", message, type, id);
+		if (it.second) {
+			it.second->sendChannelMessage("", message, type, id);
+		}
 	}
 }
 
@@ -151,7 +163,9 @@ bool ChatChannel::talk(const Player& fromPlayer, SpeakClasses type, const std::s
 	}
 
 	for (const auto& it : users) {
-		it.second->sendToChannel(&fromPlayer, type, text, id);
+		if (it.second) {
+			it.second->sendToChannel(&fromPlayer, type, text, id);
+		}
 	}
 	return true;
 }

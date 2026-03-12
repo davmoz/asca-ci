@@ -9,4 +9,8 @@
 	<event type="kill" name="PvPKill" script="pvp_handler.lua" />
 	<event type="death" name="PvPDeath" script="pvp_handler.lua" />
 	<event type="login" name="PvPLogin" script="pvp_handler.lua" />
+	<event type="kill" name="TaskKill" script="task_kill.lua"/>
+	<event type="kill" name="PvPKill2" script="pvp_kill.lua"/>
+	<event type="death" name="PvPDeath2" script="pvp_death.lua"/>
+	<event type="advance" name="AchievementCheck" script="achievement_check.lua"/>
 </creaturescripts>

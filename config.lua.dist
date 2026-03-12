@@ -271,3 +271,36 @@ ownerName = "ASCA Team"
 ownerEmail = "admin@asca-server.com"
 url = "https://asca-server.com"
 location = "Sweden"
+
+-- ============================================================================
+-- Custom Systems Configuration
+-- ============================================================================
+dailyRewardsEnabled = true
+preySystemEnabled = true
+imbuingSystemEnabled = true
+factionSystemEnabled = true
+craftingSystemEnabled = true
+taskSystemEnabled = true
+bestiaryEnabled = true
+achievementSystemEnabled = true
+pvpSystemEnabled = true
+
+-- Crafting Settings
+craftingBaseSuccessRate = 80
+miningExhaustTime = 2
+cookingExhaustTime = 3
+smithingExhaustTime = 5
+enchantingExhaustTime = 4
+
+-- Prey Settings
+preySlotCount = 3
+preyBonusDuration = 7200
+preyRerollCost = 2000
+
+-- Imbuing Settings
+imbuingBaseDuration = 72000
+imbuingCostMultiplier = 1.0
+
+-- Faction Settings
+factionMaxReputation = 10000
+factionDailyQuestLimit = 3

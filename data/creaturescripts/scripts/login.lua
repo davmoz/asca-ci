@@ -50,6 +50,8 @@ function onLogin(player)
 	-- Register PvP events
 	player:registerEvent("PvPKill")
 	player:registerEvent("PvPDeath")
+	player:registerEvent("TaskKill")
+	player:registerEvent("AchievementCheck")
 
 	-- Check expired cooking buffs
 	if Cooking and Cooking.isBuffActive then

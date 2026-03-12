@@ -19,4 +19,7 @@
 	<globalevent type="startup" name="ServerMonitorStartup" script="server_monitor.lua" />
 	<globalevent name="ServerMonitorCollect" interval="1800000" script="server_monitor.lua" />
 	<globalevent name="ServerMonitorDaily" time="23:00:00" script="server_monitor.lua" />
+
+	<!-- Daily Reward Reset: runs at midnight to log daily limit resets -->
+	<globalevent name="DailyReset" time="00:00" script="daily_reset.lua" />
 </globalevents>
