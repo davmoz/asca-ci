@@ -2294,21 +2294,24 @@
 		<attribute key="slotType" value="ring" />
 	</item>
 	<item id="2180" name="the orb of nature" />
-	<item id="2181" article="a" name="terra rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="terra rod">
 		<attribute key="description" value="Small stones are flying from its tip." />
 		<attribute key="weight" value="2500" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="smallearth" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2182" article="a" name="snakebite rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="snakebite rod">
 		<attribute key="description" value="It seems to twitch and quiver as if trying to escape your grip." />
 		<attribute key="weight" value="1900" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="smallearth" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2183" article="a" name="hailstorm rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="hailstorm rod">
 		<attribute key="description" value="It grants you the power of striking your foes with furious hailstorms." />
 		<attribute key="weight" value="2700" />
 		<attribute key="weaponType" value="wand" />
@@ -2318,49 +2321,56 @@
 	<item id="2184" article="a" name="crystal wand">
 		<attribute key="weight" value="2800" />
 	</item>
-	<item id="2185" article="a" name="necrotic rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="necrotic rod">
 		<attribute key="description" value="It was brought up from hell to deliver death." />
 		<attribute key="weight" value="2300" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2186" article="a" name="moonlight rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="moonlight rod">
 		<attribute key="description" value="Icecold rays of moonlight shimmer on its tip." />
 		<attribute key="weight" value="2100" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="smallice" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2187" article="a" name="wand of inferno">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of inferno">
 		<attribute key="description" value="It unleashes the very fires of hell." />
 		<attribute key="weight" value="2700" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="fire" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2188" article="a" name="wand of decay">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of decay">
 		<attribute key="description" value="It is half-rotten itself and reeks terribly." />
 		<attribute key="weight" value="2300" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2189" article="a" name="wand of cosmic energy">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of cosmic energy">
 		<attribute key="description" value="The energy of a radiant star is trapped inside its globe." />
 		<attribute key="weight" value="2500" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="energy" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2190" article="a" name="wand of vortex">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of vortex">
 		<attribute key="description" value="Surges of energy rush through the tip of this wand." />
 		<attribute key="weight" value="1900" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="energy" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="2191" article="a" name="wand of dragonbreath">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of dragonbreath">
 		<attribute key="description" value="Legends say that this wand holds the soul of a young dragon." />
 		<attribute key="weight" value="2100" />
 		<attribute key="weaponType" value="wand" />
@@ -16098,21 +16108,24 @@
 		<attribute key="manaGain" value="4" />
 		<attribute key="manaTicks" value="3000" />
 	</item>
-	<item id="8910" article="an" name="underworld rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="an" name="underworld rod">
 		<attribute key="description" value="No one knows which hell this unholy rod comes from." />
 		<attribute key="weight" value="2900" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="8911" article="a" name="northwind rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="northwind rod">
 		<attribute key="description" value="It was made by one of the shamans in Svargrond and symbolises an icy mammoth." />
 		<attribute key="weight" value="2900" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="ice" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="8912" article="a" name="springsprout rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="springsprout rod">
 		<attribute key="description" value="It is filled with the energy of growing plants." />
 		<attribute key="weight" value="2700" />
 		<attribute key="weaponType" value="wand" />
@@ -16130,21 +16143,24 @@
 	<item id="8919" article="a" name="spell rune">
 		<attribute key="description" value="It is Yandur's healing rune. You can't remove it from his house, but you may use it." />
 	</item>
-	<item id="8920" article="a" name="wand of starstorm">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of starstorm">
 		<attribute key="description" value="It is sparkling with universal energy." />
 		<attribute key="weight" value="2550" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="energy" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="8921" article="a" name="wand of draconia">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of draconia">
 		<attribute key="description" value="This wand holds the spirit and soul of a dragon lord." />
 		<attribute key="weight" value="2700" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="fire" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="8922" article="a" name="wand of voodoo">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of voodoo">
 		<attribute key="description" value="It is filled with the dark hatred and rage of a tormented demonic being." />
 		<attribute key="weight" value="2850" />
 		<attribute key="weaponType" value="wand" />
@@ -22719,7 +22735,8 @@
 		<attribute key="description" value="This small whistle seems used. It seems to make absolutely no sound at all when it is blown." />
 		<attribute key="weight" value="5000" />
 	</item>
-	<item id="13760" article="a" name="wand of dimensions">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="wand of dimensions">
 		<attribute key="description" value="This wand controls the rift between time and space." />
 		<attribute key="weight" value="2800" />
 		<attribute key="weaponType" value="wand" />
@@ -22944,7 +22961,8 @@
 		<attribute key="duration" value="604800" />
 		<attribute key="showduration" value="0" />
 	</item>
-	<item id="13872" article="a" name="shimmer rod">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="shimmer rod">
 		<attribute key="description" value="It feels cold and smooth." />
 		<attribute key="weight" value="3100" />
 		<attribute key="weaponType" value="wand" />
@@ -22982,7 +23000,8 @@
 		<attribute key="description" value="This is a quest item and cannot be used for anything else." />
 		<attribute key="weight" value="40" />
 	</item>
-	<item id="13880" article="a" name="shimmer wand">
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+ article="a" name="shimmer wand">
 		<attribute key="weight" value="3100" />
 		<attribute key="description" value="It feels cold and smooth." />
 		<attribute key="weaponType" value="wand" />
@@ -36278,4 +36297,91 @@
 	<item id="26379" article="a" name="golden dragon tapestry" />
 	<item id="26380" article="a" name="sword tapestry" />
 	<item id="26381" article="a" name="brocade tapestry" />
+
+	<!-- ==================== Phase 2.1: Fishing System Items ==================== -->
+
+	<!-- Common Fish (Fishing Skill 0+) -->
+	<item id="30001" article="a" name="sardine" plural="sardines">
+		<attribute key="weight" value="180" />
+		<attribute key="description" value="A small, silvery fish commonly found in coastal waters." />
+	</item>
+	<item id="30002" article="a" name="herring" plural="herrings">
+		<attribute key="weight" value="250" />
+		<attribute key="description" value="A common fish that swims in large schools." />
+	</item>
+	<item id="30003" article="a" name="cod" plural="cod">
+		<attribute key="weight" value="420" />
+		<attribute key="description" value="A staple catch for any fisherman." />
+	</item>
+
+	<!-- Uncommon Fish (Fishing Skill 20+) -->
+	<item id="30004" article="a" name="salmon" plural="salmon">
+		<attribute key="weight" value="550" />
+		<attribute key="description" value="A prized pink-fleshed fish that swims upstream." />
+	</item>
+	<item id="30005" article="a" name="trout" plural="trout">
+		<attribute key="weight" value="480" />
+		<attribute key="description" value="A freshwater fish with distinctive spotted skin." />
+	</item>
+	<item id="30006" article="a" name="bass" plural="bass">
+		<attribute key="weight" value="620" />
+		<attribute key="description" value="A strong-fighting freshwater game fish." />
+	</item>
+
+	<!-- Rare Fish (Fishing Skill 50+) -->
+	<item id="30007" article="a" name="swordfish" plural="swordfish">
+		<attribute key="weight" value="1800" />
+		<attribute key="description" value="A large fish with a distinctive sword-like bill." />
+	</item>
+	<item id="30008" article="a" name="tuna" plural="tuna">
+		<attribute key="weight" value="2200" />
+		<attribute key="description" value="A massive ocean fish prized by expert anglers." />
+	</item>
+	<item id="30009" article="a" name="lobster" plural="lobsters">
+		<attribute key="weight" value="900" />
+		<attribute key="description" value="A prized crustacean with powerful claws." />
+	</item>
+
+	<!-- Epic Fish (Fishing Skill 80+) -->
+	<item id="30010" article="a" name="golden carp" plural="golden carps">
+		<attribute key="weight" value="750" />
+		<attribute key="description" value="A shimmering golden fish of extraordinary rarity." />
+	</item>
+	<item id="30011" article="a" name="giant squid tentacle" plural="giant squid tentacles">
+		<attribute key="weight" value="3500" />
+		<attribute key="description" value="A massive tentacle from a deep-sea giant squid." />
+	</item>
+	<item id="30012" article="a" name="crystal fish" plural="crystal fish">
+		<attribute key="weight" value="600" />
+		<attribute key="description" value="A translucent fish that seems to glow with inner light." />
+	</item>
+
+	<!-- Fishing Rods -->
+	<item id="30020" article="an" name="improved fishing rod" plural="improved fishing rods">
+		<attribute key="weight" value="950" />
+		<attribute key="description" value="A well-crafted fishing rod with better line and hook. +10% catch bonus." />
+	</item>
+	<item id="30021" article="a" name="master fishing rod" plural="master fishing rods">
+		<attribute key="weight" value="1100" />
+		<attribute key="description" value="A masterwork fishing rod made by expert craftsmen. +25% catch bonus." />
+	</item>
+
+	<!-- Treasure Items (fishing loot) -->
+	<item id="30030" article="a" name="waterlogged boot" plural="waterlogged boots">
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A soggy old boot. Not exactly what you were hoping for." />
+	</item>
+	<item id="30031" article="a" name="rusty tin can" plural="rusty tin cans">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A rusty tin can pulled from the water." />
+	</item>
+	<item id="30032" article="a" name="seaweed clump" plural="seaweed clumps">
+		<attribute key="weight" value="150" />
+		<attribute key="description" value="A tangled mass of seaweed." />
+	</item>
+	<item id="30033" article="a" name="barnacle-encrusted chest" plural="barnacle-encrusted chests">
+		<attribute key="weight" value="5000" />
+		<attribute key="containerSize" value="8" />
+		<attribute key="description" value="A small chest covered in barnacles, pulled from the depths." />
+	</item>
 </items>

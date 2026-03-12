@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weapons>
-	<!-- Rods -->
+	<!-- DEPRECATED: Rods - disabled for Medivia-style gameplay (no wands/rods) -->
 	<wand id="23721" level="1" mana="1" min="3" max="7" type="ice"> <!-- The Chiller -->
 		<vocation name="Druid" />
 	</wand>
@@ -41,54 +41,54 @@
 		<vocation name="Druid" />
 	</wand>
 
-	<!-- Wands -->
+	<!-- DEPRECATED: Wands - disabled for Medivia-style gameplay (no wands/rods) -->
 	<wand id="23719" level="1" mana="1" min="3" max="7" type="fire"> <!-- The Scorcher -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="2190" level="7" mana="2" min="8" max="18" type="energy"> <!-- Wand of Vortex -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="2191" level="13" mana="3" min="13" max="25" type="fire"> <!-- Wand of Dragonbreath -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="2188" level="19" mana="5" min="27" max="33" type="death"> <!-- Wand of Decay -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="8921" level="22" mana="5" min="27" max="33" type="fire"> <!-- Wand of Draconia -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="2189" level="26" mana="8" min="42" max="48" type="energy"> <!-- Wand of Cosmic Energy -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="2187" level="33" mana="13" min="55" max="75" type="fire"> <!-- Wand of Inferno -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="8920" level="37" mana="13" min="55" max="75" type="energy"> <!-- Wand of Starmstorm -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="8922" level="42" mana="13" min="55" max="75" type="death"> <!-- Wand of Voodoo -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="13760" level="37" mana="13" min="55" max="75" type="death"> <!-- Wand of Dimensions -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="13880" level="40" mana="13" min="55" max="75" type="energy"> <!-- Shimmer Wand -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="18390" level="65" mana="17" min="70" max="100" type="energy"> <!-- Wand of Defiance -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="18409" level="65" mana="17" min="70" max="100" type="fire"> <!-- Wand of Everblazing -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="19391" level="1" mana="2" min="8" max="18" type="energy"> <!-- Sorc and Druid Staff -->
 		<vocation name="None" />
 	</wand>
 	<wand id="25421" level="65" mana="17" min="65" max="95" type="energy"> <!-- Ferumbras' Staff (Failed) -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 	<wand id="25422" level="100" mana="19" min="80" max="110" type="energy"> <!-- Ferumbras' Staff (Enchanted) -->
-		<vocation name="Sorcerer" />
+		<vocation name="Mage" />
 	</wand>
 
 	<!-- Swords -->
@@ -507,83 +507,83 @@
 
 	<!-- Bows and Crossbows -->
 	<distance id="5803" level="75" unproperly="1"> <!-- Arbalest -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8849" level="45" unproperly="1"> <!-- Modified Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8850" level="60" unproperly="1"> <!-- Chain Bolter -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8853" level="80" unproperly="1"> <!-- Ironworker -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8852" level="100" unproperly="1"> <!-- Devileye -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8851" level="130" unproperly="1"> <!-- Royal Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8857" level="40" unproperly="1"> <!-- Silkweaver Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8855" level="50" unproperly="1"> <!-- Composite Hornbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8856" level="60" unproperly="1"> <!-- Yol's Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8858" level="70" unproperly="1"> <!-- Elethriel's Elemental Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="8854" level="80" unproperly="1"> <!-- Warsinger Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="13873" level="40" unproperly="1"> <!-- Shimmer Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="15643" level="85" unproperly="1"> <!-- Hive Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="15644" level="50" unproperly="1"> <!-- Ornate Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="16111" level="150" unproperly="1"> <!-- Thorn Spitter -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="18453" level="90" unproperly="1"> <!-- Crystal Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="18454" level="105" unproperly="1"> <!-- Mycological Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="21690" level="70" unproperly="1"> <!-- Triple Bolt Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="21696" unproperly="1" /> <!-- Icicle Bow -->
 	<distance id="22416" level="75" unproperly="1"> <!-- Crude Umbral Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="22417" level="150" unproperly="1"> <!-- Umbral Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="22418" level="250" unproperly="1"> <!-- Umbral Master Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="22419" level="75" unproperly="1"> <!-- Crude Umbral Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="22420" level="150" unproperly="1"> <!-- Umbral Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="22421" level="250" unproperly="1"> <!-- Umbral Master Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="25522" level="120" unproperly="1"> <!-- Rift Bow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 	<distance id="25523" level="120" unproperly="1"> <!-- Rift Crossbow -->
-		<vocation name="Paladin" />
+		<vocation name="Archer" />
 	</distance>
 
 	<!-- Ammunition -->
