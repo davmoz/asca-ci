@@ -114,8 +114,13 @@ TEST(DatabaseEscape, EmptyString) {
 TEST(DatabaseEscape, SQLInjectionAttempt) {
     std::string malicious = "'; DROP TABLE players; --";
     std::string escaped = escapeString(malicious);
+    // The single quote should be escaped with a backslash
     EXPECT_EQ(escaped, "\\'; DROP TABLE players; --");
-    EXPECT_EQ(escaped.find("';"), std::string::npos);
+    // Verify the quote is preceded by a backslash (properly escaped)
+    auto pos = escaped.find('\'');
+    EXPECT_NE(pos, std::string::npos);
+    EXPECT_GT(pos, 0u);
+    EXPECT_EQ(escaped[pos - 1], '\\');
 }
 
 // ---- Query builder ----
@@ -171,9 +176,14 @@ TEST(QueryPatterns, PlayerLookup) {
 
 TEST(QueryPatterns, PlayerLookupSQLInjection) {
     std::string name = "'; DELETE FROM players WHERE '1'='1";
-    std::string q = "SELECT `id` FROM `players` WHERE `name` = '" + escapeString(name) + "'";
-    // Should not contain unescaped quotes
-    EXPECT_EQ(q.find("'; DELETE"), std::string::npos);
+    std::string escaped = escapeString(name);
+    std::string q = "SELECT `id` FROM `players` WHERE `name` = '" + escaped + "'";
+    // The single quotes in the malicious input should be escaped with backslashes
+    // Verify the escaped name starts with \' (backslash + quote) rather than bare '
+    EXPECT_EQ(escaped[0], '\\');
+    EXPECT_EQ(escaped[1], '\'');
+    // The query should contain the escaped version, not the raw injection
+    EXPECT_NE(q.find("\\';"), std::string::npos);
 }
 
 TEST(QueryPatterns, AccountLookup) {

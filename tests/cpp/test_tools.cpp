@@ -373,10 +373,12 @@ TEST(ToolsExplode, BasicSplit) {
 }
 
 TEST(ToolsExplode, WithLimit) {
+    // limit=2 means 2 splits, producing 3 parts: "a", "b", "c,d"
     auto v = explodeString("a,b,c,d", ",", 2);
-    ASSERT_EQ(v.size(), 2u);
+    ASSERT_EQ(v.size(), 3u);
     EXPECT_EQ(v[0], "a");
-    EXPECT_EQ(v[1], "b,c,d");
+    EXPECT_EQ(v[1], "b");
+    EXPECT_EQ(v[2], "c,d");
 }
 
 TEST(ToolsExplode, NoSeparator) {

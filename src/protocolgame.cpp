@@ -1015,6 +1015,15 @@ void ProtocolGame::parseHouseWindow(NetworkMessage& msg)
 	uint8_t doorId = msg.getByte();
 	uint32_t id = msg.get<uint32_t>();
 	const std::string text = msg.getString();
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit house list text size
+	if (text.length() > 8192) {
+		return;
+	}
+
 	addGameTask(&Game::playerUpdateHouseWindow, player->getID(), doorId, id, text);
 }
 
@@ -1040,6 +1049,15 @@ void ProtocolGame::parsePlayerPurchase(NetworkMessage& msg)
 	uint8_t amount = msg.getByte();
 	bool ignoreCap = msg.getByte() != 0;
 	bool inBackpacks = msg.getByte() != 0;
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (amount == 0) {
+		return;
+	}
+
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerPurchaseItem, player->getID(), id, count, amount, ignoreCap, inBackpacks);
 }
 
@@ -1049,6 +1067,15 @@ void ProtocolGame::parsePlayerSale(NetworkMessage& msg)
 	uint8_t count = msg.getByte();
 	uint8_t amount = msg.getByte();
 	bool ignoreEquipped = msg.getByte() != 0;
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (amount == 0) {
+		return;
+	}
+
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerSellItem, player->getID(), id, count, amount, ignoreEquipped);
 }
 
@@ -1071,6 +1098,9 @@ void ProtocolGame::parseLookInTrade(NetworkMessage& msg)
 void ProtocolGame::parseAddVip(NetworkMessage& msg)
 {
 	const std::string name = msg.getString();
+	if (name.empty() || name.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerRequestAddVip, player->getID(), name);
 }
 
@@ -1086,6 +1116,16 @@ void ProtocolGame::parseEditVip(NetworkMessage& msg)
 	const std::string description = msg.getString();
 	uint32_t icon = std::min<uint32_t>(10, msg.get<uint32_t>()); // 10 is max icon in 9.63
 	bool notify = msg.getByte() != 0;
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit VIP description length
+	if (description.length() > 128) {
+		return;
+	}
+
 	addGameTask(&Game::playerRequestEditVip, player->getID(), guid, description, icon, notify);
 }
 
@@ -1111,6 +1151,16 @@ void ProtocolGame::parseRuleViolationReport(NetworkMessage& msg)
 		msg.get<uint32_t>(); // statement id, used to get whatever player have said, we don't log that.
 	}
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Validate string sizes to prevent oversized report payloads
+	if (targetName.empty() || targetName.length() > 255 ||
+	    comment.length() > 4096 || translation.length() > 4096) {
+		return;
+	}
+
 	addGameTask(&Game::playerReportRuleViolation, player->getID(), targetName, reportType, reportReason, comment, translation);
 }
 
@@ -1122,6 +1172,15 @@ void ProtocolGame::parseBugReport(NetworkMessage& msg)
 	Position position;
 	if (category == BUG_CATEGORY_MAP) {
 		position = msg.getPosition();
+	}
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit bug report message size
+	if (message.empty() || message.length() > 4096) {
+		return;
 	}
 
 	addGameTask(&Game::playerReportBug, player->getID(), message, position, category);
@@ -1139,6 +1198,17 @@ void ProtocolGame::parseDebugAssert(NetworkMessage& msg)
 	std::string date = msg.getString();
 	std::string description = msg.getString();
 	std::string comment = msg.getString();
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit debug assert string sizes to prevent abuse
+	if (assertLine.length() > 1024 || date.length() > 64 ||
+	    description.length() > 1024 || comment.length() > 1024) {
+		return;
+	}
+
 	addGameTask(&Game::playerDebugAssert, player->getID(), assertLine, date, description, comment);
 }
 
@@ -3187,6 +3257,15 @@ void ProtocolGame::parseExtendedOpcode(NetworkMessage& msg)
 {
 	uint8_t opcode = msg.getByte();
 	const std::string& buffer = msg.getString();
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit extended opcode buffer size to prevent abuse
+	if (buffer.length() > 65535) {
+		return;
+	}
 
 	// process additional opcodes via lua script event
 	addGameTask(&Game::parsePlayerExtendedOpcode, player->getID(), opcode, buffer);

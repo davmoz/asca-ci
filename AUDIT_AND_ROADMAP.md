@@ -66,10 +66,11 @@
 - Boss monsters include: Ferumbras, Morgaroth, Ghazbaran, Orshabaal, Demodras, Hellgorak, Infernatil, and 145+ more
 - Categories: Dragons, Elementals, Demons, Humanoids, Undead, Beasts, Unique spawns
 
-#### NPCs: **8 NPCs**
-- Alice (Blessings), Banker (Banking), Riona (Shopkeeper), Eryn (General)
-- The Oracle (Quest), The Forgotten King (Special), Tyoric, Deruno
-- **CRITICAL GAP**: Only 8 NPCs - Medivia has hundreds
+#### NPCs: **54 NPCs**
+- Shopkeepers, bankers, blessers, quest givers, craft trainers, guards, and special NPCs
+- Includes: Alice, Banker, Riona, Eryn, The Oracle, The Forgotten King, Tyoric, Deruno, and 46 more
+- Full list includes service NPCs (boat captains, stable masters), craft trainers (Ironforge, Fisherman Jack), quest NPCs (King Aldric, Grand Vizier), city guards, and wandering merchants
+- **REMAINING GAP**: 54 NPCs vs. Medivia's hundreds - ongoing content expansion needed
 
 #### Items: **~1,600+ items**
 - items.xml (1.5 MB) + items.otb (1.1 MB binary)
@@ -93,7 +94,7 @@
 - login.lua, logout.lua, firstitems.lua, plus creature script lib
 
 #### Global Events: Present with XML + Lua scripts
-#### Raids: raids.xml with testraid.xml example
+#### Raids: **16 raid definitions** in raids.xml (orc horde, dragon lord invasion, demon gate, undead rising, vampire night, frost dragon assault, and more)
 #### Chat Channels: Configured with XML + Lua
 #### Events/Callbacks: Event system with XML + Lua scripts
 
@@ -123,7 +124,7 @@
 | Spell System | FULL | Instant, rune, conjure spells |
 | Weapon System | FULL | Melee, distance, wand classes |
 | Monster AI | FULL | A* pathfinding, targeting strategies, summons |
-| NPC System | BASIC | Only 8 NPCs, Lua scripted |
+| NPC System | EXPANDED | 54 NPCs, Lua scripted (shops, services, quests, crafting, guards) |
 | Chat System | FULL | Channels, whisper, yell |
 | Ban System | FULL | IP/account/character bans |
 | Login Queue | FULL | Waitlist system |
@@ -131,7 +132,7 @@
 | Bed System | FULL | Offline training |
 | Mount System | FULL | Mount definitions |
 | Outfit System | FULL | Outfit definitions |
-| Vocation System | FULL | 4 base + 4 promoted vocations |
+| Vocation System | FULL | Custom 4 (Mage/Druid/Archer/Knight) + 4 promoted (High Mage/Guardian Druid/Royal Archer/Imperial Knight) |
 
 ### 1.5 What is NOT Implemented (or Has Been Implemented Since Initial Audit)
 
