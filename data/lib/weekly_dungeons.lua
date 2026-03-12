@@ -355,3 +355,76 @@ end
 function WeeklyDungeons.getResetInfo()
 	return "Dungeon cooldowns reset 7 days after your last entry to each dungeon."
 end
+
+-- ============================================================================
+-- Cooldown Validation (Weekly Reset Alignment)
+-- ============================================================================
+
+--- Validate a player's dungeon cooldown against the weekly reset schedule.
+-- The weekly reset occurs every Monday at midnight (server time).
+-- A player may not re-enter a dungeon until both conditions are met:
+--   1. At least 7 days have elapsed since their last entry timestamp.
+--   2. A Monday-midnight reset boundary has been crossed.
+-- @param player     Player userdata
+-- @param dungeonId  integer 1-5
+-- @return boolean   true if the player may enter
+-- @return number    remaining seconds until eligible (0 if ready)
+-- @return string    human-readable remaining time description
+function WeeklyDungeons.validateCooldown(player, dungeonId)
+	local storageKey = WeeklyDungeons.STORAGE_COOLDOWN_BASE + (dungeonId - 1)
+	local lastEntry = player:getStorageValue(storageKey)
+
+	-- Never entered before
+	if lastEntry <= 0 then
+		return true, 0, "Ready"
+	end
+
+	local now = os.time()
+
+	-- Condition 1: 7-day elapsed check
+	local sevenDayExpiry = lastEntry + WeeklyDungeons.COOLDOWN_SECONDS
+	local timeBasedReady = now >= sevenDayExpiry
+
+	-- Condition 2: next Monday midnight after the entry
+	local nextReset = WeeklyDungeons.getNextWeeklyReset(lastEntry)
+	local resetBasedReady = now >= nextReset
+
+	-- Both conditions must be satisfied
+	if timeBasedReady and resetBasedReady then
+		return true, 0, "Ready"
+	end
+
+	-- Remaining time is whichever deadline is later
+	local deadline = math.max(sevenDayExpiry, nextReset)
+	local remaining = deadline - now
+	remaining = math.max(0, remaining)
+
+	local days  = math.floor(remaining / 86400)
+	local hours = math.floor((remaining % 86400) / 3600)
+	local mins  = math.floor((remaining % 3600) / 60)
+	local desc  = string.format("%dd %dh %dm", days, hours, mins)
+
+	return false, remaining, desc
+end
+
+--- Calculate the next Monday midnight (00:00:00) at or after a given timestamp.
+-- @param timestamp  number  Unix timestamp
+-- @return number    Unix timestamp of the next Monday 00:00:00
+function WeeklyDungeons.getNextWeeklyReset(timestamp)
+	local t = os.date("*t", timestamp)
+	-- wday: 1=Sunday, 2=Monday, ..., 7=Saturday
+	local daysUntilMonday = (9 - t.wday) % 7
+	if daysUntilMonday == 0 then
+		daysUntilMonday = 7  -- if already Monday, next Monday
+	end
+	-- Build midnight of that Monday
+	local resetDate = os.time({
+		year  = t.year,
+		month = t.month,
+		day   = t.day + daysUntilMonday,
+		hour  = 0,
+		min   = 0,
+		sec   = 0,
+	})
+	return resetDate
+end

@@ -464,6 +464,72 @@ function AchievementSystem.checkTaskAchievements(player)
 	if gatheringCompleted >= 5 then AchievementSystem.awardAchievement(player, 110) end
 end
 
+-- ============================================================================
+-- Persistence Validation
+-- ============================================================================
+
+--- Validate achievement storage values on player login.
+-- Checks for corrupted or impossible values such as negative counts,
+-- counts exceeding the maximum number of achievements, or point totals
+-- that do not match the actual unlocked achievements.
+-- Resets any corrupted values to valid defaults.
+-- @param player  Player userdata
+-- @return number  count of values that were corrected
+function AchievementSystem.validateOnLogin(player)
+	local corrections = 0
+	local maxAchievementId = #AchievementSystem.customAchievements
+
+	-- Validate individual achievement flags (must be 0 or 1)
+	local recalculatedPoints = 0
+	for _, ach in ipairs(AchievementSystem.customAchievements) do
+		local storageKey = AchievementSystem.STORAGE_ACH_BASE + ach.id
+		local val = player:getStorageValue(storageKey)
+		if val ~= 1 and val > 0 then
+			-- Invalid non-zero, non-one value: reset to unlocked (1)
+			player:setStorageValue(storageKey, 1)
+			corrections = corrections + 1
+			recalculatedPoints = recalculatedPoints + ach.points
+		elseif val < 0 then
+			-- Negative value: reset to locked (0 / -1 default)
+			player:setStorageValue(storageKey, -1)
+			corrections = corrections + 1
+		elseif val == 1 then
+			recalculatedPoints = recalculatedPoints + ach.points
+		end
+	end
+
+	-- Validate total achievement points against recalculated sum
+	local storedPoints = player:getStorageValue(AchievementSystem.STORAGE_ACH_POINTS)
+	if storedPoints < 0 then
+		storedPoints = 0
+	end
+	if storedPoints ~= recalculatedPoints then
+		player:setStorageValue(AchievementSystem.STORAGE_ACH_POINTS, recalculatedPoints)
+		corrections = corrections + 1
+	end
+
+	-- Validate selected title index
+	local titleIndex = player:getStorageValue(AchievementSystem.STORAGE_TITLE)
+	if titleIndex > 0 then
+		if not AchievementSystem.titles[titleIndex] then
+			-- Title index out of range: clear selection
+			player:setStorageValue(AchievementSystem.STORAGE_TITLE, 0)
+			corrections = corrections + 1
+		end
+	elseif titleIndex < -1 then
+		-- Impossible negative title index
+		player:setStorageValue(AchievementSystem.STORAGE_TITLE, 0)
+		corrections = corrections + 1
+	end
+
+	if corrections > 0 then
+		print(string.format("[AchievementSystem] Corrected %d invalid storage values for player %s.",
+			corrections, player:getName()))
+	end
+
+	return corrections
+end
+
 --- Check level-based achievements.
 function AchievementSystem.checkLevelAchievements(player)
 	local level = player:getLevel()

@@ -1,4 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	==========================================================================
+	Vocation Formula & Balance Documentation
+	==========================================================================
+
+	ATTRIBUTE REFERENCE:
+	  gaincap      = Capacity gained per level (carry weight)
+	  gainhp       = Hit points gained per level
+	  gainmana     = Mana points gained per level
+	  gainhpticks  = Seconds between passive HP regeneration ticks (lower = faster)
+	  gainhpamount = HP restored per regeneration tick
+	  gainmanaticks = Seconds between passive mana regeneration ticks
+	  gainmanaamount = Mana restored per regeneration tick
+	  manamultiplier = Cost multiplier for spells (lower = cheaper spells)
+	  attackspeed  = Milliseconds between melee attacks (2000 = one swing every 2s)
+	  basespeed    = Base walking speed (tiles per... higher = faster)
+	  soulmax      = Maximum soul points
+	  gainsoulticks = Seconds to regenerate 1 soul point
+	  fromvoc      = Base vocation ID this vocation promotes from
+
+	FORMULA MULTIPLIERS (inside <formula> element):
+	  meleeDamage  = Multiplier applied to melee damage output
+	                 1.0 = baseline; 1.2 = 20% stronger melee; 1.3 = 30% stronger
+	  distDamage   = Multiplier applied to distance weapon damage
+	                 1.0 = baseline; 1.2 = 20% stronger ranged; 1.3 = 30% stronger
+	  defense      = Multiplier applied to shield/defense calculations
+	                 1.0 = baseline; 1.2 = 20% more effective blocking
+	  armor        = Multiplier applied to armor damage reduction
+	                 1.0 = baseline; 1.2 = 20% more armor mitigation
+
+	SKILL MULTIPLIERS (inside <skill> elements):
+	  Lower multiplier = faster skill advancement.
+	  Skill IDs:
+	    0 = Fist Fighting    1 = Club Fighting    2 = Sword Fighting
+	    3 = Axe Fighting     4 = Distance Fighting  5 = Shielding
+	    6 = Fishing
+
+	BALANCE DESIGN BY VOCATION CLASS:
+	  Knight (id 4/8):   High HP (15/lvl), high melee/defense/armor (1.2-1.3x),
+	                     slow mana regen, expensive spells (3.0x mana cost).
+	                     Fastest melee skill gain (1.1x). Tank role.
+	  Archer (id 3/7):   Medium HP (10/lvl), high distance damage (1.2-1.3x),
+	                     balanced mana. Fastest distance skill gain (1.1x).
+	                     Ranged DPS role.
+	  Mage (id 1/5):     Low HP (5/lvl), huge mana pool (30/lvl), fast mana regen,
+	                     cheap spells (1.1x cost). No combat formula bonuses.
+	                     Magic DPS role.
+	  Druid (id 2/6):    Same HP/mana as Mage, slightly faster skill advancement
+	                     (1.8x vs 2.0x for weapon skills). Healer/support role.
+
+	  Promoted vocations (id 5-8) gain improved regen rates (+10 HP/mana per
+	  tick instead of +5), doubled soul max (200), and faster soul regen.
+	  Archers and Knights also receive increased formula multipliers upon
+	  promotion (e.g. distDamage 1.2 -> 1.3, meleeDamage 1.2 -> 1.3).
+	==========================================================================
+-->
 <vocations>
 	<vocation id="0" clientid="0" name="None" description="none" gaincap="10" gainhp="5" gainmana="5" gainhpticks="6" gainhpamount="1" gainmanaticks="6" gainmanaamount="1" manamultiplier="4.0" attackspeed="2000" basespeed="220" soulmax="100" gainsoulticks="120" fromvoc="0">
 		<formula meleeDamage="1.0" distDamage="1.0" defense="1.0" armor="1.0" />

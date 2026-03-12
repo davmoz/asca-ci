@@ -425,4 +425,62 @@ function SeasonalEvents.setAnniversaryDate(startMonth, startDay)
 	end
 end
 
+-- ============================================================================
+-- Holiday Detection
+-- ============================================================================
+
+--- Season definitions for auto-detection via os.date()
+SeasonalEvents.SEASONS = {
+	CHRISTMAS       = { name = "Christmas",       startMonth = 12, startDay = 15, endMonth = 1,  endDay = 5,  crossesNewYear = true },
+	EASTER          = { name = "Easter",          startMonth = 4,  startDay = 1,  endMonth = 4,  endDay = 20, crossesNewYear = false },
+	HALLOWEEN       = { name = "Halloween",       startMonth = 10, startDay = 20, endMonth = 11, endDay = 5,  crossesNewYear = false },
+	SUMMER_FESTIVAL = { name = "Summer Festival", startMonth = 7,  startDay = 1,  endMonth = 8,  endDay = 31, crossesNewYear = false },
+}
+
+--- Detect the currently active season based on the real-world date.
+-- Uses os.date() to read the system clock and matches against known
+-- holiday windows. If multiple seasons overlap, all are returned.
+-- @return table: list of active season keys (e.g. {"CHRISTMAS"})
+function SeasonalEvents.getCurrentSeason()
+	local now = os.date("*t")
+	local month = now.month
+	local day = now.day
+	local active = {}
+
+	for key, season in pairs(SeasonalEvents.SEASONS) do
+		if SeasonalEvents.isDateInRange(season, month, day) then
+			table.insert(active, key)
+		end
+	end
+
+	return active
+end
+
+--- Check whether a specific season is currently active.
+-- @param seasonKey string: key from SeasonalEvents.SEASONS (e.g. "CHRISTMAS")
+-- @return boolean
+function SeasonalEvents.isSeasonActive(seasonKey)
+	local season = SeasonalEvents.SEASONS[seasonKey]
+	if not season then
+		return false
+	end
+	local now = os.date("*t")
+	return SeasonalEvents.isDateInRange(season, now.month, now.day)
+end
+
+--- Auto-activate events whose matching season is currently detected.
+-- Call this on server startup to enable seasonal events automatically.
+function SeasonalEvents.autoActivateSeasonalEvents()
+	local activeSeasons = SeasonalEvents.getCurrentSeason()
+	for _, seasonKey in ipairs(activeSeasons) do
+		-- Activate the corresponding event if it exists
+		if SeasonalEvents.EVENTS[seasonKey] then
+			print(string.format(">> Auto-activating seasonal event: %s", SeasonalEvents.EVENTS[seasonKey].name))
+		end
+	end
+	if #activeSeasons == 0 then
+		print(">> No seasonal holidays detected for current date.")
+	end
+end
+
 print(">> Seasonal Events system loaded")

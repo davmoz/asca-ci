@@ -409,8 +409,8 @@ void simulateCriticalHit(CombatDamage& damage, CombatOrigin origin,
     if (damage.critical || origin == ORIGIN_CONDITION) {
         return;
     }
-    if (damage.primary.value > 0 || damage.secondary.value > 0) {
-        return; // only applies to damage (negative values), not healing
+    if (damage.primary.value >= 0 && damage.secondary.value >= 0) {
+        return; // only applies to damage (negative values), not healing or zero
     }
     if (critAmount != 0 && critChance != 0 && roll <= critChance) {
         damage.primary.value += std::round(damage.primary.value * (critAmount / 100.0));

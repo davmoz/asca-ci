@@ -132,6 +132,7 @@ local testModules = {
     "tests/lua/test_talkactions.lua",
     "tests/lua/test_lib.lua",
     "tests/lua/test_crafting.lua",
+    "tests/lua/test_crafting_integration.lua",
     "tests/lua/test_storage_keys.lua",
     "tests/lua/test_vocations.lua",
     "tests/lua/test_lib_loading.lua",

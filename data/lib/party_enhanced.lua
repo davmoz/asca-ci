@@ -253,7 +253,40 @@ function PartyEnhanced.vocDiversityMultiplier(members)
 	return 1.00
 end
 
+-- Maximum allowed level difference between party members for shared XP bonus
+PartyEnhanced.MAX_LEVEL_DIFFERENCE = 50
+
+--- Check if all party members are within the allowed level range.
+-- Shared XP bonus only applies when the difference between the highest
+-- and lowest level member does not exceed MAX_LEVEL_DIFFERENCE.
+-- @param members  table of Player userdata (all party members including leader)
+-- @return boolean  true if all members are within the allowed level range
+-- @return number   the actual level spread (highest - lowest)
+function PartyEnhanced.isWithinLevelRange(members)
+	if not members or #members <= 1 then
+		return true, 0
+	end
+
+	local minLevel = math.huge
+	local maxLevel = 0
+
+	for _, member in ipairs(members) do
+		local level = member:getLevel()
+		if level < minLevel then
+			minLevel = level
+		end
+		if level > maxLevel then
+			maxLevel = level
+		end
+	end
+
+	local spread = maxLevel - minLevel
+	return spread <= PartyEnhanced.MAX_LEVEL_DIFFERENCE, spread
+end
+
 --- Calculate enhanced party shared XP.
+-- The vocation diversity bonus and party size bonus only apply when all
+-- members are within MAX_LEVEL_DIFFERENCE of each other.
 -- @param baseExp  number  raw experience from a kill
 -- @param members  table of Player userdata
 -- @return number  final experience per member
@@ -263,12 +296,19 @@ function PartyEnhanced.calculateSharedExp(baseExp, members)
 		return baseExp
 	end
 
-	-- Standard split: each member gets base / count, plus 10% bonus per extra member
+	-- Standard split: each member gets base / count
 	local splitExp = baseExp / count
-	local partyBonus = 1.0 + (count - 1) * 0.10  -- +10% per extra member
-	local vocBonus = PartyEnhanced.vocDiversityMultiplier(members)
 
-	return math.floor(splitExp * partyBonus * vocBonus)
+	-- Bonuses only apply if all members are within the level range
+	local withinRange = PartyEnhanced.isWithinLevelRange(members)
+	if withinRange then
+		local partyBonus = 1.0 + (count - 1) * 0.10  -- +10% per extra member
+		local vocBonus = PartyEnhanced.vocDiversityMultiplier(members)
+		return math.floor(splitExp * partyBonus * vocBonus)
+	end
+
+	-- Out of range: no party bonus, just even split
+	return math.floor(splitExp)
 end
 
 -- ============================================================================
