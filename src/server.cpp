@@ -55,7 +55,7 @@ void ServiceManager::stop()
 
 	for (auto& servicePortIt : acceptors) {
 		try {
-			boost::asio::post(io_service, std::bind(&ServicePort::onStopServer, servicePortIt.second));
+			boost::asio::post(io_service, [servicePort = servicePortIt.second]() { servicePort->onStopServer(); });
 		} catch (boost::system::system_error& e) {
 			std::cout << "[ServiceManager::stop] Network Error: " << e.what() << std::endl;
 		}
@@ -64,7 +64,7 @@ void ServiceManager::stop()
 	acceptors.clear();
 
 	death_timer.expires_after(std::chrono::seconds(3));
-	death_timer.async_wait(std::bind(&ServiceManager::die, this));
+	death_timer.async_wait([this](const boost::system::error_code&) { die(); });
 }
 
 ServicePort::~ServicePort()
@@ -99,7 +99,9 @@ void ServicePort::accept()
 	}
 
 	auto connection = ConnectionManager::getInstance().createConnection(io_service, shared_from_this());
-	acceptor->async_accept(connection->getSocket(), std::bind(&ServicePort::onAccept, shared_from_this(), connection, std::placeholders::_1));
+	acceptor->async_accept(connection->getSocket(), [thisPtr = shared_from_this(), connection](const boost::system::error_code& error) {
+		thisPtr->onAccept(connection, error);
+	});
 }
 
 void ServicePort::onAccept(Connection_ptr connection, const boost::system::error_code& error)
@@ -127,7 +129,7 @@ void ServicePort::onAccept(Connection_ptr connection, const boost::system::error
 			close();
 			pendingStart = true;
 			g_scheduler.addEvent(createSchedulerTask(15000,
-			                     std::bind(&ServicePort::openAcceptor, std::weak_ptr<ServicePort>(shared_from_this()), serverPort)));
+			                     [weak = std::weak_ptr<ServicePort>(shared_from_this()), port = serverPort]() { ServicePort::openAcceptor(weak, port); }));
 		}
 	}
 }
@@ -183,7 +185,7 @@ void ServicePort::open(uint16_t port)
 
 		pendingStart = true;
 		g_scheduler.addEvent(createSchedulerTask(15000,
-		                     std::bind(&ServicePort::openAcceptor, std::weak_ptr<ServicePort>(shared_from_this()), port)));
+		                     [weak = std::weak_ptr<ServicePort>(shared_from_this()), port]() { ServicePort::openAcceptor(weak, port); }));
 	}
 }
 

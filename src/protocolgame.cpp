@@ -32,7 +32,6 @@
 #include "game.h"
 #include "iologindata.h"
 #include "iomarket.h"
-#include "waitlist.h"
 #include "ban.h"
 #include "scheduler.h"
 
@@ -106,15 +105,10 @@ void ProtocolGame::login(const std::string& name, uint32_t accountId, OperatingS
 			}
 		}
 
-		std::size_t currentSlot = WaitingList::getInstance().clientLogin(player);
-		if (currentSlot > 0) {
-			uint8_t retryTime = WaitingList::getTime(currentSlot);
-			auto output = OutputMessagePool::getOutputMessage();
-			output->addByte(0x16);
-			output->addString(fmt::format("Too many players online.\nYou are at place {} on the waiting list.", currentSlot));
-			output->addByte(retryTime);
-			send(output);
-			disconnect();
+		uint32_t maxPlayers = static_cast<uint32_t>(g_config.getNumber(ConfigManager::MAX_PLAYERS));
+		if (maxPlayers > 0 && g_game.getPlayersOnline() >= maxPlayers &&
+		    !player->hasFlag(PlayerFlag_CanAlwaysLogin) && player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER) {
+			disconnectClient("Too many players online. Please try again later.");
 			return;
 		}
 
@@ -150,7 +144,7 @@ void ProtocolGame::login(const std::string& name, uint32_t accountId, OperatingS
 			foundPlayer->disconnect();
 			foundPlayer->isConnecting = true;
 
-			eventConnect = g_scheduler.addEvent(createSchedulerTask(1000, std::bind(&ProtocolGame::connect, getThis(), foundPlayer->getID(), operatingSystem)));
+			eventConnect = g_scheduler.addEvent(createSchedulerTask(1000, [thisPtr = getThis(), playerId = foundPlayer->getID(), operatingSystem]() { thisPtr->connect(playerId, operatingSystem); }));
 		} else {
 			connect(foundPlayer->getID(), operatingSystem);
 		}
@@ -345,7 +339,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
-	g_dispatcher.addTask(createTask(std::bind(&ProtocolGame::login, getThis(), characterName, accountId, operatingSystem)));
+	g_dispatcher.addTask(createTask([thisPtr = getThis(), characterName, accountId, operatingSystem]() { thisPtr->login(characterName, accountId, operatingSystem); }));
 }
 
 void ProtocolGame::onConnect()
@@ -423,7 +417,7 @@ void ProtocolGame::parsePacket(NetworkMessage& msg)
 	}
 
 	switch (recvbyte) {
-		case 0x14: g_dispatcher.addTask(createTask(std::bind(&ProtocolGame::logout, getThis(), true, false))); break;
+		case 0x14: g_dispatcher.addTask(createTask([thisPtr = getThis()]() { thisPtr->logout(true, false); })); break;
 		case 0x1D: addGameTask(&Game::playerReceivePingBack, player->getID()); break;
 		case 0x1E: addGameTask(&Game::playerReceivePing, player->getID()); break;
 		case 0x32: parseExtendedOpcode(msg); break; //otclient extended opcode

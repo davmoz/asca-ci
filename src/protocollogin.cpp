@@ -220,5 +220,5 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 	std::string authToken = msg.getString();
 
 	auto thisPtr = std::static_pointer_cast<ProtocolLogin>(shared_from_this());
-	g_dispatcher.addTask(createTask(std::bind(&ProtocolLogin::getCharacterList, thisPtr, accountName, password, authToken, version)));
+	g_dispatcher.addTask(createTask([thisPtr, accountName, password, authToken, version]() { thisPtr->getCharacterList(accountName, password, authToken, version); }));
 }

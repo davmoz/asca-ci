@@ -3592,8 +3592,9 @@ int LuaScriptInterface::luaAddEvent(lua_State* L)
 	eventDesc.scriptId = getScriptEnv()->getScriptId();
 
 	auto& lastTimerEventId = g_luaEnvironment.lastEventTimerId;
+	auto timerEventId = lastTimerEventId;
 	eventDesc.eventId = g_scheduler.addEvent(createSchedulerTask(
-		delay, std::bind(&LuaEnvironment::executeTimerEvent, &g_luaEnvironment, lastTimerEventId)
+		delay, [timerEventId]() { g_luaEnvironment.executeTimerEvent(timerEventId); }
 	));
 
 	g_luaEnvironment.timerEvents.emplace(lastTimerEventId, std::move(eventDesc));
