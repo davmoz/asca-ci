@@ -162,6 +162,7 @@ CREATE TABLE IF NOT EXISTS `guild_membership` (
   `rank_id` int NOT NULL,
   `nick` varchar(15) NOT NULL DEFAULT '',
   PRIMARY KEY (`player_id`),
+  KEY `guild_id` (`guild_id`),
   FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`guild_id`) REFERENCES `guilds` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`rank_id`) REFERENCES `guild_ranks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -266,7 +267,8 @@ CREATE TABLE IF NOT EXISTS `player_deaths` (
   `mostdamage_unjustified` tinyint NOT NULL DEFAULT '0',
   FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE,
   KEY `killed_by` (`killed_by`),
-  KEY `mostdamage_by` (`mostdamage_by`)
+  KEY `mostdamage_by` (`mostdamage_by`),
+  KEY `time` (`time`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `player_depotitems` (

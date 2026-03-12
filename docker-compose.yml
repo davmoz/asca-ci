@@ -48,6 +48,12 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE:-forgottenserver}
     networks:
       - tfs-net
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 7171 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
 volumes:
   db_data:

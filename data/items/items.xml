@@ -2346,30 +2346,27 @@
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />
 	</item>
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="wand of cosmic energy"> -->
-	<!-- <attribute key="description" value="The energy of a radiant star is trapped inside its globe." /> -->
-	<!-- <attribute key="weight" value="2500" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="energy" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="wand of vortex"> -->
-	<!-- <attribute key="description" value="Surges of energy rush through the tip of this wand." /> -->
-	<!-- <attribute key="weight" value="1900" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="energy" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="wand of dragonbreath"> -->
-	<!-- <attribute key="description" value="Legends say that this wand holds the soul of a young dragon." /> -->
-	<!-- <attribute key="weight" value="2100" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="fire" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
+	<item id="2189" article="a" name="wand of cosmic energy">
+		<attribute key="description" value="The energy of a radiant star is trapped inside its globe." />
+		<attribute key="weight" value="2500" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="energy" />
+		<attribute key="range" value="3" />
+	</item>
+	<item id="2190" article="a" name="wand of vortex">
+		<attribute key="description" value="Surges of energy rush through the tip of this wand." />
+		<attribute key="weight" value="1900" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="energy" />
+		<attribute key="range" value="3" />
+	</item>
+	<item id="2191" article="a" name="wand of dragonbreath">
+		<attribute key="description" value="Legends say that this wand holds the soul of a young dragon." />
+		<attribute key="weight" value="2100" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="fire" />
+		<attribute key="range" value="3" />
+	</item>
 	<item id="2192" article="a" name="crystal ball">
 		<attribute key="weight" value="3400" />
 	</item>
@@ -16101,30 +16098,27 @@
 		<attribute key="manaGain" value="4" />
 		<attribute key="manaTicks" value="3000" />
 	</item>
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="an" name="underworld rod"> -->
-	<!-- <attribute key="description" value="No one knows which hell this unholy rod comes from." /> -->
-	<!-- <attribute key="weight" value="2900" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="death" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="northwind rod"> -->
-	<!-- <attribute key="description" value="It was made by one of the shamans in Svargrond and symbolises an icy mammoth." /> -->
-	<!-- <attribute key="weight" value="2900" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="ice" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="springsprout rod"> -->
-	<!-- <attribute key="description" value="It is filled with the energy of growing plants." /> -->
-	<!-- <attribute key="weight" value="2700" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="smallearth" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
+	<item id="8910" article="an" name="underworld rod">
+		<attribute key="description" value="No one knows which hell this unholy rod comes from." />
+		<attribute key="weight" value="2900" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="death" />
+		<attribute key="range" value="3" />
+	</item>
+	<item id="8911" article="a" name="northwind rod">
+		<attribute key="description" value="It was made by one of the shamans in Svargrond and symbolises an icy mammoth." />
+		<attribute key="weight" value="2900" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="ice" />
+		<attribute key="range" value="3" />
+	</item>
+	<item id="8912" article="a" name="springsprout rod">
+		<attribute key="description" value="It is filled with the energy of growing plants." />
+		<attribute key="weight" value="2700" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="smallearth" />
+		<attribute key="range" value="3" />
+	</item>
 	<item fromid="8913" toid="8917" name="earth" />
 	<item id="8918" article="a" name="spellbook of dark mysteries">
 		<attribute key="description" value="It shows your spells and can also shield against attacks when worn." />
@@ -16136,30 +16130,27 @@
 	<item id="8919" article="a" name="spell rune">
 		<attribute key="description" value="It is Yandur's healing rune. You can't remove it from his house, but you may use it." />
 	</item>
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="wand of starstorm"> -->
-	<!-- <attribute key="description" value="It is sparkling with universal energy." /> -->
-	<!-- <attribute key="weight" value="2550" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="energy" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="wand of draconia"> -->
-	<!-- <attribute key="description" value="This wand holds the spirit and soul of a dragon lord." /> -->
-	<!-- <attribute key="weight" value="2700" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="fire" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
-	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
-	<!-- article="a" name="wand of voodoo"> -->
-	<!-- <attribute key="description" value="It is filled with the dark hatred and rage of a tormented demonic being." /> -->
-	<!-- <attribute key="weight" value="2850" /> -->
-	<!-- <attribute key="weaponType" value="wand" /> -->
-	<!-- <attribute key="shootType" value="death" /> -->
-	<!-- <attribute key="range" value="3" /> -->
-	<!-- </item> -->
+	<item id="8920" article="a" name="wand of starstorm">
+		<attribute key="description" value="It is sparkling with universal energy." />
+		<attribute key="weight" value="2550" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="energy" />
+		<attribute key="range" value="3" />
+	</item>
+	<item id="8921" article="a" name="wand of draconia">
+		<attribute key="description" value="This wand holds the spirit and soul of a dragon lord." />
+		<attribute key="weight" value="2700" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="fire" />
+		<attribute key="range" value="3" />
+	</item>
+	<item id="8922" article="a" name="wand of voodoo">
+		<attribute key="description" value="It is filled with the dark hatred and rage of a tormented demonic being." />
+		<attribute key="weight" value="2850" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="death" />
+		<attribute key="range" value="3" />
+	</item>
 	<item id="8923" name="ranger legs">
 		<attribute key="weight" value="3500" />
 		<attribute key="armor" value="4" />

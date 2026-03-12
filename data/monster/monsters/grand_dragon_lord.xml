@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<monster name="Grand Dragon Lord" nameDescription="a grand dragon lord" race="blood" experience="4200" speed="230">
+	<health now="3800" max="3800" />
+	<look type="39" corpse="5984" />
+	<targetchange interval="4000" chance="10" />
+	<flags>
+		<flag summonable="0" />
+		<flag attackable="1" />
+		<flag hostile="1" />
+		<flag illusionable="0" />
+		<flag convinceable="0" />
+		<flag pushable="0" />
+		<flag canpushitems="1" />
+		<flag canpushcreatures="1" />
+		<flag targetdistance="1" />
+		<flag staticattack="80" />
+		<flag runonhealth="500" />
+		<flag boss="1" />
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="0" max="-380" />
+		<attack name="fire" interval="2000" chance="25" range="7" radius="5" target="1" min="-200" max="-350">
+			<attribute key="shootEffect" value="fire" />
+			<attribute key="areaEffect" value="firearea" />
+		</attack>
+		<attack name="firefield" interval="2000" chance="15" range="7" radius="5" target="1">
+			<attribute key="shootEffect" value="fire" />
+		</attack>
+		<attack name="fire" interval="2000" chance="20" length="8" spread="3" min="-250" max="-400">
+			<attribute key="areaEffect" value="firearea" />
+		</attack>
+	</attacks>
+	<defenses armor="50" defense="50">
+		<defense name="healing" interval="2000" chance="20" min="100" max="200">
+			<attribute key="areaEffect" value="blueshimmer" />
+		</defense>
+	</defenses>
+	<elements>
+		<element earthPercent="80" />
+		<element energyPercent="20" />
+		<element icePercent="-10" />
+	</elements>
+	<immunities>
+		<immunity paralyze="1" />
+		<immunity invisible="1" />
+		<immunity fire="1" />
+	</immunities>
+	<voices interval="5000" chance="10">
+		<voice sentence="I AM THE GRAND DRAGON LORD! BOW BEFORE ME!" yell="1" />
+		<voice sentence="YOUR WORLD WILL BURN TO ASHES!" yell="1" />
+		<voice sentence="ZCHHHHH" yell="1" />
+	</voices>
+	<loot>
+		<item name="gold coin" countmax="245" chance="100000" />
+		<item name="platinum coin" countmax="5" chance="80000" />
+		<item name="dragon ham" countmax="5" chance="90000" />
+		<item name="green mushroom" countmax="3" chance="20000" />
+		<item name="royal spear" countmax="5" chance="15000" />
+		<item name="power bolt" countmax="10" chance="12000" />
+		<item name="energy ring" chance="10000" />
+		<item name="small sapphire" countmax="3" chance="10000" />
+		<item name="golden mug" chance="8000" />
+		<item name="red dragon scale" countmax="2" chance="5000" />
+		<item name="red dragon leather" countmax="2" chance="3000" />
+		<item name="strong health potion" countmax="3" chance="5000" />
+		<item name="life crystal" chance="3000" />
+		<item name="strange helmet" chance="2000" />
+		<item name="fire sword" chance="1500" />
+		<item name="tower shield" chance="1500" />
+		<item name="royal helmet" chance="1500" />
+		<item name="dragon scale mail" chance="1000" />
+		<item name="dragon slayer" chance="800" />
+		<item name="dragon lord trophy" chance="500" />
+		<item name="magic plate armor" chance="200" />
+	</loot>
+</monster>

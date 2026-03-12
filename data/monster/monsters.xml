@@ -163,6 +163,7 @@
 	<monster name="Dragon Hatchling" file="monsters/dragon_hatchling.xml" />
 	<monster name="Dragon Lord Hatchling" file="monsters/dragon_lord_hatchling.xml" />
 	<monster name="Dragon Lord" file="monsters/dragon_lord.xml" />
+	<monster name="Grand Dragon Lord" file="monsters/grand_dragon_lord.xml" />
 	<monster name="Dragon" file="monsters/dragon.xml" />
 	<monster name="Dragonling" file="monsters/dragonling.xml" />
 	<monster name="Draken Abomination" file="monsters/draken_abomination.xml" />
