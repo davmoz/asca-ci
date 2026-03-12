@@ -46,6 +46,11 @@
 	<talkaction words="!online;/online" script="online.lua" />
 	<talkaction words="!serverinfo" script="serverinfo.lua" />
 
+	<!-- Phase 4: Task, Bestiary, Achievement commands -->
+	<talkaction words="!tasks" separator=" " script="tasks.lua" />
+	<talkaction words="!bestiary" separator=" " script="tasks.lua" />
+	<talkaction words="!achievements" separator=" " script="tasks.lua" />
+
 	<!-- test talkactions -->
 	<talkaction words="!z" separator=" " script="magiceffect.lua" />
 	<talkaction words="!x" separator=" " script="animationeffect.lua" />

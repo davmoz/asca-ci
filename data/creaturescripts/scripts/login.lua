@@ -32,5 +32,13 @@ function onLogin(player)
 	-- Events
 	player:registerEvent("PlayerDeath")
 	player:registerEvent("DropLoot")
+	player:registerEvent("LootAttributes")
+	player:registerEvent("KillTracker")
+
+	-- Check level-based achievements on login
+	if AchievementSystem then
+		AchievementSystem.checkLevelAchievements(player)
+	end
+
 	return true
 end
