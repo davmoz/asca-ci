@@ -429,7 +429,7 @@ const std::string& LuaScriptInterface::getFileById(int32_t scriptId)
 
 	auto it = cacheFiles.find(scriptId);
 	if (it == cacheFiles.end()) {
-		static const std::string& unk = "(Unknown scriptfile)";
+		static const std::string unk = "(Unknown scriptfile)";
 		return unk;
 	}
 	return it->second;

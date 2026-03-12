@@ -141,6 +141,11 @@ void Connection::parseHeader(const boost::system::error_code& error)
 		return;
 	}
 
+	// NOTE: The rate limiter uses a coarse window (time_t has 1-second granularity) and
+	// accumulates packets over up to 2 seconds before resetting. This allows short bursts
+	// of up to 2x the configured MAX_PACKETS_PER_SECOND limit within a single window.
+	// A sliding window or token bucket algorithm would provide smoother rate limiting,
+	// but would require significant refactoring of the connection lifecycle.
 	uint32_t timePassed = std::max<uint32_t>(1, (time(nullptr) - timeConnected) + 1);
 	if ((++packetsSent / timePassed) > static_cast<uint32_t>(g_config.getNumber(ConfigManager::MAX_PACKETS_PER_SECOND))) {
 		std::cout << convertIPToString(getIP()) << " disconnected for exceeding packet per second limit." << std::endl;

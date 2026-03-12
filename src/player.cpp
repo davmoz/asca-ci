@@ -20,6 +20,7 @@
 #include "otpch.h"
 
 #include <bitset>
+#include <cmath>
 
 #include "bed.h"
 #include "chat.h"
@@ -306,7 +307,7 @@ int32_t Player::getArmor() const
 			armor += inventoryItem->getArmor();
 		}
 	}
-	return static_cast<int32_t>(armor * vocation->armorMultiplier);
+	return static_cast<int32_t>(std::round(armor * vocation->armorMultiplier));
 }
 
 void Player::getShieldAndWeapon(const Item*& shield, const Item*& weapon) const

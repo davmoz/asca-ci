@@ -826,7 +826,7 @@ bool IOLoginData::savePlayer(Player* player)
 		return false;
 	}
 
-	if (player->lastDepotId != -1) {
+	if (player->hasVisitedDepot()) {
 		//save depot items
 		query.str(std::string());
 		query << "DELETE FROM `player_depotitems` WHERE `player_id` = " << player->getGUID();
@@ -1000,15 +1000,17 @@ void IOLoginData::loadItems(ItemMap& itemMap, DBResult_ptr result)
 
 			std::pair<Item*, uint32_t> pair(item, pid);
 			itemMap[sid] = pair;
+		} else {
+			std::cout << "WARNING: Failed to create item (type=" << type << ") in IOLoginData::loadItems, skipping sid " << sid << std::endl;
 		}
 	} while (result->next());
 }
 
-void IOLoginData::increaseBankBalance(uint32_t guid, uint64_t bankBalance)
+bool IOLoginData::increaseBankBalance(uint32_t guid, uint64_t bankBalance)
 {
 	std::ostringstream query;
 	query << "UPDATE `players` SET `balance` = `balance` + " << bankBalance << " WHERE `id` = " << guid;
-	Database::getInstance().executeQuery(query.str());
+	return Database::getInstance().executeQuery(query.str());
 }
 
 bool IOLoginData::hasBiddedOnHouse(uint32_t guid)

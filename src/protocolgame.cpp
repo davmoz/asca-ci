@@ -241,7 +241,23 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
-	OperatingSystem_t operatingSystem = static_cast<OperatingSystem_t>(msg.get<uint16_t>());
+	uint16_t operatingSystemRaw = msg.get<uint16_t>();
+	// Validate operatingSystem to a known enum value to prevent untrusted network input
+	// from being used unchecked. Clamp unknown values to CLIENTOS_NONE.
+	OperatingSystem_t operatingSystem;
+	switch (operatingSystemRaw) {
+		case CLIENTOS_LINUX:
+		case CLIENTOS_WINDOWS:
+		case CLIENTOS_FLASH:
+		case CLIENTOS_OTCLIENT_LINUX:
+		case CLIENTOS_OTCLIENT_WINDOWS:
+		case CLIENTOS_OTCLIENT_MAC:
+			operatingSystem = static_cast<OperatingSystem_t>(operatingSystemRaw);
+			break;
+		default:
+			operatingSystem = CLIENTOS_NONE;
+			break;
+	}
 	version = msg.get<uint16_t>();
 
 	msg.skipBytes(7); // U32 client version, U8 client type, U16 dat revision
@@ -358,6 +374,9 @@ void ProtocolGame::onConnect()
 	output->addByte(0x1F);
 
 	// Add timestamp & random number
+	// TODO: challengeTimestamp uses time(nullptr) which is predictable. In a future update,
+	// consider mixing in additional entropy (e.g., from std::random_device) to make the
+	// challenge less guessable, while preserving protocol compatibility with existing clients.
 	challengeTimestamp = static_cast<uint32_t>(time(nullptr));
 	output->add<uint32_t>(challengeTimestamp);
 

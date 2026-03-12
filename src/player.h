@@ -128,6 +128,10 @@ class Player final : public Creature, public Cylinder
 
 		void setID() override {
 			if (id == 0) {
+				if (playerAutoID == std::numeric_limits<uint32_t>::max()) {
+					std::cout << "Error: Player auto ID counter overflow!" << std::endl;
+					return;
+				}
 				id = playerAutoID++;
 			}
 		}
@@ -181,8 +185,11 @@ class Player final : public Creature, public Cylinder
 		void kickPlayer(bool displayEffect);
 
 		static uint64_t getExpForLevel(int32_t lv) {
-			lv--;
-			return ((50ULL * lv * lv * lv) - (150ULL * lv * lv) + (400ULL * lv)) / 3ULL;
+			if (lv <= 0) {
+				return 0;
+			}
+			uint64_t ulv = static_cast<uint64_t>(lv - 1);
+			return ((50ULL * ulv * ulv * ulv) - (150ULL * ulv * ulv) + (400ULL * ulv)) / 3ULL;
 		}
 
 		uint16_t getStaminaMinutes() const {
@@ -362,11 +369,15 @@ class Player final : public Creature, public Cylinder
 			return inMarket;
 		}
 
-		void setLastDepotId(int16_t newId) {
+		void setLastDepotId(uint16_t newId) {
 			lastDepotId = newId;
+			hasLastDepotId = true;
 		}
-		int16_t getLastDepotId() const {
+		uint16_t getLastDepotId() const {
 			return lastDepotId;
+		}
+		bool hasVisitedDepot() const {
+			return hasLastDepotId;
 		}
 
 		void resetIdleTime() {
@@ -1289,7 +1300,8 @@ class Player final : public Creature, public Cylinder
 		uint16_t lastStatsTrainingTime = 0;
 		uint16_t staminaMinutes = 2520;
 		uint16_t maxWriteLen = 0;
-		int16_t lastDepotId = -1;
+		uint16_t lastDepotId = 0;
+		bool hasLastDepotId = false;
 
 		uint8_t soul = 0;
 		uint8_t blessings = 0;

@@ -28,6 +28,7 @@
 #include <forward_list>
 #include <functional>
 #include <iomanip>
+#include <limits>
 #include <iostream>
 #include <list>
 #include <map>

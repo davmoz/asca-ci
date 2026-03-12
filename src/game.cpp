@@ -70,12 +70,7 @@ Game::Game()
 	offlineTrainingWindow.priority = true;
 }
 
-Game::~Game()
-{
-	for (const auto& it : guilds) {
-		delete it.second;
-	}
-}
+Game::~Game() = default;
 
 void Game::start(ServiceManager* manager)
 {
@@ -133,10 +128,15 @@ void Game::setGameState(GameState_t newState)
 			g_globalEvents->execute(GLOBALEVENT_SHUTDOWN);
 
 			//kick all players that are still online
-			auto it = players.begin();
-			while (it != players.end()) {
-				it->second->kickPlayer(true);
-				it = players.begin();
+			{
+				std::vector<Player*> playersToKick;
+				playersToKick.reserve(players.size());
+				for (const auto& it : players) {
+					playersToKick.push_back(it.second);
+				}
+				for (Player* player : playersToKick) {
+					player->kickPlayer(true);
+				}
 			}
 
 			saveMotdNum();
@@ -153,13 +153,15 @@ void Game::setGameState(GameState_t newState)
 
 		case GAME_STATE_CLOSED: {
 			/* kick all players without the CanAlwaysLogin flag */
-			auto it = players.begin();
-			while (it != players.end()) {
-				if (!it->second->hasFlag(PlayerFlag_CanAlwaysLogin)) {
-					it->second->kickPlayer(true);
-					it = players.begin();
-				} else {
-					++it;
+			{
+				std::vector<Player*> playersToKick;
+				for (const auto& it : players) {
+					if (!it.second->hasFlag(PlayerFlag_CanAlwaysLogin)) {
+						playersToKick.push_back(it.second);
+					}
+				}
+				for (Player* player : playersToKick) {
+					player->kickPlayer(true);
 				}
 			}
 
@@ -423,7 +425,7 @@ Creature* Game::getCreatureByName(const std::string& s)
 		return nullptr;
 	}
 
-	const std::string& lowerCaseName = asLowerCaseString(s);
+	const std::string lowerCaseName = asLowerCaseString(s);
 
 	auto m_it = mappedPlayerNames.find(lowerCaseName);
 	if (m_it != mappedPlayerNames.end()) {
@@ -493,7 +495,7 @@ ReturnValue Game::getPlayerByNameWildcard(const std::string& s, Player*& player)
 	}
 
 	if (s.back() == '~') {
-		const std::string& query = asLowerCaseString(s.substr(0, strlen - 1));
+		const std::string query = asLowerCaseString(s.substr(0, strlen - 1));
 		std::string result;
 		ReturnValue ret = wildcardTree.findOne(query, result);
 		if (ret != RETURNVALUE_NOERROR) {
@@ -589,7 +591,10 @@ bool Game::removeCreature(Creature* creature, bool isLogout/* = true*/)
 	size_t i = 0;
 	for (Creature* spectator : spectators) {
 		if (Player* player = spectator->getPlayer()) {
-			player->sendRemoveTileThing(tilePosition, oldStackPosVector[i++]);
+			int32_t stackpos = oldStackPosVector[i++];
+			if (stackpos != -1) {
+				player->sendRemoveTileThing(tilePosition, stackpos);
+			}
 		}
 	}
 
@@ -5602,7 +5607,7 @@ void Game::playerAnswerModalWindow(uint32_t playerId, uint32_t modalWindowId, ui
 
 void Game::addPlayer(Player* player)
 {
-	const std::string& lowercase_name = asLowerCaseString(player->getName());
+	const std::string lowercase_name = asLowerCaseString(player->getName());
 	mappedPlayerNames[lowercase_name] = player;
 	mappedPlayerGuids[player->getGUID()] = player;
 	wildcardTree.insert(lowercase_name);
@@ -5611,7 +5616,7 @@ void Game::addPlayer(Player* player)
 
 void Game::removePlayer(Player* player)
 {
-	const std::string& lowercase_name = asLowerCaseString(player->getName());
+	const std::string lowercase_name = asLowerCaseString(player->getName());
 	mappedPlayerNames.erase(lowercase_name);
 	mappedPlayerGuids.erase(player->getGUID());
 	wildcardTree.remove(lowercase_name);
@@ -5644,12 +5649,12 @@ Guild* Game::getGuild(uint32_t id) const
 	if (it == guilds.end()) {
 		return nullptr;
 	}
-	return it->second;
+	return it->second.get();
 }
 
 void Game::addGuild(Guild* guild)
 {
-	guilds[guild->getId()] = guild;
+	guilds[guild->getId()] = std::unique_ptr<Guild>(guild);
 }
 
 void Game::removeGuild(uint32_t guildId)
