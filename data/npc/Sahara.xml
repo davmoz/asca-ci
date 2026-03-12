@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Sahara" script="sahara.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="155" head="2" body="85" legs="99" feet="78" addons="0" />
+	<parameters>
+		<parameter key="message_greet" value="Welcome, |PLAYERNAME|! My magic carpet can take you across the desert sands. Where would you like to {travel}?" />
+	</parameters>
+</npc>

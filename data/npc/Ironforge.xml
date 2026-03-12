@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Ironforge" script="ironforge.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="134" head="57" body="20" legs="39" feet="95" addons="3" />
+	<parameters>
+		<parameter key="message_greet" value="Welcome to the forge, |PLAYERNAME|! I can teach you about {smithing} and sell you some materials. Ask for a {trade}." />
+	</parameters>
+</npc>

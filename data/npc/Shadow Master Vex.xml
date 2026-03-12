@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Shadow Master Vex" script="shadow_vex.lua" walkinterval="0" floorchange="0">
+	<health now="100" max="100" />
+	<look type="130" head="0" body="0" legs="0" feet="0" addons="3" />
+	<parameters>
+		<parameter key="message_greet" value="You dare approach me, |PLAYERNAME|? Perhaps you seek the power of the {shadows}..." />
+	</parameters>
+</npc>

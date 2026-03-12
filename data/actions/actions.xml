@@ -15,6 +15,18 @@
 	<action fromid="1747" toid="1749" script="quests/quests.lua" />
 	<action uniqueid="30015" script="quests/annihilator.lua" />
 
+	<!-- Phase 4: NPC Quest Reward Chests (uniqueid-based) -->
+	<action uniqueid="50301" script="quests/hunter_task_reward.lua" />
+	<action uniqueid="50402" script="quests/royal_faction_reward.lua" />
+	<action uniqueid="50502" script="quests/shadow_faction_reward.lua" />
+	<action uniqueid="50602" script="quests/nature_faction_reward.lua" />
+	<action uniqueid="50901" script="quests/dragon_quest_reward.lua" />
+	<action uniqueid="51001" script="quests/pirate_treasure.lua" />
+	<action uniqueid="50801" script="quests/catacombs_entrance.lua" />
+	<action uniqueid="50702" script="quests/wanderer_treasure.lua" />
+	<action uniqueid="51201" script="quests/arena_champion.lua" />
+	<action uniqueid="51102" script="quests/dungeon_boss_reward.lua" />
+
 	<!-- Tools -->
 	<action itemid="2120" script="tools/rope.lua" />
 	<action itemid="2416" script="tools/crowbar.lua" />

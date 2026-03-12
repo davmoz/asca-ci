@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Commander Thane" script="commander_thane.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="134" head="19" body="38" legs="39" feet="76" addons="3" />
+	<parameters>
+		<parameter key="message_greet" value="Hail, |PLAYERNAME|! I am Commander Thane. Are you here to serve the crown? Ask about my {missions}." />
+	</parameters>
+</npc>

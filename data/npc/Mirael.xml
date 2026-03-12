@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Mirael" script="mirael.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="138" head="0" body="96" legs="113" feet="95" addons="2" />
+	<parameters>
+		<parameter key="message_greet" value="Welcome to the Arcane Library, |PLAYERNAME|. I sell wands, rods, and spell components. Ask for a {trade}." />
+	</parameters>
+</npc>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Gladius" script="gladius.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="131" head="94" body="20" legs="39" feet="76" addons="3" />
+	<parameters>
+		<parameter key="message_greet" value="WELCOME TO THE ARENA, |PLAYERNAME|! Are you here to fight in the {arena} or check the {rules}?" />
+	</parameters>
+</npc>

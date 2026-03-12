@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Elara" script="elara.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="138" head="0" body="113" legs="125" feet="57" addons="2" />
+	<parameters>
+		<parameter key="message_greet" value="Welcome to the Grand Library, |PLAYERNAME|. I can share {lore} about our world or give you a {quest} to recover lost knowledge." />
+	</parameters>
+</npc>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="The Wanderer" script="the_wanderer.lua" walkinterval="4000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="133" head="0" body="0" legs="0" feet="0" addons="1" />
+	<parameters>
+		<parameter key="message_greet" value="...You can see me, |PLAYERNAME|? How... interesting. Perhaps you are worthy of a {secret}." />
+	</parameters>
+</npc>

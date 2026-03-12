@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Old Pete" script="old_pete.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="129" head="3" body="40" legs="96" feet="57" addons="0" />
+	<parameters>
+		<parameter key="message_greet" value="Ahh, |PLAYERNAME|! Come to learn the ways of the fish, have ye? Ask about {fishing} or ask for a {trade}." />
+	</parameters>
+</npc>
