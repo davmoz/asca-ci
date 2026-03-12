@@ -10,4 +10,5 @@ dofile('data/lib/debugging/lua_version.lua')
 
 -- Crafting systems (Phase 2)
 dofile('data/lib/crafting.lua')
+dofile('data/lib/crafting_lib.lua')
 dofile('data/lib/crafting_mining.lua')
