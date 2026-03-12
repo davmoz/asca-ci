@@ -25,3 +25,6 @@ dofile('data/lib/legendary_items.lua')
 dofile('data/lib/task_system.lua')
 dofile('data/lib/bestiary_system.lua')
 dofile('data/lib/achievement_system.lua')
+
+-- Seasonal Events system (Phase 4.6 + 5.5)
+dofile('data/lib/seasonal_events.lua')

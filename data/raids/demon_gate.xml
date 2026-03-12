@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="A demonic gate has opened! Hellfire spills into the world!" />
+	<announce delay="20000" type="warning" message="A mighty Demon Lord steps through the gate!" />
+	<announce delay="90000" type="warning" message="The demon invasion grows stronger! Close the gate!" />
+
+	<areaspawn delay="3000" radius="6" centerx="105" centery="145" centerz="7">
+		<monster name="Fire Devil" minamount="4" maxamount="7" />
+	</areaspawn>
+
+	<areaspawn delay="8000" radius="5" centerx="108" centery="143" centerz="7">
+		<monster name="Dark Torturer" minamount="2" maxamount="3" />
+	</areaspawn>
+
+	<areaspawn delay="12000" radius="4" centerx="103" centery="147" centerz="7">
+		<monster name="Demon" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="18000" radius="3" centerx="105" centery="145" centerz="7">
+		<monster name="Fire Elemental" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="20000" name="Demon" x="105" y="145" z="7" />
+	<singlespawn delay="20000" name="Demon" x="106" y="146" z="7" />
+
+	<areaspawn delay="30000" radius="6" centerx="105" centery="145" centerz="7">
+		<monster name="Fire Devil" minamount="3" maxamount="5" />
+	</areaspawn>
+</raid>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="A bitter frost sweeps the land! The Ice Witch Coven has arrived!" />
+	<announce delay="25000" type="warning" message="The Ice Witch Queen channels a devastating blizzard!" />
+	<announce delay="90000" type="warning" message="Ice creatures continue to emerge from the frozen portals!" />
+
+	<areaspawn delay="2000" radius="7" centerx="85" centery="125" centerz="7">
+		<monster name="Ice Golem" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="7000" radius="5" centerx="82" centery="128" centerz="7">
+		<monster name="Crystal Spider" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="12000" radius="6" centerx="88" centery="123" centerz="7">
+		<monster name="Frost Dragon" minamount="1" maxamount="2" />
+	</areaspawn>
+
+	<areaspawn delay="18000" radius="4" centerx="85" centery="125" centerz="7">
+		<monster name="Ice Witch" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="25000" name="Ice Witch" x="85" y="125" z="7" />
+
+	<areaspawn delay="30000" radius="5" centerx="85" centery="125" centerz="7">
+		<monster name="Ice Golem" minamount="2" maxamount="4" />
+	</areaspawn>
+</raid>

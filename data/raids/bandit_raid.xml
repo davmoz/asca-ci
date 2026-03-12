@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="Bandits have been spotted approaching the town! Guard your valuables!" />
+	<announce delay="20000" type="warning" message="The Bandit Leader has arrived with his elite guard!" />
+	<announce delay="90000" type="warning" message="More bandits pour in from the surrounding roads!" />
+
+	<areaspawn delay="2000" radius="7" centerx="120" centery="135" centerz="7">
+		<monster name="Bandit" minamount="6" maxamount="10" />
+	</areaspawn>
+
+	<areaspawn delay="6000" radius="5" centerx="123" centery="133" centerz="7">
+		<monster name="Assassin" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="10000" radius="6" centerx="117" centery="137" centerz="7">
+		<monster name="Hunter" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="15000" radius="4" centerx="120" centery="135" centerz="7">
+		<monster name="Dark Monk" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="20000" name="Assassin" x="120" y="135" z="7" />
+
+	<areaspawn delay="28000" radius="6" centerx="120" centery="135" centerz="7">
+		<monster name="Bandit" minamount="4" maxamount="7" />
+	</areaspawn>
+</raid>

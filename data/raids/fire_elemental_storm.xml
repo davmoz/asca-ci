@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="The ground cracks and fire erupts! A Fire Elemental Storm sweeps across the land!" />
+	<announce delay="30000" type="warning" message="The fire storm intensifies! Massive fire elementals emerge!" />
+	<announce delay="90000" type="warning" message="The Fire Elemental Storm shows no signs of abating!" />
+
+	<areaspawn delay="2000" radius="8" centerx="130" centery="125" centerz="7">
+		<monster name="Fire Elemental" minamount="4" maxamount="8" />
+	</areaspawn>
+
+	<areaspawn delay="8000" radius="6" centerx="133" centery="122" centerz="7">
+		<monster name="Fire Devil" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="14000" radius="5" centerx="127" centery="128" centerz="7">
+		<monster name="Fire Elemental" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<areaspawn delay="20000" radius="7" centerx="130" centery="125" centerz="7">
+		<monster name="Hellfire Fighter" minamount="2" maxamount="3" />
+	</areaspawn>
+
+	<areaspawn delay="28000" radius="5" centerx="130" centery="125" centerz="7">
+		<monster name="Fire Elemental" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="35000" radius="4" centerx="131" centery="126" centerz="7">
+		<monster name="Fire Devil" minamount="2" maxamount="4" />
+	</areaspawn>
+</raid>

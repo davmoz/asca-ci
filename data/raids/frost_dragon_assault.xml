@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="A freezing wind howls from the north! Frost Dragons descend upon the land!" />
+	<announce delay="30000" type="warning" message="An elder Frost Dragon leads the aerial assault!" />
+	<announce delay="90000" type="warning" message="The Frost Dragon assault freezes everything in its path!" />
+
+	<areaspawn delay="3000" radius="7" centerx="100" centery="100" centerz="7">
+		<monster name="Frost Dragon" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="8000" radius="5" centerx="103" centery="97" centerz="7">
+		<monster name="Ice Golem" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="14000" radius="6" centerx="97" centery="103" centerz="7">
+		<monster name="Crystal Spider" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="20000" radius="4" centerx="100" centery="100" centerz="7">
+		<monster name="Frost Dragon" minamount="1" maxamount="3" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="28000" name="Frost Dragon" x="100" y="100" z="7" />
+
+	<areaspawn delay="35000" radius="6" centerx="100" centery="100" centerz="7">
+		<monster name="Ice Golem" minamount="2" maxamount="4" />
+	</areaspawn>
+</raid>

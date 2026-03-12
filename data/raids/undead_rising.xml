@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="The dead are rising from their graves! An undead horde approaches!" />
+	<announce delay="30000" type="warning" message="A powerful Lich has emerged to command the undead army!" />
+	<announce delay="90000" type="warning" message="The undead continue to pour forth! Stand your ground!" />
+
+	<areaspawn delay="2000" radius="8" centerx="90" centery="140" centerz="7">
+		<monster name="Skeleton" minamount="5" maxamount="10" />
+	</areaspawn>
+
+	<areaspawn delay="5000" radius="6" centerx="95" centery="138" centerz="7">
+		<monster name="Ghost" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<areaspawn delay="10000" radius="7" centerx="88" centery="142" centerz="7">
+		<monster name="Ghoul" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="15000" radius="5" centerx="92" centery="136" centerz="7">
+		<monster name="Vampire" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="25000" name="Lich" x="90" y="140" z="7" />
+	<singlespawn delay="25000" name="Bonebeast" x="92" y="141" z="7" />
+
+	<areaspawn delay="35000" radius="6" centerx="90" centery="140" centerz="7">
+		<monster name="Skeleton" minamount="4" maxamount="8" />
+	</areaspawn>
+</raid>

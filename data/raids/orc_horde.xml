@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="An Orc Horde has been spotted marching toward the city!" />
+	<announce delay="25000" type="warning" message="The Orc Warlord commands his troops to attack!" />
+	<announce delay="90000" type="warning" message="The orc assault intensifies! Reinforcements have arrived!" />
+
+	<areaspawn delay="2000" radius="8" centerx="115" centery="120" centerz="7">
+		<monster name="Orc" minamount="6" maxamount="12" />
+	</areaspawn>
+
+	<areaspawn delay="8000" radius="6" centerx="112" centery="118" centerz="7">
+		<monster name="Orc Spearman" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<areaspawn delay="12000" radius="5" centerx="118" centery="122" centerz="7">
+		<monster name="Orc Warrior" minamount="2" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="16000" radius="4" centerx="115" centery="120" centerz="7">
+		<monster name="Orc Berserker" minamount="2" maxamount="3" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="22000" name="Orc Warlord" x="115" y="120" z="7" />
+	<singlespawn delay="22000" name="Orc Leader" x="116" y="121" z="7" />
+
+	<areaspawn delay="30000" radius="7" centerx="115" centery="120" centerz="7">
+		<monster name="Orc" minamount="4" maxamount="8" />
+	</areaspawn>
+</raid>

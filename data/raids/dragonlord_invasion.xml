@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="The sky darkens as Dragon Lords descend upon the city! Seek shelter!" />
+	<announce delay="30000" type="warning" message="A Grand Dragon has been spotted leading the invasion!" />
+	<announce delay="120000" type="warning" message="The Dragon Lord invasion rages on! Heroes are needed!" />
+
+	<areaspawn delay="3000" radius="8" centerx="100" centery="130" centerz="7">
+		<monster name="Dragon Lord" amount="4" />
+	</areaspawn>
+
+	<areaspawn delay="10000" radius="6" centerx="110" centery="125" centerz="7">
+		<monster name="Dragon Lord" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="15000" radius="10" centerx="95" centery="135" centerz="7">
+		<monster name="Dragon" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="25000" name="Grand Dragon Lord" x="100" y="128" z="7" />
+
+	<areaspawn delay="35000" radius="5" centerx="105" centery="130" centerz="7">
+		<monster name="Dragon Lord" minamount="2" maxamount="3" />
+	</areaspawn>
+</raid>

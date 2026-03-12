@@ -6,4 +6,12 @@
 	<!--
 	<globalevent name="timer_example" time="12:00:00" script="my_script.lua" />
 	-->
+
+	<!-- Seasonal Event Checker: runs at startup and daily at midnight -->
+	<globalevent type="startup" name="SeasonalCheckerStartup" script="seasonal_checker.lua" />
+	<globalevent name="SeasonalCheckerDaily" time="00:00:30" script="seasonal_checker.lua" />
+
+	<!-- Daily Raid Guarantee: runs at startup and every 15 minutes -->
+	<globalevent type="startup" name="DailyRaidStartup" script="daily_raid.lua" />
+	<globalevent name="DailyRaidCheck" time="00:15:00" script="daily_raid.lua" />
 </globalevents>
