@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 project(tfs_tests)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Fetch Google Test
 include(FetchContent)
@@ -20,7 +21,7 @@ set(TFS_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../src")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake")
 
 find_package(PugiXML REQUIRED)
-find_package(Boost 1.53.0 REQUIRED COMPONENTS date_time system filesystem iostreams)
+find_package(Boost 1.53.0 REQUIRED COMPONENTS date_time filesystem iostreams)
 
 # We compile only the minimal source files needed for unit tests.
 # Many TFS classes have deep dependency chains, so we isolate testable

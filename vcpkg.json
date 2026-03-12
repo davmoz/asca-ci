@@ -1,0 +1,19 @@
+{
+  "name": "asca",
+  "version-string": "1.3.0",
+  "description": "ASCA - TFS 1.3 based Tibia server",
+  "dependencies": [
+    "boost-system",
+    "boost-filesystem",
+    "boost-iostreams",
+    "boost-date-time",
+    "boost-asio",
+    "pugixml",
+    "luajit",
+    "cryptopp",
+    {
+      "name": "libmysql",
+      "platform": "!linux"
+    }
+  ]
+}

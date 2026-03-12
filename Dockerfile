@@ -1,6 +1,6 @@
-FROM alpine:3.19 AS build
+FROM alpine:3.21 AS build
 
-# crypto++-dev is in edge/testing
+# crypto++-dev is in edge/testing (will be removed after OpenSSL migration)
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
   binutils \
   boost-dev \
@@ -8,6 +8,7 @@ RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/test
   clang \
   cmake \
   crypto++-dev \
+  openssl-dev \
   gcc \
   gmp-dev \
   luajit-dev \
@@ -21,14 +22,16 @@ COPY CMakeLists.txt /usr/src/forgottenserver/
 WORKDIR /usr/src/forgottenserver/build
 RUN cmake .. && make
 
-FROM alpine:3.19
+FROM alpine:3.21
 
-# crypto++ is in edge/testing
+# crypto++ is in edge/testing (will be removed after OpenSSL migration)
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
   boost-iostreams \
   boost-system \
   boost-filesystem \
   crypto++ \
+  libssl3 \
+  libcrypto3 \
   gmp \
   luajit \
   mariadb-connector-c \

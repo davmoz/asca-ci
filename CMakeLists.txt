@@ -1,17 +1,19 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 project(tfs)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 add_subdirectory(src)
 add_executable(tfs ${tfs_SRC})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# Issue #120: Use target_compile_options (after add_executable) instead of the
-# global add_compile_options, so flags only apply to this target.
 if (NOT WIN32)
     target_compile_options(tfs PRIVATE -Wall -Werror -pipe -fvisibility=hidden)
 endif ()
@@ -20,20 +22,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(tfs PRIVATE -fno-strict-aliasing)
 endif ()
 
-# Issue #118: Upgrade from C++11 to C++17. TFS 1.3 builds cleanly with C++17
-# on GCC 7+, Clang 5+, and MSVC 2017+. This unlocks std::optional,
-# std::string_view, structured bindings, and other modern features.
-set_target_properties(tfs PROPERTIES CXX_STANDARD 17)
-set_target_properties(tfs PROPERTIES CXX_STANDARD_REQUIRED ON)
+target_precompile_headers(tfs PUBLIC src/otpch.h)
 
-# Issue #113: CMake 3.16+ is now widely available and supports
-# target_precompile_headers natively. The cotire fallback has been removed.
-# If building with CMake < 3.16, upgrade CMake instead of relying on cotire.
-if (${CMAKE_VERSION} VERSION_GREATER "3.16.0")
-    target_precompile_headers(tfs PUBLIC src/otpch.h)
-else ()
-    message(WARNING "CMake >= 3.16 is required for precompiled header support. "
-                    "Consider upgrading CMake. The cotire fallback has been removed.")
+# Issue 232: Unity build support — groups source files to speed compilation
+option(ENABLE_UNITY_BUILD "Enable unity (jumbo) builds" OFF)
+if (ENABLE_UNITY_BUILD)
+    set_target_properties(tfs PROPERTIES UNITY_BUILD ON)
 endif ()
 
 set(CMAKE_CXX_FLAGS_PERFORMANCE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
@@ -66,12 +60,11 @@ else ()
     find_package(Lua REQUIRED)
 endif ()
 
-find_package(Boost 1.53.0 REQUIRED COMPONENTS date_time system filesystem iostreams)
+find_package(Boost 1.53.0 REQUIRED COMPONENTS date_time filesystem iostreams)
 
 include_directories(${Boost_INCLUDE_DIRS} ${Crypto++_INCLUDE_DIR} ${LUA_INCLUDE_DIR} ${MYSQL_INCLUDE_DIR} ${PUGIXML_INCLUDE_DIR})
 target_link_libraries(tfs PRIVATE
         Boost::date_time
-        Boost::system
         Boost::filesystem
         Boost::iostreams
         ${CMAKE_THREAD_LIBS_INIT}

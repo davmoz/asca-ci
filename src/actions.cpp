@@ -506,7 +506,7 @@ namespace {
 
 bool enterMarket(Player* player, Item*, const Position&, Thing*, const Position&, bool)
 {
-	if (player->getLastDepotId() == -1) {
+	if (player->getLastDepotId() == std::numeric_limits<uint16_t>::max()) {
 		return false;
 	}
 
