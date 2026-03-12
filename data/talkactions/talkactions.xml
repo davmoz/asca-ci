@@ -84,6 +84,12 @@
 	<talkaction words="/unfreeze" separator=" " script="moderation.lua" />
 	<talkaction words="/watchlist" separator=" " script="moderation.lua" />
 
+	<!-- Phase 7: Player-facing game system interfaces -->
+	<talkaction words="!recipes" separator=" " script="recipes.lua" />
+	<talkaction words="!prey" separator=" " script="prey.lua" />
+	<talkaction words="!imbue" separator=" " script="imbue.lua" />
+	<talkaction words="!faction" separator=" " script="faction.lua" />
+
 	<!-- test talkactions -->
 	<talkaction words="!z" separator=" " script="magiceffect.lua" />
 	<talkaction words="!x" separator=" " script="animationeffect.lua" />

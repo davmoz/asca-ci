@@ -286,4 +286,66 @@ function DailyRewards.getBonusXPRemaining(player)
 	return remaining
 end
 
+-- ============================================================================
+-- Display Function (Issue #217)
+-- ============================================================================
+-- Shows streak, today's reward tier, and time until next daily reward on login.
+
+function DailyRewards.displayLoginInfo(player)
+	local daysSince = DailyRewards.daysSinceLastClaim(player)
+	local streak = DailyRewards.getStreak(player)
+
+	local msg = "=== Daily Rewards ===\n"
+
+	-- Show current streak
+	msg = msg .. "Current streak: " .. streak .. "/" .. DailyRewards.CYCLE_LENGTH .. " days\n"
+
+	-- Determine today's reward tier
+	if daysSince == 0 then
+		-- Already claimed today
+		local reward = DailyRewards.rewards[streak]
+		msg = msg .. "Today's reward (CLAIMED): Day " .. streak .. " - " .. reward.description .. "\n"
+
+		-- Show time until next daily reward (next midnight)
+		local now = os.date("*t")
+		local secondsUntilMidnight = (24 - now.hour - 1) * 3600 + (60 - now.min - 1) * 60 + (60 - now.sec)
+		local hoursLeft = math.floor(secondsUntilMidnight / 3600)
+		local minsLeft = math.floor((secondsUntilMidnight % 3600) / 60)
+		msg = msg .. "Next reward available in: " .. hoursLeft .. "h " .. minsLeft .. "m\n"
+
+		-- Preview next day reward
+		local nextDay = (streak % DailyRewards.CYCLE_LENGTH) + 1
+		local nextReward = DailyRewards.rewards[nextDay]
+		if nextReward then
+			msg = msg .. "Tomorrow (Day " .. nextDay .. "): " .. nextReward.description .. "\n"
+		end
+	elseif daysSince == 1 then
+		-- Consecutive day, can claim
+		local nextDay = (streak % DailyRewards.CYCLE_LENGTH) + 1
+		local reward = DailyRewards.rewards[nextDay]
+		msg = msg .. "Today's reward (AVAILABLE): Day " .. nextDay .. " - " .. reward.description .. "\n"
+		msg = msg .. "Type !daily to claim your reward!\n"
+	elseif daysSince == -1 then
+		-- Never claimed
+		local reward = DailyRewards.rewards[1]
+		msg = msg .. "Today's reward (AVAILABLE): Day 1 - " .. reward.description .. "\n"
+		msg = msg .. "Type !daily to claim your first reward!\n"
+	else
+		-- Streak broken
+		local reward = DailyRewards.rewards[1]
+		msg = msg .. "Streak broken! Your streak has been reset.\n"
+		msg = msg .. "Today's reward (AVAILABLE): Day 1 - " .. reward.description .. "\n"
+		msg = msg .. "Type !daily to claim your reward and start a new streak!\n"
+	end
+
+	-- Show bonus XP status if active
+	if DailyRewards.hasBonusXP(player) then
+		local remaining = DailyRewards.getBonusXPRemaining(player)
+		local mins = math.floor(remaining / 60)
+		msg = msg .. "\n2x XP Bonus ACTIVE: " .. mins .. " minutes remaining"
+	end
+
+	player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, msg)
+end
+
 print(">> Daily rewards system loaded")

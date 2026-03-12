@@ -80,6 +80,20 @@ def main():
         else:
             print(f"  SKIP: {filepath} - not found")
 
+    # Run schema validation tests (unittest-based)
+    print(f"\n--- Schema Validation Tests ---")
+    import unittest
+    from test_schema import (TestSpellsSchema, TestMonstersSchema,
+                             TestItemsSchema, TestVocationsSchema)
+    loader = unittest.TestLoader()
+    schema_suite = unittest.TestSuite()
+    for test_cls in (TestSpellsSchema, TestMonstersSchema,
+                     TestItemsSchema, TestVocationsSchema):
+        schema_suite.addTests(loader.loadTestsFromTestCase(test_cls))
+    result = unittest.TextTestRunner(verbosity=2).run(schema_suite)
+    if not result.wasSuccessful():
+        all_passed = False
+
     print(f"\n{'=' * 60}")
     if all_passed:
         print("ALL XML VALIDATIONS PASSED")
