@@ -28,3 +28,8 @@ dofile('data/lib/achievement_system.lua')
 
 -- Seasonal Events system (Phase 4.6 + 5.5)
 dofile('data/lib/seasonal_events.lua')
+
+-- Housing, Party, and Dungeon enhancements (Phase 5)
+dofile('data/lib/housing_enhanced.lua')
+dofile('data/lib/party_enhanced.lua')
+dofile('data/lib/weekly_dungeons.lua')

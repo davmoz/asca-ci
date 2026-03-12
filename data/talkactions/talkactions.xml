@@ -51,6 +51,11 @@
 	<talkaction words="!bestiary" separator=" " script="tasks.lua" />
 	<talkaction words="!achievements" separator=" " script="tasks.lua" />
 
+	<!-- Phase 5: Party, Dungeon, Housing commands -->
+	<talkaction words="!party" separator=" " script="party.lua" />
+	<talkaction words="!dungeon" separator=" " script="party.lua" />
+	<talkaction words="!house" separator=" " script="party.lua" />
+
 	<!-- test talkactions -->
 	<talkaction words="!z" separator=" " script="magiceffect.lua" />
 	<talkaction words="!x" separator=" " script="animationeffect.lua" />
