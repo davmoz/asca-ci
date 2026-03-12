@@ -81,7 +81,7 @@ statusProtocolPort = 7171
 maxPlayers = 0
 
 -- Message of the Day shown on login.
-motd = "Welcome to The Forgotten Server!"
+motd = "Welcome to ASCA!"
 
 -- Account/character restrictions.
 onePlayerOnlinePerAccount = true
@@ -92,7 +92,7 @@ allowClones = false
 allowWalkthrough = true
 
 -- Server identity.
-serverName = "Forgotten"
+serverName = "ASCA"
 statusTimeout = 5000
 replaceKickOnLogin = true
 
@@ -269,5 +269,5 @@ startupDatabaseOptimization = false
 -- Public information shown in server lists and status queries.
 ownerName = ""
 ownerEmail = ""
-url = "https://otland.net/"
+url = ""
 location = "Sweden"

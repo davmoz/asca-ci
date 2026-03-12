@@ -1,19 +1,40 @@
-Davids version of README1132
+# ASCA - Custom Medivia-Style MMORPG Server
 
-forgottenserver [![Build Status](https://travis-ci.org/otland/forgottenserver.svg?branch=master)](https://travis-ci.org/otland/forgottenserver "Travis CI status") [![Build status](https://ci.appveyor.com/api/projects/status/599x38f3a0luessl?svg=true)](https://ci.appveyor.com/project/otland/forgottenserver "Download builds for Windows") [![Docker status](https://images.microbadger.com/badges/image/otland/forgottenserver.svg)](https://microbadger.com/images/otland/forgottenserver "Docker image status")
-===============
+ASCA is a custom MMORPG server based on The Forgotten Server (TFS) 1.3, featuring extensive gameplay systems inspired by Medivia and other custom servers.
 
-The Forgotten Server is a free and open-source MMORPG server emulator written in C++. It is a fork of the [OpenTibia Server](https://github.com/opentibia/server) project. To connect to the server, you can use [OTClient](https://github.com/edubart/otclient) or [OpenTibiaUnity](https://github.com/slavidodo/OpenTibia-Unity).
+## Key Features
 
-### Getting Started
+- **Custom Vocations** -- Mage, Druid, Archer, Knight with promoted variants (High Mage, Guardian Druid, Sharpshooter, Imperial Knight)
+- **6 Crafting Systems** -- Smithing, Alchemy, Cooking, Woodworking, Tailoring, Enchanting
+- **Item Rank System** -- Upgrade equipment from rank 0 to rank 5 with scaling stats
+- **Item Attributes** -- Random attribute rolls (STR/DEX/INT) on equipment
+- **Enchanting** -- Use Painite Crystals to add random enchantments to gear
+- **Task & Bestiary System** -- Monster hunting tasks with rewards
+- **PvP System** -- Skull system with configurable frag timers
+- **Custom Spells** -- Expanded spell list with vocation-specific abilities
 
-* [Compiling](https://github.com/otland/forgottenserver/wiki/Compiling), alternatively download [AppVeyor builds for Windows](https://ci.appveyor.com/project/otland/forgottenserver)
-* [Scripting Reference](https://github.com/otland/forgottenserver/wiki/Script-Interface)
+## Setup
 
-### Support
+### Docker (Recommended)
 
-If you need help, please visit the [support forum on OTLand](https://otland.net/forums/support.16/). Our issue tracker is not a support forum, and using it as one will result in your issue being closed. If you were unable to get assistance in the support forum, you should consider [becoming a premium user on OTLand](https://otland.net/account/upgrades) which grants you access to the premium support forum and supports OTLand financially.
+```bash
+cp config.lua.dist config.lua
+# Edit config.lua with your settings
+docker compose up -d
+```
 
-### Issues
+### Manual
 
-We use the [issue tracker on GitHub](https://github.com/otland/forgottenserver/issues). Keep in mind that everyone who is watching the repository gets notified by e-mail when there is activity, so be thoughtful and avoid writing comments that aren't meaningful for an issue (e.g. "+1"). If you'd like for an issue to be fixed faster, you should either fix it yourself and submit a pull request, or place a bounty on the issue.
+1. Install dependencies: LuaJIT, MySQL/MariaDB, Boost, pugixml, crypto++
+2. Build with CMake:
+   ```bash
+   mkdir build && cd build
+   cmake .. && make -j$(nproc)
+   ```
+3. Import `schema.sql` into your database
+4. Copy `config.lua.dist` to `config.lua` and configure
+5. Run `./build/tfs`
+
+## Roadmap
+
+See [AUDIT_AND_ROADMAP.md](AUDIT_AND_ROADMAP.md) for a detailed server audit and upgrade roadmap.

@@ -154,9 +154,9 @@ function ItemRanks.getPlayerProperties(player)
 		local level = player:getLevel()
 		if vocId == 4 then      -- Knight
 			str = str + math.floor(level / 10)
-		elseif vocId == 3 then  -- Paladin
+		elseif vocId == 3 then  -- Archer
 			dex = dex + math.floor(level / 10)
-		elseif vocId == 1 then  -- Sorcerer
+		elseif vocId == 1 then  -- Mage
 			int = int + math.floor(level / 10)
 		elseif vocId == 2 then  -- Druid
 			int = int + math.floor(level / 15)

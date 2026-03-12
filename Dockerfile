@@ -33,7 +33,7 @@ RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/test
   luajit \
   mariadb-connector-c \
   pugixml \
-  curl
+  netcat-openbsd
 
 RUN ln -s /usr/lib/libcryptopp.so /usr/lib/libcryptopp.so.5.6
 
@@ -51,11 +51,8 @@ RUN chown -R tfs:tfs /srv
 
 EXPOSE 7171 7172
 WORKDIR /srv
-VOLUME /srv
 
-# Health check: verify the status protocol responds on port 7171
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -sf http://localhost:7171/ || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD nc -z localhost 7171 || exit 1
 
 USER tfs
 ENTRYPOINT ["/bin/tfs"]

@@ -12,9 +12,8 @@ env:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    if: github.repository == 'otland/forgottenserver'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: >

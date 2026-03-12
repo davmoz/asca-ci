@@ -183,3 +183,7 @@ pip-log.txt
 config.lua
 key.pem
 .env
+.claude/
+tests/cpp/build/
+tests/xml/__pycache__/
+*.dSYM/

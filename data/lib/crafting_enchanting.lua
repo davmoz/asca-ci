@@ -40,7 +40,7 @@ Enchanting.CUSTOM_ATTR_COUNT  = "enchant_count"
 
 -- Cooldown between enchant attempts (milliseconds)
 Enchanting.COOLDOWN_MS = 3000
-Enchanting.STORAGE_COOLDOWN = 45200
+Enchanting.STORAGE_COOLDOWN = 45400
 
 -- ---------------------------------------------------------------------------
 -- Attribute Pool
@@ -84,8 +84,8 @@ Enchanting.AttributePool = {
 	{ id = "wisdom",        name = "Mana",          min = 10, max = 50, weight = 15, appliesTo = BODY_ARMOR },
 
 	-- Vocation-specific attributes
-	{ id = "intelligence",  name = "Intelligence",  min = 1, max = 5,  weight = 10, appliesTo = ALL_EQUIPMENT, vocations = {1, 5} },  -- Sorcerer
-	{ id = "dexterity",     name = "Dexterity",     min = 1, max = 5,  weight = 10, appliesTo = ALL_EQUIPMENT, vocations = {3, 7} },  -- Paladin
+	{ id = "intelligence",  name = "Intelligence",  min = 1, max = 5,  weight = 10, appliesTo = ALL_EQUIPMENT, vocations = {1, 5} },  -- Mage
+	{ id = "dexterity",     name = "Dexterity",     min = 1, max = 5,  weight = 10, appliesTo = ALL_EQUIPMENT, vocations = {3, 7} },  -- Archer
 	{ id = "strength",      name = "Strength",      min = 1, max = 5,  weight = 10, appliesTo = ALL_EQUIPMENT, vocations = {4, 8} },  -- Knight
 	{ id = "wisdom_voc",    name = "Wisdom",        min = 1, max = 5,  weight = 10, appliesTo = ALL_EQUIPMENT, vocations = {2, 6} },  -- Druid
 }
