@@ -35,14 +35,14 @@ GuildEnhanced.config = {
 -- Storage keys for guild system
 -- Guild storage uses a base key + guild ID offset
 GuildEnhanced.STORAGE = {
-	GUILD_BANK_BASE     = 54000, -- + guildId
-	GUILD_XP_BASE       = 54500, -- + guildId
-	GUILD_LEVEL_BASE    = 55000, -- + guildId
-	GUILD_ALLIES_BASE   = 55500, -- + guildId (comma-separated list of ally guild IDs)
-	GUILD_WAR_KILLS_BASE = 56000, -- + guildId
+	GUILD_BANK_BASE     = 59000, -- + guildId
+	GUILD_XP_BASE       = 59500, -- + guildId
+	GUILD_LEVEL_BASE    = 59900, -- + guildId
+	GUILD_ALLIES_BASE   = 60500, -- + guildId (comma-separated list of ally guild IDs)
+	GUILD_WAR_KILLS_BASE = 61000, -- + guildId
 
 	-- Per-player guild contribution tracking
-	PLAYER_GUILD_CONTRIBUTION = 56500,
+	PLAYER_GUILD_CONTRIBUTION = 61500,
 }
 
 -- XP required per guild level (cumulative)
@@ -61,11 +61,11 @@ end
 function GuildEnhanced.getBankBalance(guildId)
 	if not guildId or guildId <= 0 then return 0 end
 
-	local result = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
+	local resultId = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
 		guildId .. " AND `key` = " .. GuildEnhanced.STORAGE.GUILD_BANK_BASE)
-	if result then
-		local balance = result:getNumber("value")
-		result:free()
+	if resultId then
+		local balance = result.getNumber(resultId, "value")
+		result.free(resultId)
 		return balance
 	end
 
@@ -185,11 +185,11 @@ end
 function GuildEnhanced.getGuildLevel(guildId)
 	if not guildId or guildId <= 0 then return 1 end
 
-	local result = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
+	local resultId = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
 		guildId .. " AND `key` = " .. GuildEnhanced.STORAGE.GUILD_LEVEL_BASE)
-	if result then
-		local level = result:getNumber("value")
-		result:free()
+	if resultId then
+		local level = result.getNumber(resultId, "value")
+		result.free(resultId)
 		return math.max(1, level)
 	end
 
@@ -202,11 +202,11 @@ end
 function GuildEnhanced.getGuildXP(guildId)
 	if not guildId or guildId <= 0 then return 0 end
 
-	local result = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
+	local resultId = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
 		guildId .. " AND `key` = " .. GuildEnhanced.STORAGE.GUILD_XP_BASE)
-	if result then
-		local xp = result:getNumber("value")
-		result:free()
+	if resultId then
+		local xp = result.getNumber(resultId, "value")
+		result.free(resultId)
 		return xp
 	end
 
@@ -304,14 +304,14 @@ function GuildEnhanced.checkWarAutoAccept(killer, target)
 	if killerGuildId == targetGuildId then return end
 
 	-- Check for pending war between these guilds (status = 0 means pending)
-	local result = db.storeQuery(
+	local resultId = db.storeQuery(
 		"SELECT `id` FROM `guild_wars` WHERE `status` = 0 AND " ..
 		"((guild1 = " .. killerGuildId .. " AND guild2 = " .. targetGuildId .. ") OR " ..
 		"(guild1 = " .. targetGuildId .. " AND guild2 = " .. killerGuildId .. "))")
 
-	if result then
-		local warId = result:getNumber("id")
-		result:free()
+	if resultId then
+		local warId = result.getNumber(resultId, "id")
+		result.free(resultId)
 
 		-- Auto-accept the war
 		db.query("UPDATE `guild_wars` SET `status` = 1, `started` = " .. os.time() ..
@@ -344,11 +344,11 @@ end
 function GuildEnhanced.getAllies(guildId)
 	if not guildId or guildId <= 0 then return {} end
 
-	local result = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
+	local resultId = db.storeQuery("SELECT `value` FROM `guild_storage` WHERE `guild_id` = " ..
 		guildId .. " AND `key` = " .. GuildEnhanced.STORAGE.GUILD_ALLIES_BASE)
-	if result then
-		local allyStr = result:getString("value")
-		result:free()
+	if resultId then
+		local allyStr = result.getString(resultId, "value")
+		result.free(resultId)
 
 		local allies = {}
 		if allyStr and allyStr ~= "" then
@@ -453,25 +453,25 @@ function GuildEnhanced.getRankings(limit)
 	limit = limit or 10
 
 	local rankings = {}
-	local result = db.storeQuery(
+	local resultId = db.storeQuery(
 		"SELECT g.`id`, g.`name`, " ..
 		"(SELECT COUNT(*) FROM `guild_membership` gm WHERE gm.`guild_id` = g.`id`) as `member_count` " ..
 		"FROM `guilds` g ORDER BY `member_count` DESC LIMIT " .. limit)
 
-	if result then
+	if resultId then
 		repeat
-			local guildId = result:getNumber("id")
+			local guildId = result.getNumber(resultId, "id")
 			local entry = {
 				id = guildId,
-				name = result:getString("name"),
-				memberCount = result:getNumber("member_count"),
+				name = result.getString(resultId, "name"),
+				memberCount = result.getNumber(resultId, "member_count"),
 				level = GuildEnhanced.getGuildLevel(guildId),
 				xp = GuildEnhanced.getGuildXP(guildId),
 				balance = GuildEnhanced.getBankBalance(guildId),
 			}
 			table.insert(rankings, entry)
-		until not result:next()
-		result:free()
+		until not result.next(resultId)
+		result.free(resultId)
 	end
 
 	-- Sort by guild level, then XP

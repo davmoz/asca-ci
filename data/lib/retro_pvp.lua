@@ -61,12 +61,15 @@ RetroPvP.config = {
 
 -- Storage keys for PvP tracking
 RetroPvP.STORAGE = {
-	UNJUST_KILLS      = 53000,
-	SKULL_TYPE         = 53001,
-	SKULL_EXPIRE_TIME  = 53002,
-	LAST_PVP_DEATH     = 53003,
-	PVP_KILL_COUNT     = 53004,
-	PVP_DEATH_COUNT    = 53005,
+	UNJUST_KILLS      = 58000,
+	WHITE_SKULL_TIME   = 58001,
+	RED_SKULL_TIME     = 58002,
+	BLACK_SKULL_TIME   = 58003,
+	SKULL_TYPE         = 58004,
+	SKULL_EXPIRE_TIME  = 58005,
+	LAST_PVP_DEATH     = 58006,
+	PVP_KILL_COUNT     = 58007,
+	PVP_DEATH_COUNT    = 58008,
 }
 
 -- ============================================================================

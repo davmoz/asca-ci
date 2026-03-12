@@ -263,13 +263,13 @@ function PvPSystems.placeBounty(player, targetName, amount)
 
 	-- Check if target exists
 	local targetNameLower = targetName:lower()
-	local result = db.storeQuery("SELECT `name` FROM `players` WHERE LOWER(`name`) = " ..
+	local resultId = db.storeQuery("SELECT `name` FROM `players` WHERE LOWER(`name`) = " ..
 		db.escapeString(targetNameLower))
-	if not result then
+	if not resultId then
 		return false, "Player '" .. targetName .. "' does not exist."
 	end
-	local actualName = result:getString("name")
-	result:free()
+	local actualName = result.getString(resultId, "name")
+	result.free(resultId)
 
 	if actualName:lower() == player:getName():lower() then
 		return false, "You cannot place a bounty on yourself."
@@ -454,7 +454,7 @@ function PvPSystems.getRankings(limit)
 	limit = limit or 10
 
 	local rankings = {}
-	local result = db.storeQuery(
+	local resultId = db.storeQuery(
 		"SELECT p.`name`, p.`level`, p.`vocation`, " ..
 		"ps_elo.`value` as elo, ps_kills.`value` as kills, ps_deaths.`value` as deaths " ..
 		"FROM `players` p " ..
@@ -468,26 +468,26 @@ function PvPSystems.getRankings(limit)
 		"ORDER BY COALESCE(ps_elo.`value`, " .. PvPSystems.config.defaultElo .. ") DESC " ..
 		"LIMIT " .. limit)
 
-	if result then
+	if resultId then
 		repeat
-			local elo = result:getNumber("elo")
+			local elo = result.getNumber(resultId, "elo")
 			if elo <= 0 then elo = PvPSystems.config.defaultElo end
-			local kills = result:getNumber("kills")
+			local kills = result.getNumber(resultId, "kills")
 			if kills < 0 then kills = 0 end
-			local deaths = result:getNumber("deaths")
+			local deaths = result.getNumber(resultId, "deaths")
 			if deaths < 0 then deaths = 0 end
 
 			table.insert(rankings, {
-				name = result:getString("name"),
-				level = result:getNumber("level"),
-				vocation = result:getNumber("vocation"),
+				name = result.getString(resultId, "name"),
+				level = result.getNumber(resultId, "level"),
+				vocation = result.getNumber(resultId, "vocation"),
 				elo = elo,
 				kills = kills,
 				deaths = deaths,
 				kd = deaths > 0 and string.format("%.2f", kills / deaths) or tostring(kills) .. ".00",
 			})
-		until not result:next()
-		result:free()
+		until not result.next(resultId)
+		result.free(resultId)
 	end
 
 	return rankings
@@ -543,8 +543,9 @@ function PvPSystems.cleanupExpiredDuels()
 
 			local target = Player(duel.targetId)
 			if target then
+				local challengerName = challenger and challenger:getName() or "an unknown player"
 				target:sendTextMessage(MESSAGE_STATUS_CONSOLE_RED,
-					"A duel challenge from has expired.")
+					"A duel challenge from " .. challengerName .. " has expired.")
 			end
 		end
 	end

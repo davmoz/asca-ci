@@ -208,6 +208,16 @@ function SeasonalEvents.isEventActive(eventKey)
 		return false
 	end
 
+	-- Check if the event has been force-stopped by an admin
+	if SeasonalEvents._forcedStops and SeasonalEvents._forcedStops[eventKey] then
+		return false
+	end
+
+	-- Check if the event has been force-started by an admin
+	if SeasonalEvents._forcedEvents and SeasonalEvents._forcedEvents[eventKey] then
+		return true
+	end
+
 	local now = os.date("*t")
 	return SeasonalEvents.isDateInRange(event, now.month, now.day)
 end

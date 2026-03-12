@@ -1,3 +1,6 @@
+-- Storage key registry (loaded first to document all allocations)
+dofile('data/lib/storage_keys.lua')
+
 -- Core API functions implemented in Lua
 dofile('data/lib/core/core.lua')
 

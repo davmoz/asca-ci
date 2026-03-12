@@ -40,15 +40,15 @@ local ITEM = {
 	CHEESE         = 2696,
 	MUSHROOM       = 2789,
 
-	-- Farming crops (30110-30117)
-	CARROT         = 30110,
-	POTATO         = 30111,
-	TOMATO         = 30112,
-	WHEAT          = 30113,
-	FRESH_HERBS    = 30114,
-	MIXED_BERRIES  = 30115,
-	GRAPES         = 30116,
-	PUMPKIN        = 30117,
+	-- Farming crops (must match Farming.Items in crafting_farming.lua)
+	CARROT         = 30143,
+	POTATO         = 30142,
+	TOMATO         = 30144,
+	WHEAT          = 30140,
+	FRESH_HERBS    = 30154,
+	MIXED_BERRIES  = 30152,
+	GRAPES         = 30153,
+	PUMPKIN        = 30148,
 
 	-- Cooking-specific supplies (30250-30260)
 	COOKING_OIL    = 30250,

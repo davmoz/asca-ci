@@ -10,12 +10,12 @@
 Smithing = {}
 
 -- ---------------------------------------------------------------------------
--- Storage Keys (smithing-specific, avoids collision with Mining 45100-45103)
+-- Storage Keys (smithing-specific, avoids collision with Mining 45100-45103 and Farming 45200-45202)
 -- ---------------------------------------------------------------------------
 Smithing.Storage = {
-	skillLevel     = 45200, -- current smithing skill level (0-100)
-	skillTries     = 45201, -- accumulated tries toward next level
-	lastSmithTime  = 45202, -- cooldown timestamp
+	skillLevel     = 45300, -- current smithing skill level (0-100)
+	skillTries     = 45301, -- accumulated tries toward next level
+	lastSmithTime  = 45302, -- cooldown timestamp
 }
 
 -- Skill tries needed per level (same exponential curve as Mining)
