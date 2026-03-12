@@ -267,7 +267,7 @@ startupDatabaseOptimization = false
 -- Status Server Information
 -- ============================================================================
 -- Public information shown in server lists and status queries.
-ownerName = ""
-ownerEmail = ""
-url = ""
+ownerName = "ASCA Team"
+ownerEmail = "admin@asca-server.com"
+url = "https://asca-server.com"
 location = "Sweden"

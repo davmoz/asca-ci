@@ -5,6 +5,14 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 project(tfs)
 
+if (NOT WIN32)
+    add_compile_options(-Wall -Werror -pipe -fvisibility=hidden)
+endif ()
+
+if (CMAKE_COMPILER_IS_GNUCXX)
+    add_compile_options(-fno-strict-aliasing)
+endif ()
+
 add_subdirectory(src)
 add_executable(tfs ${tfs_SRC})
 
@@ -22,15 +30,7 @@ else ()
     cotire(tfs)
 endif ()
 
-if (NOT WIN32)
-    add_compile_options(-Wall -Werror -pipe -fvisibility=hidden)
-endif ()
-
 set(CMAKE_CXX_FLAGS_PERFORMANCE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
-
-if (CMAKE_COMPILER_IS_GNUCXX)
-    add_compile_options(-fno-strict-aliasing)
-endif ()
 
 # Find packages.
 find_package(CryptoPP QUIET)
@@ -98,3 +98,10 @@ if (Git_FOUND)
     target_include_directories(tfs PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 ### END  Git Version ###
+
+### Tests ###
+option(BUILD_TESTS "Build unit tests" OFF)
+if (BUILD_TESTS)
+    add_subdirectory(tests/cpp)
+endif ()
+### END Tests ###

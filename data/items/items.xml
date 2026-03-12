@@ -16015,7 +16015,7 @@
 		<attribute key="absorbPercentDeath" value="12" />
 		<attribute key="absorbPercentHoly" value="-12" />
 	</item>
-	<item id="8891" article="a" name="paladin armor">
+	<item id="8891" article="an" name="archer armor">
 		<attribute key="armor" value="12" />
 		<attribute key="slotType" value="body" />
 		<attribute key="weight" value="6500" />
@@ -26275,7 +26275,7 @@
 		<attribute key="maxHitChance" value="76" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="19391" article="a" name="sorc and druid staff">
+	<item id="19391" article="a" name="mage and druid staff">
 		<attribute key="weaponType" value="wand" />
 		<attribute key="weight" value="1900" />
 		<attribute key="shootType" value="energy" />
@@ -26662,7 +26662,7 @@
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="210" />
 	</item>
-	<item id="19792" article="a" name="sorc and druid rune">
+	<item id="19792" article="a" name="mage and druid rune">
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="21" />
 	</item>

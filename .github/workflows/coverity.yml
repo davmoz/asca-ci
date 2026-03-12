@@ -6,7 +6,7 @@ on:
     - cron: '0 0 * * 5' # Weekly at 00:00 UTC
 
 env:
-  COVERITY_PROJECT: otland/forgottenserver
+  COVERITY_PROJECT: DocKarma1/asca
   COVERITY_EMAIL: coverity@otland.net
 
 jobs:
@@ -49,13 +49,13 @@ jobs:
       - name: Submit the result to Coverity Scan
         run: |
           cd ${{ runner.workspace }}
-          tar czvf forgottenserver.tgz cov-int
-          du -hs forgottenserver.tgz
+          tar czvf asca.tgz cov-int
+          du -hs asca.tgz
           curl \
             --form project=$COVERITY_PROJECT \
             --form token=$TOKEN \
             --form email=$COVERITY_EMAIL \
-            --form file=@forgottenserver.tgz \
+            --form file=@asca.tgz \
             --form version=$GITHUB_SHA \
             https://scan.coverity.com/builds?project=$COVERITY_PROJECT
         env:
