@@ -200,9 +200,20 @@ end
 -- Main Action Handler
 -- ============================================================================
 
+-- Exhaustion storage key for crafting stations
+local CRAFTING_EXHAUST_KEY = 40111
+local CRAFTING_EXHAUST_SECONDS = 3
+
 function onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	if not Crafting then
 		player:sendTextMessage(MESSAGE_STATUS_SMALL, "Crafting system is not available.")
+		return true
+	end
+
+	-- Exhaustion check (anti-spam)
+	local now = os.time()
+	if player:getStorageValue(CRAFTING_EXHAUST_KEY) > now then
+		player:sendTextMessage(MESSAGE_STATUS_SMALL, "You must wait before doing this again.")
 		return true
 	end
 
@@ -211,11 +222,15 @@ function onUse(player, item, fromPosition, target, toPosition, isHotkey)
 		return false
 	end
 
+	local result = false
 	if craftType == "cooking" then
-		return handleCooking(player, item)
+		result = handleCooking(player, item)
 	elseif craftType == "smithing" then
-		return handleSmithing(player, item)
+		result = handleSmithing(player, item)
 	end
 
-	return true
+	-- Set exhaustion after successful use
+	player:setStorageValue(CRAFTING_EXHAUST_KEY, now + CRAFTING_EXHAUST_SECONDS)
+
+	return result
 end

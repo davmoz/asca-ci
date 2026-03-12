@@ -146,6 +146,65 @@ def test_migration_sequence():
     return True
 
 
+def test_migration_ordering():
+    """Verify migration files are numbered sequentially with no gaps and have valid Lua syntax."""
+    assert MIGRATIONS_DIR.exists(), f"Migration directory not found: {MIGRATIONS_DIR}"
+
+    migration_files = sorted(MIGRATIONS_DIR.glob("*.lua"))
+    assert len(migration_files) > 0, "No migration files found"
+
+    # Extract numeric filenames
+    numbers = []
+    for f in migration_files:
+        try:
+            numbers.append(int(f.stem))
+        except ValueError:
+            pass  # skip non-numeric filenames
+
+    numbers.sort()
+    assert len(numbers) > 0, "No numerically-named migration files found"
+
+    # Must start at 0
+    assert numbers[0] == 0, f"Migrations must start at 0, but first is {numbers[0]}"
+
+    # Must be sequential with no gaps (0 through N)
+    expected = list(range(0, numbers[-1] + 1))
+    missing = set(expected) - set(numbers)
+    assert len(missing) == 0, f"Gap in migration numbering, missing: {sorted(missing)}"
+
+    # Validate basic Lua syntax for each file
+    # Check for balanced block keywords (function/end, if/end, etc.)
+    block_open = re.compile(r'\b(function|if|for|while|do)\b')
+    block_close = re.compile(r'\bend\b')
+
+    for num in numbers:
+        filepath = MIGRATIONS_DIR / f"{num}.lua"
+        content = filepath.read_text(encoding="utf-8", errors="replace")
+
+        # File must not be empty
+        assert len(content.strip()) > 0, f"{filepath.name}: migration file is empty"
+
+        # Check that block openers and closers are balanced
+        opens = len(block_open.findall(content))
+        closes = len(block_close.findall(content))
+        assert opens == closes, (
+            f"{filepath.name}: unbalanced Lua blocks "
+            f"({opens} openers vs {closes} 'end' keywords)"
+        )
+
+        # Must not have obvious syntax errors: unmatched quotes
+        # Count non-escaped double quotes and single quotes
+        for quote_char, name in [('"', 'double'), ("'", 'single')]:
+            # Strip long-string literals before counting
+            stripped = re.sub(r'\[\[.*?\]\]', '', content, flags=re.DOTALL)
+            # Strip line comments
+            stripped = re.sub(r'--[^\n]*', '', stripped)
+            count = stripped.count(quote_char)
+            assert count % 2 == 0, (
+                f"{filepath.name}: odd number of {name} quotes ({count}), likely syntax error"
+            )
+
+
 if __name__ == "__main__":
     success = test_migrations()
     success = test_migration_sequence() and success
