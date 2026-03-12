@@ -2295,88 +2295,88 @@
 	</item>
 	<item id="2180" name="the orb of nature" />
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="terra rod">
-		<attribute key="description" value="Small stones are flying from its tip." />
-		<attribute key="weight" value="2500" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallearth" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="terra rod"> -->
+	<!-- <attribute key="description" value="Small stones are flying from its tip." /> -->
+	<!-- <attribute key="weight" value="2500" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallearth" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="snakebite rod">
-		<attribute key="description" value="It seems to twitch and quiver as if trying to escape your grip." />
-		<attribute key="weight" value="1900" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallearth" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="snakebite rod"> -->
+	<!-- <attribute key="description" value="It seems to twitch and quiver as if trying to escape your grip." /> -->
+	<!-- <attribute key="weight" value="1900" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallearth" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="hailstorm rod">
-		<attribute key="description" value="It grants you the power of striking your foes with furious hailstorms." />
-		<attribute key="weight" value="2700" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallice" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="hailstorm rod"> -->
+	<!-- <attribute key="description" value="It grants you the power of striking your foes with furious hailstorms." /> -->
+	<!-- <attribute key="weight" value="2700" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallice" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<item id="2184" article="a" name="crystal wand">
 		<attribute key="weight" value="2800" />
 	</item>
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="necrotic rod">
-		<attribute key="description" value="It was brought up from hell to deliver death." />
-		<attribute key="weight" value="2300" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="death" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="necrotic rod"> -->
+	<!-- <attribute key="description" value="It was brought up from hell to deliver death." /> -->
+	<!-- <attribute key="weight" value="2300" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="death" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="moonlight rod">
-		<attribute key="description" value="Icecold rays of moonlight shimmer on its tip." />
-		<attribute key="weight" value="2100" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallice" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="moonlight rod"> -->
+	<!-- <attribute key="description" value="Icecold rays of moonlight shimmer on its tip." /> -->
+	<!-- <attribute key="weight" value="2100" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallice" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of inferno">
-		<attribute key="description" value="It unleashes the very fires of hell." />
-		<attribute key="weight" value="2700" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="fire" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of inferno"> -->
+	<!-- <attribute key="description" value="It unleashes the very fires of hell." /> -->
+	<!-- <attribute key="weight" value="2700" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="fire" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of decay">
-		<attribute key="description" value="It is half-rotten itself and reeks terribly." />
-		<attribute key="weight" value="2300" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="death" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of decay"> -->
+	<!-- <attribute key="description" value="It is half-rotten itself and reeks terribly." /> -->
+	<!-- <attribute key="weight" value="2300" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="death" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of cosmic energy">
-		<attribute key="description" value="The energy of a radiant star is trapped inside its globe." />
-		<attribute key="weight" value="2500" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="energy" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of cosmic energy"> -->
+	<!-- <attribute key="description" value="The energy of a radiant star is trapped inside its globe." /> -->
+	<!-- <attribute key="weight" value="2500" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="energy" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of vortex">
-		<attribute key="description" value="Surges of energy rush through the tip of this wand." />
-		<attribute key="weight" value="1900" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="energy" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of vortex"> -->
+	<!-- <attribute key="description" value="Surges of energy rush through the tip of this wand." /> -->
+	<!-- <attribute key="weight" value="1900" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="energy" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of dragonbreath">
-		<attribute key="description" value="Legends say that this wand holds the soul of a young dragon." />
-		<attribute key="weight" value="2100" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="fire" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of dragonbreath"> -->
+	<!-- <attribute key="description" value="Legends say that this wand holds the soul of a young dragon." /> -->
+	<!-- <attribute key="weight" value="2100" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="fire" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<item id="2192" article="a" name="crystal ball">
 		<attribute key="weight" value="3400" />
 	</item>
@@ -16109,29 +16109,29 @@
 		<attribute key="manaTicks" value="3000" />
 	</item>
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="an" name="underworld rod">
-		<attribute key="description" value="No one knows which hell this unholy rod comes from." />
-		<attribute key="weight" value="2900" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="death" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="an" name="underworld rod"> -->
+	<!-- <attribute key="description" value="No one knows which hell this unholy rod comes from." /> -->
+	<!-- <attribute key="weight" value="2900" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="death" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="northwind rod">
-		<attribute key="description" value="It was made by one of the shamans in Svargrond and symbolises an icy mammoth." />
-		<attribute key="weight" value="2900" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="ice" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="northwind rod"> -->
+	<!-- <attribute key="description" value="It was made by one of the shamans in Svargrond and symbolises an icy mammoth." /> -->
+	<!-- <attribute key="weight" value="2900" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="ice" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="springsprout rod">
-		<attribute key="description" value="It is filled with the energy of growing plants." />
-		<attribute key="weight" value="2700" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallearth" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="springsprout rod"> -->
+	<!-- <attribute key="description" value="It is filled with the energy of growing plants." /> -->
+	<!-- <attribute key="weight" value="2700" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallearth" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<item fromid="8913" toid="8917" name="earth" />
 	<item id="8918" article="a" name="spellbook of dark mysteries">
 		<attribute key="description" value="It shows your spells and can also shield against attacks when worn." />
@@ -16144,29 +16144,29 @@
 		<attribute key="description" value="It is Yandur's healing rune. You can't remove it from his house, but you may use it." />
 	</item>
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of starstorm">
-		<attribute key="description" value="It is sparkling with universal energy." />
-		<attribute key="weight" value="2550" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="energy" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of starstorm"> -->
+	<!-- <attribute key="description" value="It is sparkling with universal energy." /> -->
+	<!-- <attribute key="weight" value="2550" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="energy" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of draconia">
-		<attribute key="description" value="This wand holds the spirit and soul of a dragon lord." />
-		<attribute key="weight" value="2700" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="fire" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of draconia"> -->
+	<!-- <attribute key="description" value="This wand holds the spirit and soul of a dragon lord." /> -->
+	<!-- <attribute key="weight" value="2700" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="fire" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of voodoo">
-		<attribute key="description" value="It is filled with the dark hatred and rage of a tormented demonic being." />
-		<attribute key="weight" value="2850" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="death" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of voodoo"> -->
+	<!-- <attribute key="description" value="It is filled with the dark hatred and rage of a tormented demonic being." /> -->
+	<!-- <attribute key="weight" value="2850" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="death" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<item id="8923" name="ranger legs">
 		<attribute key="weight" value="3500" />
 		<attribute key="armor" value="4" />
@@ -22736,13 +22736,13 @@
 		<attribute key="weight" value="5000" />
 	</item>
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="wand of dimensions">
-		<attribute key="description" value="This wand controls the rift between time and space." />
-		<attribute key="weight" value="2800" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="death" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- article="a" name="wand of dimensions"> -->
+	<!-- <attribute key="description" value="This wand controls the rift between time and space." /> -->
+	<!-- <attribute key="weight" value="2800" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="death" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<item fromid="13761" toid="13773" name="rubbish" />
 	<item id="13774" name="torn teddy">
 		<attribute key="weight" value="100" />
@@ -22962,16 +22962,16 @@
 		<attribute key="showduration" value="0" />
 	</item>
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="shimmer rod">
-		<attribute key="description" value="It feels cold and smooth." />
-		<attribute key="weight" value="3100" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallice" />
-		<attribute key="range" value="4" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="duration" value="604800" />
-		<attribute key="showduration" value="0" />
-	</item>
+	<!-- article="a" name="shimmer rod"> -->
+	<!-- <attribute key="description" value="It feels cold and smooth." /> -->
+	<!-- <attribute key="weight" value="3100" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallice" /> -->
+	<!-- <attribute key="range" value="4" /> -->
+	<!-- <attribute key="decayTo" value="0" /> -->
+	<!-- <attribute key="duration" value="604800" /> -->
+	<!-- <attribute key="showduration" value="0" /> -->
+	<!-- </item> -->
 	<item id="13873" article="a" name="shimmer bow">
 		<attribute key="weight" value="4800" />
 		<attribute key="weaponType" value="distance" />
@@ -23001,16 +23001,16 @@
 		<attribute key="weight" value="40" />
 	</item>
 	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
- article="a" name="shimmer wand">
-		<attribute key="weight" value="3100" />
-		<attribute key="description" value="It feels cold and smooth." />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="energy" />
-		<attribute key="range" value="4" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="duration" value="604800" />
-		<attribute key="showduration" value="0" />
-	</item>
+	<!-- article="a" name="shimmer wand"> -->
+	<!-- <attribute key="weight" value="3100" /> -->
+	<!-- <attribute key="description" value="It feels cold and smooth." /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="energy" /> -->
+	<!-- <attribute key="range" value="4" /> -->
+	<!-- <attribute key="decayTo" value="0" /> -->
+	<!-- <attribute key="duration" value="604800" /> -->
+	<!-- <attribute key="showduration" value="0" /> -->
+	<!-- </item> -->
 	<item id="13881" name="yielowax">
 		<attribute key="description" value="Fine wax for various different uses." />
 		<attribute key="weight" value="475" />
