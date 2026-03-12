@@ -63,6 +63,27 @@
 	<talkaction words="!pvprank" script="pvp.lua" />
 	<talkaction words="!guildbank" separator=" " script="pvp.lua" />
 
+	<!-- Phase 6.5: Admin Panel commands -->
+	<talkaction words="/admin" script="admin_panel.lua" />
+	<talkaction words="/economy" script="admin_panel.lua" />
+	<talkaction words="/serverstats" script="admin_panel.lua" />
+	<talkaction words="/playerinfo" separator=" " script="admin_panel.lua" />
+	<talkaction words="/teleportall" separator=" " script="admin_panel.lua" />
+	<talkaction words="/eventstart" separator=" " script="admin_panel.lua" />
+	<talkaction words="/eventstop" separator=" " script="admin_panel.lua" />
+	<talkaction words="/raidstart" separator=" " script="admin_panel.lua" />
+	<talkaction words="/craftingstats" script="admin_panel.lua" />
+	<talkaction words="/taskreset" separator=" " script="admin_panel.lua" />
+	<talkaction words="/grantachievement" separator=" " script="admin_panel.lua" />
+
+	<!-- Phase 6.5: Moderation commands -->
+	<talkaction words="/warn" separator=" " script="moderation.lua" />
+	<talkaction words="/mute" separator=" " script="moderation.lua" />
+	<talkaction words="/jail" separator=" " script="moderation.lua" />
+	<talkaction words="/freeze" separator=" " script="moderation.lua" />
+	<talkaction words="/unfreeze" separator=" " script="moderation.lua" />
+	<talkaction words="/watchlist" separator=" " script="moderation.lua" />
+
 	<!-- test talkactions -->
 	<talkaction words="!z" separator=" " script="magiceffect.lua" />
 	<talkaction words="!x" separator=" " script="animationeffect.lua" />

@@ -38,3 +38,6 @@ dofile('data/lib/weekly_dungeons.lua')
 dofile('data/lib/retro_pvp.lua')
 dofile('data/lib/guild_enhanced.lua')
 dofile('data/lib/pvp_systems.lua')
+
+-- Server Monitoring and Admin Tools (Phase 6.5)
+dofile('data/lib/server_monitor.lua')
