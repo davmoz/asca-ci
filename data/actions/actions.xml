@@ -194,6 +194,26 @@
 	<action fromid="19974" toid="19975" script="other/windows.lua" />
 	<action fromid="20180" toid="20185" script="other/windows.lua" />
 
+	<!-- Cooking Stations (Phase 2.3) -->
+	<!-- Custom cooking stove -->
+	<action itemid="30240" script="crafting/cooking.lua" />
+	<!-- Existing campfires (basic recipes only) -->
+	<action itemid="1423" script="crafting/cooking.lua" />
+	<action itemid="1424" script="crafting/cooking.lua" />
+	<action itemid="1425" script="crafting/cooking.lua" />
+	<!-- Existing ovens -->
+	<action itemid="1786" script="crafting/cooking.lua" />
+	<action itemid="1787" script="crafting/cooking.lua" />
+	<action itemid="1788" script="crafting/cooking.lua" />
+	<action itemid="1789" script="crafting/cooking.lua" />
+	<!-- Existing stoves -->
+	<action itemid="1791" script="crafting/cooking.lua" />
+	<action itemid="1792" script="crafting/cooking.lua" />
+	<action itemid="1793" script="crafting/cooking.lua" />
+
+	<!-- Cooked Meals (eating for buffs, Phase 2.3) -->
+	<action fromid="30200" toid="30226" script="crafting/cooking.lua" />
+
 	<!-- Mining (Phase 2.4) -->
 	<!-- Pickaxes: use on ore veins (veins identified by actionId 9100-9114) -->
 	<action itemid="30320" script="crafting/mining.lua" allowfaruse="1" />  <!-- Basic Pickaxe -->
