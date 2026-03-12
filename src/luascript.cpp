@@ -1982,6 +1982,8 @@ void LuaScriptInterface::registerFunctions()
 
 	registerMethod("Game", "getTowns", LuaScriptInterface::luaGameGetTowns);
 	registerMethod("Game", "getHouses", LuaScriptInterface::luaGameGetHouses);
+	registerMethod("Game", "getMountIdByLookType", LuaScriptInterface::luaGameGetMountIdByLookType);
+	registerMethod("Game", "getMounts", LuaScriptInterface::luaGameGetMounts);
 
 	registerMethod("Game", "getGameState", LuaScriptInterface::luaGameGetGameState);
 	registerMethod("Game", "setGameState", LuaScriptInterface::luaGameSetGameState);
@@ -2413,6 +2415,7 @@ void LuaScriptInterface::registerFunctions()
 	registerMethod("Player", "addMount", LuaScriptInterface::luaPlayerAddMount);
 	registerMethod("Player", "removeMount", LuaScriptInterface::luaPlayerRemoveMount);
 	registerMethod("Player", "hasMount", LuaScriptInterface::luaPlayerHasMount);
+	registerMethod("Player", "toggleMount", LuaScriptInterface::luaPlayerToggleMount);
 
 	registerMethod("Player", "getPremiumEndsAt", LuaScriptInterface::luaPlayerGetPremiumEndsAt);
 	registerMethod("Player", "setPremiumEndsAt", LuaScriptInterface::luaPlayerSetPremiumEndsAt);
@@ -4183,6 +4186,44 @@ int LuaScriptInterface::luaGameGetHouses(lua_State* L)
 		setMetatable(L, -1, "House");
 		lua_rawseti(L, -2, ++index);
 	}
+	return 1;
+}
+
+int LuaScriptInterface::luaGameGetMountIdByLookType(lua_State* L)
+{
+	// Game.getMountIdByLookType(lookType)
+	Mount* mount = nullptr;
+	if (isNumber(L, 1)) {
+		mount = g_game.mounts.getMountByClientID(getNumber<uint16_t>(L, 1));
+	}
+
+	if (mount) {
+		lua_pushnumber(L, mount->id);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int LuaScriptInterface::luaGameGetMounts(lua_State* L)
+{
+	// Game.getMounts()
+	const auto& mounts = g_game.mounts.getMounts();
+	lua_createtable(L, mounts.size(), 0);
+
+	int index = 0;
+	for (const auto& mount : mounts) {
+		lua_createtable(L, 0, 5);
+
+		setField(L, "name", mount.name);
+		setField(L, "speed", mount.speed);
+		setField(L, "clientId", mount.clientId);
+		setField(L, "id", mount.id);
+		setField(L, "premium", mount.premium);
+
+		lua_rawseti(L, -2, ++index);
+	}
+
 	return 1;
 }
 
@@ -9440,6 +9481,19 @@ int LuaScriptInterface::luaPlayerHasMount(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int LuaScriptInterface::luaPlayerToggleMount(lua_State* L) {
+	// player:toggleMount(mount)
+	Player* player = getUserdata<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	bool mount = getBoolean(L, 2);
+	pushBoolean(L, player->toggleMount(mount));
 	return 1;
 }
 

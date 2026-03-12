@@ -526,6 +526,16 @@ Attr_ReadValue Item::readAttr(AttrTypes_t attr, PropStream& propStream)
 			break;
 		}
 
+		case ATTR_ATTACK_SPEED: {
+			uint32_t attackSpeed;
+			if (!propStream.read<uint32_t>(attackSpeed)) {
+				return ATTR_READ_ERROR;
+			}
+
+			setIntAttr(ITEM_ATTRIBUTE_ATTACK_SPEED, attackSpeed);
+			break;
+		}
+
 		case ATTR_DEFENSE: {
 			int32_t defense;
 			if (!propStream.read<int32_t>(defense)) {
@@ -606,6 +616,15 @@ Attr_ReadValue Item::readAttr(AttrTypes_t attr, PropStream& propStream)
 			break;
 		}
 
+		case ATTR_OPENCONTAINER: {
+			uint8_t openContainer;
+			if (!propStream.read<uint8_t>(openContainer)) {
+				return ATTR_READ_ERROR;
+			}
+
+			setIntAttr(ITEM_ATTRIBUTE_OPENCONTAINER, openContainer);
+			break;
+		}
 
 		//these should be handled through derived classes
 		//If these are called then something has changed in the items.xml since the map was saved
@@ -787,6 +806,11 @@ void Item::serializeAttr(PropWriteStream& propWriteStream) const
 		propWriteStream.write<int32_t>(getIntAttr(ITEM_ATTRIBUTE_ATTACK));
 	}
 
+	if (hasAttribute(ITEM_ATTRIBUTE_ATTACK_SPEED)) {
+		propWriteStream.write<uint8_t>(ATTR_ATTACK_SPEED);
+		propWriteStream.write<uint32_t>(getIntAttr(ITEM_ATTRIBUTE_ATTACK_SPEED));
+	}
+
 	if (hasAttribute(ITEM_ATTRIBUTE_DEFENSE)) {
 		propWriteStream.write<uint8_t>(ATTR_DEFENSE);
 		propWriteStream.write<int32_t>(getIntAttr(ITEM_ATTRIBUTE_DEFENSE));
@@ -825,6 +849,11 @@ void Item::serializeAttr(PropWriteStream& propWriteStream) const
 	if (hasAttribute(ITEM_ATTRIBUTE_STOREITEM)) {
 		propWriteStream.write<uint8_t>(ATTR_STOREITEM);
 		propWriteStream.write<uint8_t>(getIntAttr(ITEM_ATTRIBUTE_STOREITEM));
+	}
+
+	if (hasAttribute(ITEM_ATTRIBUTE_OPENCONTAINER)) {
+		propWriteStream.write<uint8_t>(ATTR_OPENCONTAINER);
+		propWriteStream.write<uint8_t>(getIntAttr(ITEM_ATTRIBUTE_OPENCONTAINER));
 	}
 
 	if (hasAttribute(ITEM_ATTRIBUTE_CUSTOM)) {
