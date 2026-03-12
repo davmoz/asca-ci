@@ -1083,6 +1083,10 @@ bool InstantSpell::castSpell(Creature* creature)
 bool InstantSpell::castSpell(Creature* creature, Creature* target)
 {
 	if (needTarget) {
+		if (!target) {
+			return false;
+		}
+
 		LuaVariant var;
 		var.type = VARIANT_NUMBER;
 		var.number = target->getID();
@@ -1231,7 +1235,11 @@ bool RuneSpell::executeUse(Player* player, Item* item, const Position&, Thing* t
 				}
 			}
 		} else {
-			var.number = target->getCreature()->getID();
+			const Creature* targetCreature = target->getCreature();
+			if (!targetCreature) {
+				return false;
+			}
+			var.number = targetCreature->getID();
 		}
 	} else {
 		var.type = VARIANT_POSITION;
@@ -1266,6 +1274,10 @@ bool RuneSpell::castSpell(Creature* creature)
 
 bool RuneSpell::castSpell(Creature* creature, Creature* target)
 {
+	if (!target) {
+		return false;
+	}
+
 	LuaVariant var;
 	var.type = VARIANT_NUMBER;
 	var.number = target->getID();

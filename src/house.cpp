@@ -90,13 +90,13 @@ void House::setOwner(uint32_t guid, bool updateDatabase/* = true*/, Player* play
 		std::string strRentPeriod = asLowerCaseString(g_config.getString(ConfigManager::HOUSE_RENT_PERIOD));
 		time_t currentTime = time(nullptr);
 		if (strRentPeriod == "yearly") {
-		    currentTime += 24 * 60 * 60 * 365;
+		    currentTime += static_cast<time_t>(24) * 60 * 60 * 365;
 		} else if (strRentPeriod == "monthly") {
-		    currentTime += 24 * 60 * 60 * 30;
+		    currentTime += static_cast<time_t>(24) * 60 * 60 * 30;
 		} else if (strRentPeriod == "weekly") {
-		    currentTime += 24 * 60 * 60 * 7;
+		    currentTime += static_cast<time_t>(24) * 60 * 60 * 7;
 		} else if (strRentPeriod == "daily") {
-		    currentTime += 24 * 60 * 60;
+		    currentTime += static_cast<time_t>(24) * 60 * 60;
 		} else {
 		    currentTime = 0;
 		}
@@ -695,16 +695,16 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const
 			time_t paidUntil = currentTime;
 			switch (rentPeriod) {
 				case RENTPERIOD_DAILY:
-					paidUntil += 24 * 60 * 60;
+					paidUntil += static_cast<time_t>(24) * 60 * 60;
 					break;
 				case RENTPERIOD_WEEKLY:
-					paidUntil += 24 * 60 * 60 * 7;
+					paidUntil += static_cast<time_t>(24) * 60 * 60 * 7;
 					break;
 				case RENTPERIOD_MONTHLY:
-					paidUntil += 24 * 60 * 60 * 30;
+					paidUntil += static_cast<time_t>(24) * 60 * 60 * 30;
 					break;
 				case RENTPERIOD_YEARLY:
-					paidUntil += 24 * 60 * 60 * 365;
+					paidUntil += static_cast<time_t>(24) * 60 * 60 * 365;
 					break;
 				default:
 					break;
