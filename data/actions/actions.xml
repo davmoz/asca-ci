@@ -220,6 +220,11 @@
 	<action itemid="30321" script="crafting/mining.lua" allowfaruse="1" />  <!-- Steel Pickaxe -->
 	<action itemid="30322" script="crafting/mining.lua" allowfaruse="1" />  <!-- Crystal Pickaxe -->
 
+	<!-- Enchanting Crystals (Phase 2.6) -->
+	<action itemid="30600" script="crafting/enchanting.lua" />  <!-- Small Painite Crystal -->
+	<action itemid="30601" script="crafting/enchanting.lua" />  <!-- Medium Painite Crystal -->
+	<action itemid="30602" script="crafting/enchanting.lua" />  <!-- Large Painite Crystal -->
+
 	<!-- Smelting: use ore on furnace -->
 	<action itemid="30300" script="crafting/smelting.lua" />  <!-- Copper Ore -->
 	<action itemid="30301" script="crafting/smelting.lua" />  <!-- Tin Ore -->
