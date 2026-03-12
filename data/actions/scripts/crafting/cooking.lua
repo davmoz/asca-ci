@@ -1,34 +1,44 @@
 -- =============================================================================
--- Cooking System - Phase 2.3
+-- Cooking System - Phase 2.3 (Revised)
 -- =============================================================================
 -- Players use cooking stations (stoves, campfires, ovens) to craft meals from
 -- raw ingredients. Meals provide temporary stat buffs. Only one food buff may
 -- be active at a time. Cooking skill progresses with each attempt.
 --
 -- Usage: Player uses a cooking station (right-click stove/campfire/oven).
---        A recipe window is shown, or the system auto-detects the best recipe
---        the player can craft from their inventory.
+--        A recipe list is shown and the best craftable recipe is auto-cooked.
+--        Eating a cooked meal grants a timed stat buff.
 -- =============================================================================
 
 -- ============================================================================
--- Item IDs (from docs/phase2-crafting-overview.md ID range 30200-30299)
+-- Item IDs
 -- ============================================================================
 
--- Raw ingredient IDs
+-- Raw ingredient IDs aligned with fishing system (Phase 2.1)
 local ITEM = {
-	-- Fish (from fishing system, 30001-30012)
-	TROUT          = 30001,
-	BASS           = 30002,
-	COD            = 30003,
-	HERRING        = 30004,
-	SALMON         = 30005,
-	TUNA           = 30006,
-	SWORDFISH      = 30007,
-	GOLDEN_FISH    = 30008,
-	CRYSTAL_PERCH  = 30009,
-	DEEP_SEA_EEL   = 30010,
-	ANCIENT_SCALE  = 30011,
-	PRISMATIC_KOI  = 30012,
+	-- Fish from fishing_enhanced.lua
+	SARDINE        = 30001,  -- common
+	HERRING        = 30002,  -- common
+	COD            = 30003,  -- common
+	FISH           = 2667,   -- original TFS fish (common)
+	SALMON         = 30004,  -- uncommon
+	TROUT          = 30005,  -- uncommon
+	BASS           = 30006,  -- uncommon
+	SWORDFISH      = 30007,  -- rare
+	TUNA           = 30008,  -- rare
+	LOBSTER        = 30009,  -- rare
+	GOLDEN_CARP    = 30010,  -- epic
+	SQUID_TENTACLE = 30011,  -- epic
+	CRYSTAL_FISH   = 30012,  -- epic
+
+	-- Existing Tibia items used as ingredients
+	MEAT           = 2666,
+	HAM            = 2671,
+	DRAGON_HAM     = 2672,
+	BREAD          = 2689,
+	EGG            = 2695,
+	CHEESE         = 2696,
+	MUSHROOM       = 2789,
 
 	-- Farming crops (30110-30117)
 	CARROT         = 30110,
@@ -39,17 +49,6 @@ local ITEM = {
 	MIXED_BERRIES  = 30115,
 	GRAPES         = 30116,
 	PUMPKIN        = 30117,
-
-	-- Existing Tibia items used as cooking ingredients
-	MEAT           = 2666,
-	FISH           = 2667,
-	HAM            = 2671,
-	DRAGON_HAM     = 2672,
-	CHICKEN        = 2671,   -- ham serves as poultry equivalent
-	BREAD          = 2689,
-	EGG            = 2695,
-	CHEESE         = 2696,
-	MUSHROOM       = 2789,
 
 	-- Cooking-specific supplies (30250-30260)
 	COOKING_OIL    = 30250,
@@ -63,71 +62,72 @@ local ITEM = {
 	HONEY          = 30258,
 	VINEGAR        = 30259,
 	BUTTER         = 30260,
+	ENCHANTED_DUST = 30261,
+	CELESTIAL_SALT = 30262,
 
 	-- Cooked meal output IDs (30200-30230)
-	GRILLED_TROUT       = 30200,
-	FISH_STEW           = 30201,
-	HERB_CRUSTED_SALMON = 30202,
-	WARRIORS_FEAST      = 30203,
-	ARCHERS_RATION      = 30204,
-	MAGES_BREW          = 30205,
-	HEALERS_PORRIDGE    = 30206,
-	DRAGON_STEAK        = 30207,
-	DEEP_SEA_SASHIMI    = 30208,
-	LEGENDARY_FEAST     = 30209,
-	PUMPKIN_PIE         = 30210,
-	BERRY_SMOOTHIE      = 30211,
-	FRIED_FISH          = 30212,
-	GRILLED_MEAT        = 30213,
-	ROASTED_CHICKEN     = 30214,
-	MUSHROOM_SOUP       = 30215,
-	BAKED_POTATO        = 30216,
-	TUNA_STEAK          = 30217,
-	VEGGIE_WRAP         = 30218,
-	CHEESE_OMELETTE     = 30219,
+	FRIED_FISH          = 30200,
+	GRILLED_MEAT        = 30201,
+	BAKED_BREAD         = 30202,
+	SIMPLE_SOUP         = 30203,
+	GRILLED_TROUT       = 30204,
+	CHEESE_OMELETTE     = 30205,
+	SPICED_BASS         = 30206,
+	BAKED_POTATO        = 30207,
+	FISH_STEW           = 30208,
+	ROASTED_CHICKEN     = 30209,
+	VEGETABLE_PIE       = 30210,
+	SALMON_ROLL         = 30211,
+	HONEY_GLAZED_HAM    = 30212,
+	BERRY_SMOOTHIE      = 30213,
+	MUSHROOM_SOUP       = 30214,
+	TUNA_STEAK          = 30215,
+	ROYAL_FEAST         = 30216,
+	DRAGON_STEAK        = 30217,
+	MAGIC_FISH_PIE      = 30218,
+	ENCHANTED_STEW      = 30219,
 	SWORDFISH_GRILL     = 30220,
-	HONEY_GLAZED_HAM    = 30221,
-	SPICED_BASS         = 30222,
-	GRAPE_SALAD         = 30223,
-	GOLDEN_FISH_PLATE   = 30224,
-	CRYSTAL_PERCH_FILLET = 30225,
-	EEL_KEBAB           = 30226,
+	GOLDEN_CARP_SUSHI   = 30221,
+	CELESTIAL_BANQUET   = 30222,
+	CRYSTAL_FISH_TARTARE = 30223,
+	WARRIORS_FEAST      = 30224,
+	ARCHERS_RATION      = 30225,
+	MAGES_BREW          = 30226,
+
+	-- Burnt food (failure result)
+	BURNT_FOOD     = 30230,
 
 	-- Cooking stations
 	COOKING_STOVE  = 30240,
-	CAMPFIRE       = 1423,   -- existing campfire item
-	OVEN           = 1786,   -- existing oven item
-	STOVE_ALT      = 1791,   -- existing stove variant
+	CAMPFIRE       = 1423,
+	OVEN           = 1786,
+	STOVE_ALT      = 1791,
 }
 
 -- ============================================================================
 -- Buff Definitions
 -- ============================================================================
--- Each meal provides a unique buff. Only one food buff active at a time.
--- subId is used to identify the food buff condition category.
--- We use a single subId (100) so that any new food buff replaces the old one.
 
 local FOOD_BUFF_SUBID = 100
 
--- Buff types mapped to condition parameters
-local BUFF_HP_REGEN   = 1  -- extra HP regen per tick
-local BUFF_MANA_REGEN = 2  -- extra mana regen per tick
-local BUFF_SPEED      = 3  -- movement speed bonus
-local BUFF_MELEE      = 4  -- melee skill boost
-local BUFF_DISTANCE   = 5  -- distance skill boost
-local BUFF_MAGIC      = 6  -- magic level boost
-local BUFF_MAX_HP     = 7  -- max HP bonus
-local BUFF_MAX_MANA   = 8  -- max mana bonus
+local BUFF_HP_REGEN   = 1
+local BUFF_MANA_REGEN = 2
+local BUFF_SPEED      = 3
+local BUFF_MELEE      = 4
+local BUFF_DISTANCE   = 5
+local BUFF_MAGIC      = 6
+local BUFF_MAX_HP     = 7
+local BUFF_MAX_MANA   = 8
 
--- Meal effect definitions: what each cooked meal does when eaten
+-- Meal effects: what each cooked meal does when eaten
 local mealEffects = {
 	-- =========================================================================
-	-- Basic Meals (Cooking 1-10)
+	-- Basic Meals (Cooking skill 0+)
 	-- =========================================================================
 	[ITEM.FRIED_FISH] = {
 		name = "Fried Fish",
 		message = "The crispy fish restores your energy.",
-		duration = 10 * 60 * 1000,  -- 10 minutes
+		duration = 10 * 60 * 1000,
 		buffType = BUFF_HP_REGEN,
 		buffValue = 5,
 		food = 15,
@@ -140,6 +140,22 @@ local mealEffects = {
 		buffValue = 8,
 		food = 20,
 	},
+	[ITEM.BAKED_BREAD] = {
+		name = "Baked Bread",
+		message = "The warm bread is comforting and nourishing.",
+		duration = 8 * 60 * 1000,
+		buffType = BUFF_HP_REGEN,
+		buffValue = 3,
+		food = 12,
+	},
+	[ITEM.SIMPLE_SOUP] = {
+		name = "Simple Soup",
+		message = "The hot soup warms your belly.",
+		duration = 10 * 60 * 1000,
+		buffType = BUFF_MANA_REGEN,
+		buffValue = 3,
+		food = 14,
+	},
 	[ITEM.GRILLED_TROUT] = {
 		name = "Grilled Trout",
 		message = "The fresh trout invigorates you.",
@@ -147,14 +163,6 @@ local mealEffects = {
 		buffType = BUFF_HP_REGEN,
 		buffValue = 10,
 		food = 18,
-	},
-	[ITEM.BAKED_POTATO] = {
-		name = "Baked Potato",
-		message = "The warm potato is comforting.",
-		duration = 10 * 60 * 1000,
-		buffType = BUFF_MANA_REGEN,
-		buffValue = 3,
-		food = 12,
 	},
 	[ITEM.CHEESE_OMELETTE] = {
 		name = "Cheese Omelette",
@@ -172,25 +180,25 @@ local mealEffects = {
 		buffValue = 5,
 		food = 14,
 	},
+	[ITEM.BAKED_POTATO] = {
+		name = "Baked Potato",
+		message = "The warm potato is comforting.",
+		duration = 10 * 60 * 1000,
+		buffType = BUFF_MANA_REGEN,
+		buffValue = 4,
+		food = 12,
+	},
 
 	-- =========================================================================
-	-- Intermediate Meals (Cooking 15-35)
+	-- Intermediate Meals (Cooking skill 20+)
 	-- =========================================================================
 	[ITEM.FISH_STEW] = {
 		name = "Fish Stew",
 		message = "The rich stew warms your spirit.",
 		duration = 15 * 60 * 1000,
 		buffType = BUFF_MANA_REGEN,
-		buffValue = 5,
+		buffValue = 6,
 		food = 25,
-	},
-	[ITEM.MUSHROOM_SOUP] = {
-		name = "Mushroom Soup",
-		message = "The earthy soup clears your mind.",
-		duration = 15 * 60 * 1000,
-		buffType = BUFF_MANA_REGEN,
-		buffValue = 7,
-		food = 22,
 	},
 	[ITEM.ROASTED_CHICKEN] = {
 		name = "Roasted Chicken",
@@ -200,29 +208,21 @@ local mealEffects = {
 		buffValue = 1,
 		food = 28,
 	},
-	[ITEM.VEGGIE_WRAP] = {
-		name = "Veggie Wrap",
-		message = "A fresh wrap invigorates you.",
+	[ITEM.VEGETABLE_PIE] = {
+		name = "Vegetable Pie",
+		message = "The hearty pie restores body and mind.",
+		duration = 15 * 60 * 1000,
+		buffType = BUFF_MAX_HP,
+		buffValue = 15,
+		food = 24,
+	},
+	[ITEM.SALMON_ROLL] = {
+		name = "Salmon Roll",
+		message = "The delicate salmon roll sharpens your reflexes.",
 		duration = 15 * 60 * 1000,
 		buffType = BUFF_SPEED,
-		buffValue = 10,
-		food = 18,
-	},
-	[ITEM.TUNA_STEAK] = {
-		name = "Tuna Steak",
-		message = "The thick tuna steak empowers you.",
-		duration = 20 * 60 * 1000,
-		buffType = BUFF_MELEE,
-		buffValue = 2,
-		food = 30,
-	},
-	[ITEM.GRAPE_SALAD] = {
-		name = "Grape Salad",
-		message = "The sweet salad refreshes your mind.",
-		duration = 15 * 60 * 1000,
-		buffType = BUFF_MANA_REGEN,
-		buffValue = 8,
-		food = 15,
+		buffValue = 12,
+		food = 20,
 	},
 	[ITEM.HONEY_GLAZED_HAM] = {
 		name = "Honey-Glazed Ham",
@@ -240,17 +240,65 @@ local mealEffects = {
 		buffValue = 15,
 		food = 10,
 	},
+	[ITEM.MUSHROOM_SOUP] = {
+		name = "Mushroom Soup",
+		message = "The earthy soup clears your mind.",
+		duration = 15 * 60 * 1000,
+		buffType = BUFF_MANA_REGEN,
+		buffValue = 7,
+		food = 22,
+	},
+	[ITEM.TUNA_STEAK] = {
+		name = "Tuna Steak",
+		message = "The thick tuna steak empowers you.",
+		duration = 20 * 60 * 1000,
+		buffType = BUFF_MELEE,
+		buffValue = 2,
+		food = 30,
+	},
 
 	-- =========================================================================
-	-- Advanced Meals (Cooking 40-60)
+	-- Advanced Meals (Cooking skill 50+)
 	-- =========================================================================
-	[ITEM.HERB_CRUSTED_SALMON] = {
-		name = "Herb-Crusted Salmon",
-		message = "The herbed salmon restores your vitality.",
-		duration = 20 * 60 * 1000,
-		buffType = BUFF_HP_REGEN,
-		buffValue = 15,
-		food = 35,
+	[ITEM.ROYAL_FEAST] = {
+		name = "Royal Feast",
+		message = "You dine like royalty! All your abilities surge!",
+		duration = 30 * 60 * 1000,
+		buffType = BUFF_MAX_HP,
+		buffValue = 30,
+		food = 45,
+	},
+	[ITEM.DRAGON_STEAK] = {
+		name = "Dragon Steak",
+		message = "Dragonfire burns within you!",
+		duration = 30 * 60 * 1000,
+		buffType = BUFF_MAX_HP,
+		buffValue = 40,
+		food = 50,
+	},
+	[ITEM.MAGIC_FISH_PIE] = {
+		name = "Magic Fish Pie",
+		message = "Arcane energy flows through the pie into your veins!",
+		duration = 30 * 60 * 1000,
+		buffType = BUFF_MAGIC,
+		buffValue = 3,
+		food = 40,
+	},
+	[ITEM.ENCHANTED_STEW] = {
+		name = "Enchanted Stew",
+		message = "The enchanted stew heightens all your senses!",
+		duration = 30 * 60 * 1000,
+		buffType = BUFF_MANA_REGEN,
+		buffValue = 12,
+		food = 40,
+	},
+	[ITEM.SWORDFISH_GRILL] = {
+		name = "Swordfish Grill",
+		message = "The mighty swordfish empowers you!",
+		duration = 25 * 60 * 1000,
+		buffType = BUFF_MELEE,
+		buffValue = 3,
+		food = 38,
 	},
 	[ITEM.WARRIORS_FEAST] = {
 		name = "Warrior's Feast",
@@ -276,98 +324,44 @@ local mealEffects = {
 		buffValue = 2,
 		food = 40,
 	},
-	[ITEM.HEALERS_PORRIDGE] = {
-		name = "Healer's Porridge",
-		message = "A soothing warmth flows through your body.",
-		duration = 30 * 60 * 1000,
-		buffType = BUFF_HP_REGEN,
-		buffValue = 20,
-		food = 40,
-	},
-	[ITEM.SWORDFISH_GRILL] = {
-		name = "Swordfish Grill",
-		message = "The mighty swordfish empowers you!",
-		duration = 25 * 60 * 1000,
-		buffType = BUFF_MAX_HP,
-		buffValue = 20,
-		food = 38,
-	},
-	[ITEM.PUMPKIN_PIE] = {
-		name = "Pumpkin Pie",
-		message = "The sweet pie expands your magical reserves.",
-		duration = 30 * 60 * 1000,
-		buffType = BUFF_MAX_MANA,
-		buffValue = 50,
-		food = 35,
-	},
-	[ITEM.EEL_KEBAB] = {
-		name = "Eel Kebab",
-		message = "The exotic eel invigorates your body!",
-		duration = 25 * 60 * 1000,
-		buffType = BUFF_SPEED,
-		buffValue = 20,
-		food = 32,
-	},
 
 	-- =========================================================================
-	-- Expert Meals (Cooking 65-85)
+	-- Master Meals (Cooking skill 80+)
 	-- =========================================================================
-	[ITEM.DRAGON_STEAK] = {
-		name = "Dragon Steak",
-		message = "Dragonfire burns within you!",
-		duration = 30 * 60 * 1000,
-		buffType = BUFF_MAX_HP,
-		buffValue = 40,
-		food = 50,
-	},
-	[ITEM.DEEP_SEA_SASHIMI] = {
-		name = "Deep Sea Sashimi",
-		message = "The rare sashimi enhances your vitality!",
-		duration = 30 * 60 * 1000,
-		buffType = BUFF_MAX_HP,
-		buffValue = 25,
-		food = 45,
-	},
-	[ITEM.GOLDEN_FISH_PLATE] = {
-		name = "Golden Fish Plate",
-		message = "The golden fish fills you with radiant energy!",
-		duration = 30 * 60 * 1000,
+	[ITEM.GOLDEN_CARP_SUSHI] = {
+		name = "Golden Carp Sushi",
+		message = "The golden carp fills you with radiant energy!",
+		duration = 45 * 60 * 1000,
 		buffType = BUFF_MAX_MANA,
-		buffValue = 75,
-		food = 50,
+		buffValue = 100,
+		food = 55,
 	},
-	[ITEM.CRYSTAL_PERCH_FILLET] = {
-		name = "Crystal Perch Fillet",
-		message = "Crystal energy sharpens your mind!",
-		duration = 30 * 60 * 1000,
-		buffType = BUFF_MAGIC,
-		buffValue = 3,
-		food = 48,
-	},
-
-	-- =========================================================================
-	-- Legendary Meals (Cooking 80+)
-	-- =========================================================================
-	[ITEM.LEGENDARY_FEAST] = {
-		name = "Legendary Feast",
-		message = "You feel the power of legends coursing through you!",
+	[ITEM.CELESTIAL_BANQUET] = {
+		name = "Celestial Banquet",
+		message = "You feel the power of the cosmos coursing through you!",
 		duration = 60 * 60 * 1000,
-		buffType = BUFF_MELEE,  -- primary buff; this meal is special
+		buffType = BUFF_MELEE,
 		buffValue = 5,
 		food = 60,
 		isLegendary = true,
 	},
+	[ITEM.CRYSTAL_FISH_TARTARE] = {
+		name = "Crystal Fish Tartare",
+		message = "Crystal energy sharpens every fiber of your being!",
+		duration = 45 * 60 * 1000,
+		buffType = BUFF_MAGIC,
+		buffValue = 4,
+		food = 55,
+	},
 }
 
 -- ============================================================================
--- Cooking Recipe Definitions (26 recipes)
+-- Cooking Recipe Definitions (27 recipes across 4 tiers)
 -- ============================================================================
--- Categories: Basic, Fish, Vegetable, Special
--- Format: {itemId, count} for ingredients, {itemId, count, chance} for results
 
 local cookingRecipes = {
 	-- =========================================================================
-	-- BASIC MEALS (Cooking skill 1-10) -- Campfire-compatible
+	-- BASIC (Cooking skill 0+) -- Campfire-compatible
 	-- =========================================================================
 	{
 		id = 1,
@@ -399,26 +393,26 @@ local cookingRecipes = {
 	},
 	{
 		id = 3,
-		name = "Grilled Trout",
+		name = "Baked Bread",
 		category = "basic",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 3,
-		ingredients = {{ITEM.TROUT, 1}, {ITEM.SALT, 1}},
-		results = {{ITEM.GRILLED_TROUT, 1, 100}},
-		skillTries = 4,
-		successChance = 85,
+		requiredSkillLevel = 1,
+		ingredients = {{ITEM.FLOUR, 2}, {ITEM.WATER_FLASK, 1}},
+		results = {{ITEM.BAKED_BREAD, 1, 100}},
+		skillTries = 3,
+		successChance = 95,
 		skillBonusPerLevel = 2,
 		campfireAllowed = true,
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
 		id = 4,
-		name = "Baked Potato",
+		name = "Simple Soup",
 		category = "basic",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 3,
-		ingredients = {{ITEM.POTATO, 2}, {ITEM.BUTTER, 1}},
-		results = {{ITEM.BAKED_POTATO, 1, 100}},
+		requiredSkillLevel = 1,
+		ingredients = {{ITEM.POTATO, 1}, {ITEM.CARROT, 1}, {ITEM.WATER_FLASK, 1}},
+		results = {{ITEM.SIMPLE_SOUP, 1, 100}},
 		skillTries = 4,
 		successChance = 90,
 		skillBonusPerLevel = 2,
@@ -427,10 +421,24 @@ local cookingRecipes = {
 	},
 	{
 		id = 5,
-		name = "Cheese Omelette",
+		name = "Grilled Trout",
 		category = "basic",
 		craftingSkill = Crafting.SKILL_COOKING,
 		requiredSkillLevel = 5,
+		ingredients = {{ITEM.TROUT, 1}, {ITEM.SALT, 1}},
+		results = {{ITEM.GRILLED_TROUT, 1, 100}},
+		skillTries = 5,
+		successChance = 85,
+		skillBonusPerLevel = 2,
+		campfireAllowed = true,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 6,
+		name = "Cheese Omelette",
+		category = "basic",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 8,
 		ingredients = {{ITEM.EGG, 2}, {ITEM.CHEESE, 1}, {ITEM.BUTTER, 1}},
 		results = {{ITEM.CHEESE_OMELETTE, 1, 100}},
 		skillTries = 5,
@@ -440,11 +448,11 @@ local cookingRecipes = {
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
-		id = 6,
+		id = 7,
 		name = "Spiced Bass",
 		category = "basic",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 8,
+		requiredSkillLevel = 10,
 		ingredients = {{ITEM.BASS, 1}, {ITEM.SPICES, 1}, {ITEM.COOKING_OIL, 1}},
 		results = {{ITEM.SPICED_BASS, 1, 100}},
 		skillTries = 6,
@@ -453,16 +461,30 @@ local cookingRecipes = {
 		campfireAllowed = true,
 		stationItemId = ITEM.COOKING_STOVE,
 	},
+	{
+		id = 8,
+		name = "Baked Potato",
+		category = "basic",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 5,
+		ingredients = {{ITEM.POTATO, 2}, {ITEM.BUTTER, 1}},
+		results = {{ITEM.BAKED_POTATO, 1, 100}},
+		skillTries = 4,
+		successChance = 90,
+		skillBonusPerLevel = 2,
+		campfireAllowed = true,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
 
 	-- =========================================================================
-	-- FISH DISHES (Cooking skill 15-50)
+	-- INTERMEDIATE (Cooking skill 20+)
 	-- =========================================================================
 	{
-		id = 7,
+		id = 9,
 		name = "Fish Stew",
-		category = "fish",
+		category = "intermediate",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 15,
+		requiredSkillLevel = 20,
 		ingredients = {{ITEM.TROUT, 2}, {ITEM.TOMATO, 1}, {ITEM.FRESH_HERBS, 1}, {ITEM.WATER_FLASK, 1}},
 		results = {{ITEM.FISH_STEW, 1, 100}},
 		skillTries = 10,
@@ -472,190 +494,12 @@ local cookingRecipes = {
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
-		id = 8,
-		name = "Tuna Steak",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 25,
-		ingredients = {{ITEM.TUNA, 1}, {ITEM.SPICES, 1}, {ITEM.COOKING_OIL, 1}},
-		results = {{ITEM.TUNA_STEAK, 1, 100}},
-		skillTries = 15,
-		successChance = 65,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 9,
-		name = "Herb-Crusted Salmon",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 35,
-		ingredients = {{ITEM.SALMON, 1}, {ITEM.FRESH_HERBS, 2}, {ITEM.BUTTER, 1}, {ITEM.SALT, 1}},
-		results = {{ITEM.HERB_CRUSTED_SALMON, 1, 100}},
-		skillTries = 20,
-		successChance = 60,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
 		id = 10,
-		name = "Swordfish Grill",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 45,
-		ingredients = {{ITEM.SWORDFISH, 1}, {ITEM.SPICES, 2}, {ITEM.COOKING_OIL, 1}, {ITEM.FRESH_HERBS, 1}},
-		results = {{ITEM.SWORDFISH_GRILL, 1, 100}},
-		skillTries = 25,
-		successChance = 55,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 11,
-		name = "Deep Sea Sashimi",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 55,
-		ingredients = {{ITEM.DEEP_SEA_EEL, 1}, {ITEM.VINEGAR, 1}, {ITEM.SALT, 1}, {ITEM.FRESH_HERBS, 1}},
-		results = {{ITEM.DEEP_SEA_SASHIMI, 1, 100}},
-		skillTries = 35,
-		successChance = 45,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 12,
-		name = "Eel Kebab",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 50,
-		ingredients = {{ITEM.DEEP_SEA_EEL, 1}, {ITEM.TOMATO, 1}, {ITEM.SPICES, 1}},
-		results = {{ITEM.EEL_KEBAB, 1, 100}},
-		skillTries = 30,
-		successChance = 50,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 13,
-		name = "Golden Fish Plate",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 65,
-		ingredients = {{ITEM.GOLDEN_FISH, 1}, {ITEM.FRESH_HERBS, 2}, {ITEM.BUTTER, 1}, {ITEM.SPICES, 2}},
-		results = {{ITEM.GOLDEN_FISH_PLATE, 1, 100}},
-		skillTries = 50,
-		successChance = 40,
-		skillBonusPerLevel = 0.5,
-		maxSuccessChance = 90,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 14,
-		name = "Crystal Perch Fillet",
-		category = "fish",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 70,
-		ingredients = {{ITEM.CRYSTAL_PERCH, 1}, {ITEM.RARE_HERB, 1}, {ITEM.SALT, 1}, {ITEM.COOKING_OIL, 1}},
-		results = {{ITEM.CRYSTAL_PERCH_FILLET, 1, 100}},
-		skillTries = 60,
-		successChance = 35,
-		skillBonusPerLevel = 0.5,
-		maxSuccessChance = 85,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-
-	-- =========================================================================
-	-- VEGETABLE DISHES (Cooking skill 10-40)
-	-- =========================================================================
-	{
-		id = 15,
-		name = "Mushroom Soup",
-		category = "vegetable",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 10,
-		ingredients = {{ITEM.MUSHROOM, 3}, {ITEM.WATER_FLASK, 1}, {ITEM.SALT, 1}},
-		results = {{ITEM.MUSHROOM_SOUP, 1, 100}},
-		skillTries = 8,
-		successChance = 75,
-		skillBonusPerLevel = 2,
-		campfireAllowed = true,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 16,
-		name = "Veggie Wrap",
-		category = "vegetable",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 20,
-		ingredients = {{ITEM.CARROT, 1}, {ITEM.TOMATO, 1}, {ITEM.FRESH_HERBS, 1}, {ITEM.BREAD, 1}},
-		results = {{ITEM.VEGGIE_WRAP, 1, 100}},
-		skillTries = 12,
-		successChance = 70,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 17,
-		name = "Grape Salad",
-		category = "vegetable",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 18,
-		ingredients = {{ITEM.GRAPES, 2}, {ITEM.FRESH_HERBS, 1}, {ITEM.VINEGAR, 1}},
-		results = {{ITEM.GRAPE_SALAD, 1, 100}},
-		skillTries = 10,
-		successChance = 75,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 18,
-		name = "Berry Smoothie",
-		category = "vegetable",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 25,
-		ingredients = {{ITEM.MIXED_BERRIES, 3}, {ITEM.HONEY, 1}, {ITEM.MILK_FLASK, 1}},
-		results = {{ITEM.BERRY_SMOOTHIE, 1, 100}},
-		skillTries = 14,
-		successChance = 70,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-	{
-		id = 19,
-		name = "Pumpkin Pie",
-		category = "vegetable",
-		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 40,
-		ingredients = {{ITEM.PUMPKIN, 2}, {ITEM.FLOUR, 1}, {ITEM.EGG, 1}, {ITEM.SUGAR, 1}, {ITEM.BUTTER, 1}},
-		results = {{ITEM.PUMPKIN_PIE, 1, 100}},
-		skillTries = 22,
-		successChance = 55,
-		skillBonusPerLevel = 1,
-		campfireAllowed = false,
-		stationItemId = ITEM.COOKING_STOVE,
-	},
-
-	-- =========================================================================
-	-- SPECIAL DISHES (Cooking skill 30-80+)
-	-- =========================================================================
-	{
-		id = 20,
 		name = "Roasted Chicken",
-		category = "special",
+		category = "intermediate",
 		craftingSkill = Crafting.SKILL_COOKING,
 		requiredSkillLevel = 20,
-		ingredients = {{ITEM.CHICKEN, 1}, {ITEM.SPICES, 1}, {ITEM.COOKING_OIL, 1}},
+		ingredients = {{ITEM.HAM, 1}, {ITEM.SPICES, 1}, {ITEM.COOKING_OIL, 1}},
 		results = {{ITEM.ROASTED_CHICKEN, 1, 100}},
 		skillTries = 12,
 		successChance = 70,
@@ -664,9 +508,37 @@ local cookingRecipes = {
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
-		id = 21,
+		id = 11,
+		name = "Vegetable Pie",
+		category = "intermediate",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 25,
+		ingredients = {{ITEM.CARROT, 2}, {ITEM.POTATO, 1}, {ITEM.FLOUR, 1}, {ITEM.EGG, 1}, {ITEM.BUTTER, 1}},
+		results = {{ITEM.VEGETABLE_PIE, 1, 100}},
+		skillTries = 14,
+		successChance = 65,
+		skillBonusPerLevel = 1,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 12,
+		name = "Salmon Roll",
+		category = "intermediate",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 28,
+		ingredients = {{ITEM.SALMON, 1}, {ITEM.BREAD, 1}, {ITEM.FRESH_HERBS, 1}, {ITEM.VINEGAR, 1}},
+		results = {{ITEM.SALMON_ROLL, 1, 100}},
+		skillTries = 15,
+		successChance = 65,
+		skillBonusPerLevel = 1,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 13,
 		name = "Honey-Glazed Ham",
-		category = "special",
+		category = "intermediate",
 		craftingSkill = Crafting.SKILL_COOKING,
 		requiredSkillLevel = 30,
 		ingredients = {{ITEM.HAM, 1}, {ITEM.HONEY, 2}, {ITEM.SPICES, 1}},
@@ -678,15 +550,134 @@ local cookingRecipes = {
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
+		id = 14,
+		name = "Berry Smoothie",
+		category = "intermediate",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 25,
+		ingredients = {{ITEM.MIXED_BERRIES, 3}, {ITEM.HONEY, 1}, {ITEM.MILK_FLASK, 1}},
+		results = {{ITEM.BERRY_SMOOTHIE, 1, 100}},
+		skillTries = 14,
+		successChance = 70,
+		skillBonusPerLevel = 1,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 15,
+		name = "Mushroom Soup",
+		category = "intermediate",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 22,
+		ingredients = {{ITEM.MUSHROOM, 3}, {ITEM.WATER_FLASK, 1}, {ITEM.SALT, 1}},
+		results = {{ITEM.MUSHROOM_SOUP, 1, 100}},
+		skillTries = 10,
+		successChance = 75,
+		skillBonusPerLevel = 1,
+		campfireAllowed = true,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 16,
+		name = "Tuna Steak",
+		category = "intermediate",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 35,
+		ingredients = {{ITEM.TUNA, 1}, {ITEM.SPICES, 1}, {ITEM.COOKING_OIL, 1}},
+		results = {{ITEM.TUNA_STEAK, 1, 100}},
+		skillTries = 18,
+		successChance = 60,
+		skillBonusPerLevel = 1,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+
+	-- =========================================================================
+	-- ADVANCED (Cooking skill 50+)
+	-- =========================================================================
+	{
+		id = 17,
+		name = "Royal Feast",
+		category = "advanced",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 50,
+		ingredients = {{ITEM.MEAT, 3}, {ITEM.POTATO, 2}, {ITEM.GRAPES, 2}, {ITEM.SPICES, 2}, {ITEM.BUTTER, 1}},
+		results = {{ITEM.ROYAL_FEAST, 1, 100}},
+		skillTries = 30,
+		successChance = 50,
+		skillBonusPerLevel = 1,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 18,
+		name = "Dragon Steak",
+		category = "advanced",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 55,
+		ingredients = {{ITEM.DRAGON_HAM, 1}, {ITEM.SPICES, 2}, {ITEM.RARE_HERB, 1}, {ITEM.COOKING_OIL, 1}},
+		results = {{ITEM.DRAGON_STEAK, 1, 100}},
+		skillTries = 35,
+		successChance = 45,
+		skillBonusPerLevel = 1,
+		maxSuccessChance = 90,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 19,
+		name = "Magic Fish Pie",
+		category = "advanced",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 55,
+		ingredients = {{ITEM.SWORDFISH, 1}, {ITEM.FLOUR, 1}, {ITEM.EGG, 1}, {ITEM.FRESH_HERBS, 2}, {ITEM.ENCHANTED_DUST, 1}},
+		results = {{ITEM.MAGIC_FISH_PIE, 1, 100}},
+		skillTries = 35,
+		successChance = 45,
+		skillBonusPerLevel = 1,
+		maxSuccessChance = 85,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 20,
+		name = "Enchanted Stew",
+		category = "advanced",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 60,
+		ingredients = {{ITEM.TUNA, 1}, {ITEM.MUSHROOM, 2}, {ITEM.FRESH_HERBS, 2}, {ITEM.RARE_HERB, 1}, {ITEM.WATER_FLASK, 1}},
+		results = {{ITEM.ENCHANTED_STEW, 1, 100}},
+		skillTries = 40,
+		successChance = 40,
+		skillBonusPerLevel = 1,
+		maxSuccessChance = 85,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
+		id = 21,
+		name = "Swordfish Grill",
+		category = "advanced",
+		craftingSkill = Crafting.SKILL_COOKING,
+		requiredSkillLevel = 50,
+		ingredients = {{ITEM.SWORDFISH, 1}, {ITEM.SPICES, 2}, {ITEM.COOKING_OIL, 1}, {ITEM.FRESH_HERBS, 1}},
+		results = {{ITEM.SWORDFISH_GRILL, 1, 100}},
+		skillTries = 28,
+		successChance = 50,
+		skillBonusPerLevel = 1,
+		campfireAllowed = false,
+		stationItemId = ITEM.COOKING_STOVE,
+	},
+	{
 		id = 22,
 		name = "Warrior's Feast",
-		category = "special",
+		category = "advanced",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 40,
+		requiredSkillLevel = 55,
 		ingredients = {{ITEM.MEAT, 3}, {ITEM.POTATO, 2}, {ITEM.SPICES, 2}, {ITEM.COOKING_OIL, 1}},
 		results = {{ITEM.WARRIORS_FEAST, 1, 100}},
-		skillTries = 25,
-		successChance = 50,
+		skillTries = 30,
+		successChance = 45,
 		skillBonusPerLevel = 1,
 		campfireAllowed = false,
 		stationItemId = ITEM.COOKING_STOVE,
@@ -694,13 +685,13 @@ local cookingRecipes = {
 	{
 		id = 23,
 		name = "Archer's Ration",
-		category = "special",
+		category = "advanced",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 40,
+		requiredSkillLevel = 55,
 		ingredients = {{ITEM.TUNA, 1}, {ITEM.CARROT, 2}, {ITEM.FRESH_HERBS, 2}, {ITEM.BREAD, 1}},
 		results = {{ITEM.ARCHERS_RATION, 1, 100}},
-		skillTries = 25,
-		successChance = 50,
+		skillTries = 30,
+		successChance = 45,
 		skillBonusPerLevel = 1,
 		campfireAllowed = false,
 		stationItemId = ITEM.COOKING_STOVE,
@@ -708,63 +699,70 @@ local cookingRecipes = {
 	{
 		id = 24,
 		name = "Mage's Brew",
-		category = "special",
+		category = "advanced",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 45,
+		requiredSkillLevel = 60,
 		ingredients = {{ITEM.FRESH_HERBS, 3}, {ITEM.MUSHROOM, 2}, {ITEM.HONEY, 1}, {ITEM.WATER_FLASK, 1}},
 		results = {{ITEM.MAGES_BREW, 1, 100}},
-		skillTries = 28,
-		successChance = 45,
+		skillTries = 35,
+		successChance = 40,
 		skillBonusPerLevel = 1,
 		campfireAllowed = false,
 		stationItemId = ITEM.COOKING_STOVE,
 	},
+
+	-- =========================================================================
+	-- MASTER (Cooking skill 80+)
+	-- =========================================================================
 	{
 		id = 25,
-		name = "Healer's Porridge",
-		category = "special",
+		name = "Golden Carp Sushi",
+		category = "master",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 45,
-		ingredients = {{ITEM.WHEAT, 2}, {ITEM.MILK_FLASK, 1}, {ITEM.HONEY, 1}, {ITEM.FRESH_HERBS, 2}},
-		results = {{ITEM.HEALERS_PORRIDGE, 1, 100}},
-		skillTries = 28,
-		successChance = 45,
-		skillBonusPerLevel = 1,
+		requiredSkillLevel = 80,
+		ingredients = {{ITEM.GOLDEN_CARP, 1}, {ITEM.VINEGAR, 1}, {ITEM.SALT, 1}, {ITEM.FRESH_HERBS, 2}},
+		results = {{ITEM.GOLDEN_CARP_SUSHI, 1, 100}},
+		skillTries = 60,
+		failSkillTries = 20,
+		successChance = 35,
+		skillBonusPerLevel = 0.5,
+		maxSuccessChance = 80,
 		campfireAllowed = false,
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
 		id = 26,
-		name = "Dragon Steak",
-		category = "special",
+		name = "Celestial Banquet",
+		category = "master",
 		craftingSkill = Crafting.SKILL_COOKING,
-		requiredSkillLevel = 65,
-		ingredients = {{ITEM.DRAGON_HAM, 1}, {ITEM.SPICES, 2}, {ITEM.RARE_HERB, 1}, {ITEM.COOKING_OIL, 1}},
-		results = {{ITEM.DRAGON_STEAK, 1, 100}},
-		skillTries = 45,
-		successChance = 35,
+		requiredSkillLevel = 85,
+		ingredients = {
+			{ITEM.GOLDEN_CARP, 1},
+			{ITEM.SQUID_TENTACLE, 1},
+			{ITEM.FRESH_HERBS, 3},
+			{ITEM.GRAPES, 2},
+			{ITEM.RARE_HERB, 2},
+			{ITEM.CELESTIAL_SALT, 1},
+		},
+		results = {{ITEM.CELESTIAL_BANQUET, 1, 100}},
+		skillTries = 100,
+		failSkillTries = 30,
+		successChance = 25,
 		skillBonusPerLevel = 0.5,
-		maxSuccessChance = 85,
+		maxSuccessChance = 75,
 		campfireAllowed = false,
 		stationItemId = ITEM.COOKING_STOVE,
 	},
 	{
 		id = 27,
-		name = "Legendary Feast",
-		category = "special",
+		name = "Crystal Fish Tartare",
+		category = "master",
 		craftingSkill = Crafting.SKILL_COOKING,
 		requiredSkillLevel = 80,
-		ingredients = {
-			{ITEM.ANCIENT_SCALE, 1},
-			{ITEM.GOLDEN_FISH, 1},
-			{ITEM.FRESH_HERBS, 3},
-			{ITEM.GRAPES, 2},
-			{ITEM.RARE_HERB, 2},
-			{ITEM.SPICES, 3},
-		},
-		results = {{ITEM.LEGENDARY_FEAST, 1, 100}},
-		skillTries = 100,
-		failSkillTries = 30,
+		ingredients = {{ITEM.CRYSTAL_FISH, 1}, {ITEM.RARE_HERB, 2}, {ITEM.ENCHANTED_DUST, 1}, {ITEM.VINEGAR, 1}},
+		results = {{ITEM.CRYSTAL_FISH_TARTARE, 1, 100}},
+		skillTries = 65,
+		failSkillTries = 20,
 		successChance = 30,
 		skillBonusPerLevel = 0.5,
 		maxSuccessChance = 80,
@@ -782,21 +780,21 @@ for _, recipe in ipairs(cookingRecipes) do
 end
 
 -- ============================================================================
--- Cooking Station IDs (stoves, campfires, ovens that trigger cooking)
+-- Cooking Station IDs
 -- ============================================================================
 
 local cookingStations = {
-	[ITEM.COOKING_STOVE] = true,  -- custom cooking stove
-	[ITEM.CAMPFIRE]      = true,  -- standard campfire (1423)
-	[1424]               = true,  -- campfire variant
-	[1425]               = true,  -- campfire variant
-	[ITEM.OVEN]          = true,  -- oven (1786)
-	[1787]               = true,  -- oven variant
-	[1788]               = true,  -- oven variant
-	[1789]               = true,  -- oven variant
-	[ITEM.STOVE_ALT]     = true,  -- stove (1791)
-	[1792]               = true,  -- stove variant
-	[1793]               = true,  -- stove variant
+	[ITEM.COOKING_STOVE] = true,
+	[ITEM.CAMPFIRE]      = true,
+	[1424]               = true,
+	[1425]               = true,
+	[ITEM.OVEN]          = true,
+	[1787]               = true,
+	[1788]               = true,
+	[1789]               = true,
+	[ITEM.STOVE_ALT]     = true,
+	[1792]               = true,
+	[1793]               = true,
 }
 
 local function isCampfire(itemId)
@@ -806,7 +804,6 @@ end
 -- ============================================================================
 -- Apply Meal Buff (eating a cooked meal)
 -- ============================================================================
--- This function is called when a player uses (eats) a cooked meal item.
 -- Only one food buff can be active at a time. New buffs replace old ones.
 
 local function applyMealBuff(player, item)
@@ -815,18 +812,17 @@ local function applyMealBuff(player, item)
 		return false
 	end
 
-	-- Check for existing food buff -- only one allowed at a time
+	-- Remove existing food buff if any (only 1 food buff at a time)
 	local existingBuff = player:getStorageValue(Crafting.STORAGE_FOOD_BUFF)
 	if existingBuff > 0 then
-		-- Remove old buff condition before applying new one
 		player:removeCondition(CONDITION_ATTRIBUTES, CONDITIONID_COMBAT, FOOD_BUFF_SUBID)
 	end
 
-	-- Build and apply the condition
+	-- Build the condition
 	local condition = Condition(CONDITION_ATTRIBUTES, CONDITIONID_COMBAT)
 	condition:setTicks(meal.duration)
 
-	-- Apply the appropriate stat bonus based on buff type
+	-- Apply the stat bonus based on buff type
 	if meal.buffType == BUFF_HP_REGEN then
 		condition:setParameter(CONDITION_PARAM_HEALTHGAIN, meal.buffValue)
 		condition:setParameter(CONDITION_PARAM_HEALTHTICKS, 2000)
@@ -849,7 +845,7 @@ local function applyMealBuff(player, item)
 		condition:setParameter(CONDITION_PARAM_STAT_MAXMANAPOINTS, meal.buffValue)
 	end
 
-	-- For legendary meals, apply additional bonuses
+	-- Legendary meals get additional bonuses across all combat stats
 	if meal.isLegendary then
 		condition:setParameter(CONDITION_PARAM_SKILL_SWORD, meal.buffValue)
 		condition:setParameter(CONDITION_PARAM_SKILL_AXE, meal.buffValue)
@@ -864,7 +860,7 @@ local function applyMealBuff(player, item)
 	-- Track active buff via storage
 	player:setStorageValue(Crafting.STORAGE_FOOD_BUFF, item:getId())
 
-	-- Also feed the player normally
+	-- Feed the player normally
 	if meal.food and meal.food > 0 then
 		player:feed(meal.food * 12)
 	end
@@ -872,7 +868,7 @@ local function applyMealBuff(player, item)
 	-- Remove the meal item
 	item:remove(1)
 
-	-- Visual and text feedback
+	-- Feedback
 	player:say(meal.message, TALKTYPE_MONSTER_SAY)
 	player:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
 	player:sendTextMessage(MESSAGE_INFO_DESCR, "You ate " .. meal.name .. ".")
@@ -881,7 +877,7 @@ local function applyMealBuff(player, item)
 end
 
 -- ============================================================================
--- Find Best Recipe for Player at Station
+-- Find Craftable Recipes at a Station
 -- ============================================================================
 
 local function findCraftableRecipes(player, stationItemId)
@@ -889,18 +885,18 @@ local function findCraftableRecipes(player, stationItemId)
 	local isCampfireStation = isCampfire(stationItemId)
 
 	for _, recipe in ipairs(Crafting.recipes.cooking) do
-		-- If using campfire, only campfire-allowed recipes
+		-- Campfire restriction
 		if isCampfireStation and not recipe.campfireAllowed then
 			goto continue
 		end
 
-		-- Check skill level
+		-- Skill check
 		local skillLevel = Crafting.getSkillLevel(player, Crafting.SKILL_COOKING)
 		if skillLevel < recipe.requiredSkillLevel then
 			goto continue
 		end
 
-		-- Check ingredients
+		-- Ingredient check
 		if Crafting.hasIngredients(player, recipe) then
 			table.insert(results, recipe)
 		end
@@ -912,7 +908,7 @@ local function findCraftableRecipes(player, stationItemId)
 end
 
 -- ============================================================================
--- Show Recipe List to Player
+-- Show Recipe List
 -- ============================================================================
 
 local function showRecipeList(player, recipes, stationItemId)
@@ -927,8 +923,9 @@ local function showRecipeList(player, recipes, stationItemId)
 	local msg = "[Cooking] Available recipes:\n"
 	for i, recipe in ipairs(recipes) do
 		local chance = Crafting.calculateSuccessChance(player, recipe)
+		local category = recipe.category or "unknown"
 		msg = msg .. i .. ". " .. recipe.name ..
-			" [Skill " .. recipe.requiredSkillLevel .. "] " ..
+			" [" .. category .. ", Skill " .. recipe.requiredSkillLevel .. "] " ..
 			"(" .. math.floor(chance) .. "% success)\n"
 	end
 
@@ -947,7 +944,7 @@ end
 -- ============================================================================
 
 local function cookRecipe(player, recipe, stationItemId)
-	-- Validate campfire restriction
+	-- Campfire restriction
 	if isCampfire(stationItemId) and not recipe.campfireAllowed then
 		player:sendCancelMessage("This recipe requires a proper cooking stove or oven.")
 		return false
@@ -964,29 +961,21 @@ local function cookRecipe(player, recipe, stationItemId)
 		return true
 	else
 		if reason == "failed" then
+			-- On failure, give burnt food as a visual indicator
+			player:addItem(ITEM.BURNT_FOOD, 1)
 			player:sendTextMessage(MESSAGE_INFO_DESCR,
 				"[Cooking] You failed to prepare " .. recipe.name ..
-				". The ingredients were wasted.")
+				". The ingredients were wasted and you got burnt food.")
 			player:getPosition():sendMagicEffect(CONST_ME_POFF)
 			player:say("*burns the food*", TALKTYPE_MONSTER_SAY)
 		end
-		-- Other reasons (skill, ingredients, etc.) are handled by Crafting.attempt
 		return false
 	end
 end
 
 -- ============================================================================
--- Pending cooking actions (player -> {recipes, stationItemId})
--- Tracks when a player has opened a cooking station and is selecting a recipe.
+-- Action Handler: Using a Cooking Station or Eating a Meal
 -- ============================================================================
-
-local pendingCooking = {}
-
--- ============================================================================
--- Action Handler: Using a Cooking Station
--- ============================================================================
--- When the player right-clicks a stove/campfire/oven, this handler fires.
--- It shows the available recipes. The player then says a number to select one.
 
 function onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	local stationId = 0
@@ -1029,16 +1018,13 @@ function onUse(player, item, fromPosition, target, toPosition, isHotkey)
 		return true
 	end
 
-	-- Multiple recipes available: cook the highest-skill one the player can make
-	-- Sort by required skill level descending to prioritize the best recipe
+	-- Multiple recipes: sort by required skill level descending (best first)
 	table.sort(recipes, function(a, b)
 		return a.requiredSkillLevel > b.requiredSkillLevel
 	end)
 
-	-- Show what is being cooked and cook the best available recipe
+	-- Show the full list and auto-cook the best available recipe
 	showRecipeList(player, recipes, stationId)
-
-	-- Auto-cook the best recipe (highest skill requirement that player meets)
 	cookRecipe(player, recipes[1], stationId)
 	return true
 end

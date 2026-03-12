@@ -212,7 +212,7 @@
 	<action itemid="1793" script="crafting/cooking.lua" />
 
 	<!-- Cooked Meals (eating for buffs, Phase 2.3) -->
-	<action fromid="30200" toid="30226" script="crafting/cooking.lua" />
+	<action fromid="30200" toid="30230" script="crafting/cooking.lua" />
 
 	<!-- Mining (Phase 2.4) -->
 	<!-- Pickaxes: use on ore veins (veins identified by actionId 9100-9114) -->
