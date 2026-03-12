@@ -17,25 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_WAITLIST_H_7E4299E552E44F10BC4F4E50BF3D7241
-#define FS_WAITLIST_H_7E4299E552E44F10BC4F4E50BF3D7241
+#include "otpch.h"
 
-#include "player.h"
-
-struct WaitListInfo;
-
-class WaitingList
-{
-	public:
-		static WaitingList& getInstance();
-
-		std::size_t clientLogin(const Player* player);
-		static uint8_t getTime(std::size_t slot);
-
-	private:
-		WaitingList();
-
-		std::unique_ptr<WaitListInfo> info;
-};
-
-#endif
+#include "matrixarea.h"
