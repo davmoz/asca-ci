@@ -23,7 +23,7 @@
 #include "databasemanager.h"
 #include "luascript.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 bool DatabaseManager::optimizeTables()
 {

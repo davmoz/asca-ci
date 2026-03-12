@@ -25,7 +25,7 @@
 #include "configmanager.h"
 #include "ban.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 Ban g_bans;
 
 ServiceManager::~ServiceManager()

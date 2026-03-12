@@ -45,7 +45,7 @@ Dispatcher g_dispatcher;
 Scheduler g_scheduler;
 
 Game g_game;
-ConfigManager g_config;
+ConfigManagerCompat g_config;
 Monsters g_monsters;
 Vocations g_vocations;
 extern Scripts* g_scripts;

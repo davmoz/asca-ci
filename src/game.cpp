@@ -42,7 +42,7 @@
 #include "weapons.h"
 #include "script.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Actions* g_actions;
 extern Chat* g_chat;
 extern TalkActions* g_talkActions;

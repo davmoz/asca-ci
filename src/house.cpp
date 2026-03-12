@@ -27,7 +27,7 @@
 #include "configmanager.h"
 #include "bed.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 
 House::House(uint32_t houseId) : id(houseId) {}

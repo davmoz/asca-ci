@@ -24,7 +24,7 @@
 #include "configmanager.h"
 
 extern LuaEnvironment g_luaEnvironment;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 Scripts::Scripts() :
 	scriptInterface("Scripts Interface")

@@ -44,7 +44,7 @@
 extern Chat* g_chat;
 extern Game g_game;
 extern Monsters g_monsters;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Vocations g_vocations;
 extern Spells* g_spells;
 extern Events* g_events;

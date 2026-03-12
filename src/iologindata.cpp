@@ -23,7 +23,7 @@
 #include "configmanager.h"
 #include "game.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 
 Account IOLoginData::loadAccount(uint32_t accno)

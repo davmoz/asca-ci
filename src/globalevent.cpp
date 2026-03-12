@@ -25,7 +25,7 @@
 #include "scheduler.h"
 #include "pugicast.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 GlobalEvents::GlobalEvents() :
 	scriptInterface("GlobalEvent Interface")

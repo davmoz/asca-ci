@@ -24,7 +24,7 @@
 
 #include <mysql/errmsg.h>
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 Database::~Database()
 {

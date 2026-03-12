@@ -35,7 +35,7 @@
 #include "ban.h"
 #include "scheduler.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Actions actions;
 extern CreatureEvents* g_creatureEvents;
 extern Chat* g_chat;

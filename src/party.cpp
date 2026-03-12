@@ -25,7 +25,7 @@
 #include "events.h"
 
 extern Game g_game;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Events* g_events;
 
 Party::Party(Player* leader) : leader(leader)

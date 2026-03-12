@@ -32,7 +32,7 @@
 extern Game g_game;
 extern Spells* g_spells;
 extern Monsters g_monsters;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 spellBlock_t::~spellBlock_t()
 {

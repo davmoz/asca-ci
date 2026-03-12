@@ -24,7 +24,7 @@
 #include "game.h"
 #include "outputmessage.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 
 std::map<uint32_t, int64_t> ProtocolStatus::ipConnectMap;

@@ -28,7 +28,7 @@
 
 extern Game g_game;
 extern Weapons* g_weapons;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Events* g_events;
 
 CombatDamage Combat::getCombatDamage(Creature* creature, Creature* target) const

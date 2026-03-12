@@ -27,7 +27,7 @@
 
 extern Game g_game;
 extern Vocations g_vocations;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Weapons* g_weapons;
 
 Weapons::Weapons()

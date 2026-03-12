@@ -26,7 +26,7 @@
 #include "spawn.h"
 #include "configmanager.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 enum OTBM_AttrTypes_t {
 	OTBM_ATTR_DESCRIPTION = 1,

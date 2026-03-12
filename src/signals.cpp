@@ -43,7 +43,7 @@ extern Scheduler g_scheduler;
 extern DatabaseTasks g_databaseTasks;
 extern Dispatcher g_dispatcher;
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Actions* g_actions;
 extern Monsters g_monsters;
 extern TalkActions* g_talkActions;

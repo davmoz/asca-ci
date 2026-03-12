@@ -35,7 +35,7 @@
 #include "scheduler.h"
 #include "weapons.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 extern Chat* g_chat;
 extern Vocations g_vocations;

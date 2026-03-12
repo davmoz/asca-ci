@@ -29,7 +29,7 @@
 #include "monster.h"
 
 extern Game g_game;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 Raids::Raids()
 {

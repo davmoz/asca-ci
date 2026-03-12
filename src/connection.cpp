@@ -26,7 +26,7 @@
 #include "scheduler.h"
 #include "server.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 Connection_ptr ConnectionManager::createConnection(boost::asio::io_context& io_service, ConstServicePort_ptr servicePort)
 {
