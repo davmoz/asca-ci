@@ -34,6 +34,7 @@ set(CMAKE_CXX_FLAGS_PERFORMANCE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
 
 # Find packages.
 find_package(OpenSSL REQUIRED)
+find_package(fmt REQUIRED)
 find_package(MySQL REQUIRED)
 find_package(Threads REQUIRED)
 find_package(PugiXML REQUIRED)
@@ -64,6 +65,7 @@ target_link_libraries(tfs PRIVATE
         Boost::iostreams
         ${CMAKE_THREAD_LIBS_INIT}
         OpenSSL::Crypto
+        fmt::fmt
         ${LUA_LIBRARIES}
         ${MYSQL_CLIENT_LIBS}
         ${PUGIXML_LIBRARIES}

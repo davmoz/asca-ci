@@ -11,6 +11,7 @@
     "pugixml",
     "luajit",
     "openssl",
+    "fmt",
     {
       "name": "libmysql",
       "platform": "!linux"
