@@ -7,9 +7,11 @@
  */
 
 #include <gtest/gtest.h>
+#include <cmath>
 #include <cstdint>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 // Re-declare enums from const.h / enums.h
 enum CombatType_t : uint16_t {
@@ -267,4 +269,383 @@ TEST(DamageCalc, ArmorReduction) {
     EXPECT_LE(maxReduction, 15);
     int reducedDamage = damage + maxReduction;
     EXPECT_EQ(reducedDamage, -185);
+}
+
+TEST(DamageCalc, ZeroArmorNoReduction) {
+    int damage = -200;
+    int armor = 0;
+    int maxReduction = armor;
+    EXPECT_EQ(damage + maxReduction, -200);
+}
+
+TEST(DamageCalc, LevelMagicFormula) {
+    // Simulates COMBAT_FORMULA_LEVELMAGIC:
+    //   min = (level * 2 + magLevel * 3) * mina + minb
+    //   max = (level * 2 + magLevel * 3) * maxa + maxb
+    int level = 100;
+    int magLevel = 70;
+    double mina = -1.0, minb = -10.0;
+    double maxa = -1.4, maxb = -20.0;
+    double levelBase = level * 2 + magLevel * 3; // 200 + 210 = 410
+    double minDamage = levelBase * mina + minb;  // -410 + -10 = -420
+    double maxDamage = levelBase * maxa + maxb;  // -574 + -20 = -594
+    EXPECT_DOUBLE_EQ(minDamage, -420.0);
+    EXPECT_DOUBLE_EQ(maxDamage, -594.0);
+    EXPECT_LE(maxDamage, minDamage); // max is more negative (more damage)
+}
+
+TEST(DamageCalc, SkillFormula) {
+    // Simulates COMBAT_FORMULA_SKILL:
+    //   min = skill * mina + minb
+    //   max = skill * maxa + maxb
+    int skill = 90;
+    double mina = 0.0, minb = 0.0;
+    double maxa = 0.085, maxb = 1.0;
+    double minDamage = skill * mina + minb; // 0
+    double maxDamage = skill * maxa + maxb; // 7.65 + 1.0 = 8.65
+    EXPECT_DOUBLE_EQ(minDamage, 0.0);
+    EXPECT_NEAR(maxDamage, 8.65, 0.001);
+}
+
+// ---- ConditionType_t <-> CombatType_t mappings ----
+// Re-declare condition types from enums.h
+enum ConditionType_t : uint32_t {
+    CONDITION_NONE = 0,
+    CONDITION_POISON = 1 << 0,
+    CONDITION_FIRE = 1 << 1,
+    CONDITION_ENERGY = 1 << 2,
+    CONDITION_BLEEDING = 1 << 3,
+    CONDITION_DROWN = 1 << 15,
+    CONDITION_FREEZING = 1 << 20,
+    CONDITION_DAZZLED = 1 << 21,
+    CONDITION_CURSED = 1 << 22,
+};
+
+// Extracted from Combat::ConditionToDamageType (combat.cpp)
+CombatType_t conditionToDamageType(ConditionType_t type) {
+    switch (type) {
+        case CONDITION_FIRE:     return COMBAT_FIREDAMAGE;
+        case CONDITION_ENERGY:   return COMBAT_ENERGYDAMAGE;
+        case CONDITION_BLEEDING: return COMBAT_PHYSICALDAMAGE;
+        case CONDITION_DROWN:    return COMBAT_DROWNDAMAGE;
+        case CONDITION_POISON:   return COMBAT_EARTHDAMAGE;
+        case CONDITION_FREEZING: return COMBAT_ICEDAMAGE;
+        case CONDITION_DAZZLED:  return COMBAT_HOLYDAMAGE;
+        case CONDITION_CURSED:   return COMBAT_DEATHDAMAGE;
+        default: return COMBAT_NONE;
+    }
+}
+
+// Extracted from Combat::DamageToConditionType (combat.cpp)
+ConditionType_t damageToConditionType(CombatType_t type) {
+    switch (type) {
+        case COMBAT_FIREDAMAGE:     return CONDITION_FIRE;
+        case COMBAT_ENERGYDAMAGE:   return CONDITION_ENERGY;
+        case COMBAT_DROWNDAMAGE:    return CONDITION_DROWN;
+        case COMBAT_EARTHDAMAGE:    return CONDITION_POISON;
+        case COMBAT_ICEDAMAGE:      return CONDITION_FREEZING;
+        case COMBAT_HOLYDAMAGE:     return CONDITION_DAZZLED;
+        case COMBAT_DEATHDAMAGE:    return CONDITION_CURSED;
+        case COMBAT_PHYSICALDAMAGE: return CONDITION_BLEEDING;
+        default: return CONDITION_NONE;
+    }
+}
+
+TEST(ConditionDamageMapping, FireRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_FIRE), COMBAT_FIREDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_FIREDAMAGE), CONDITION_FIRE);
+}
+
+TEST(ConditionDamageMapping, EnergyRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_ENERGY), COMBAT_ENERGYDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_ENERGYDAMAGE), CONDITION_ENERGY);
+}
+
+TEST(ConditionDamageMapping, EarthPoisonRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_POISON), COMBAT_EARTHDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_EARTHDAMAGE), CONDITION_POISON);
+}
+
+TEST(ConditionDamageMapping, IceFreezingRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_FREEZING), COMBAT_ICEDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_ICEDAMAGE), CONDITION_FREEZING);
+}
+
+TEST(ConditionDamageMapping, HolyDazzledRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_DAZZLED), COMBAT_HOLYDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_HOLYDAMAGE), CONDITION_DAZZLED);
+}
+
+TEST(ConditionDamageMapping, DeathCursedRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_CURSED), COMBAT_DEATHDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_DEATHDAMAGE), CONDITION_CURSED);
+}
+
+TEST(ConditionDamageMapping, DrownRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_DROWN), COMBAT_DROWNDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_DROWNDAMAGE), CONDITION_DROWN);
+}
+
+TEST(ConditionDamageMapping, BleedingPhysicalRoundTrip) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_BLEEDING), COMBAT_PHYSICALDAMAGE);
+    EXPECT_EQ(damageToConditionType(COMBAT_PHYSICALDAMAGE), CONDITION_BLEEDING);
+}
+
+TEST(ConditionDamageMapping, UnknownCondition) {
+    EXPECT_EQ(conditionToDamageType(CONDITION_NONE), COMBAT_NONE);
+}
+
+TEST(ConditionDamageMapping, UnknownDamageType) {
+    EXPECT_EQ(damageToConditionType(COMBAT_NONE), CONDITION_NONE);
+    EXPECT_EQ(damageToConditionType(COMBAT_HEALING), CONDITION_NONE);
+    EXPECT_EQ(damageToConditionType(COMBAT_LIFEDRAIN), CONDITION_NONE);
+    EXPECT_EQ(damageToConditionType(COMBAT_MANADRAIN), CONDITION_NONE);
+}
+
+// ---- Critical hit simulation (from Combat::checkCriticalHit) ----
+// Re-implements the logic without needing a Player object
+void simulateCriticalHit(CombatDamage& damage, CombatOrigin origin,
+                         uint16_t critChance, uint16_t critAmount, int roll) {
+    if (damage.critical || origin == ORIGIN_CONDITION) {
+        return;
+    }
+    if (damage.primary.value > 0 || damage.secondary.value > 0) {
+        return; // only applies to damage (negative values), not healing
+    }
+    if (critAmount != 0 && critChance != 0 && roll <= critChance) {
+        damage.primary.value += std::round(damage.primary.value * (critAmount / 100.0));
+        damage.secondary.value += std::round(damage.secondary.value * (critAmount / 100.0));
+        damage.critical = true;
+    }
+}
+
+TEST(CriticalHit, AppliesCritWhenRollSucceeds) {
+    CombatDamage damage;
+    damage.primary.value = -200;
+    damage.secondary.value = -50;
+    // 10% crit chance, 50% crit amount, roll of 5 (succeeds since 5 <= 10)
+    simulateCriticalHit(damage, ORIGIN_SPELL, 10, 50, 5);
+    EXPECT_TRUE(damage.critical);
+    EXPECT_EQ(damage.primary.value, -300);  // -200 + round(-200 * 0.5) = -200 + -100
+    EXPECT_EQ(damage.secondary.value, -75); // -50 + round(-50 * 0.5) = -50 + -25
+}
+
+TEST(CriticalHit, NoCritWhenRollFails) {
+    CombatDamage damage;
+    damage.primary.value = -200;
+    simulateCriticalHit(damage, ORIGIN_SPELL, 10, 50, 50); // roll 50 > chance 10
+    EXPECT_FALSE(damage.critical);
+    EXPECT_EQ(damage.primary.value, -200);
+}
+
+TEST(CriticalHit, NoCritOnConditionDamage) {
+    CombatDamage damage;
+    damage.primary.value = -100;
+    simulateCriticalHit(damage, ORIGIN_CONDITION, 100, 50, 1); // 100% chance but origin is condition
+    EXPECT_FALSE(damage.critical);
+    EXPECT_EQ(damage.primary.value, -100);
+}
+
+TEST(CriticalHit, NoCritOnHealing) {
+    CombatDamage damage;
+    damage.primary.value = 100; // positive = healing
+    simulateCriticalHit(damage, ORIGIN_SPELL, 100, 50, 1);
+    EXPECT_FALSE(damage.critical);
+    EXPECT_EQ(damage.primary.value, 100);
+}
+
+TEST(CriticalHit, NoCritWhenAlreadyCritical) {
+    CombatDamage damage;
+    damage.primary.value = -200;
+    damage.critical = true; // already crit
+    simulateCriticalHit(damage, ORIGIN_SPELL, 100, 50, 1);
+    EXPECT_EQ(damage.primary.value, -200); // unchanged
+}
+
+TEST(CriticalHit, ZeroCritChance) {
+    CombatDamage damage;
+    damage.primary.value = -200;
+    simulateCriticalHit(damage, ORIGIN_SPELL, 0, 50, 1);
+    EXPECT_FALSE(damage.critical);
+}
+
+TEST(CriticalHit, ZeroCritAmount) {
+    CombatDamage damage;
+    damage.primary.value = -200;
+    simulateCriticalHit(damage, ORIGIN_SPELL, 100, 0, 1);
+    EXPECT_FALSE(damage.critical);
+}
+
+// ---- PvP damage scaling (from doTargetCombat) ----
+// In TFS, PvP damage is halved against non-black-skull players
+TEST(PvPScaling, DamageHalved) {
+    CombatDamage damage;
+    damage.primary.value = -200;
+    damage.secondary.value = -100;
+    // PvP halving
+    damage.primary.value /= 2;
+    damage.secondary.value /= 2;
+    EXPECT_EQ(damage.primary.value, -100);
+    EXPECT_EQ(damage.secondary.value, -50);
+}
+
+TEST(PvPScaling, OddDamageRoundsDown) {
+    CombatDamage damage;
+    damage.primary.value = -201;
+    damage.primary.value /= 2;
+    EXPECT_EQ(damage.primary.value, -100); // integer division truncates toward zero
+}
+
+TEST(PvPScaling, ZeroDamageUnchanged) {
+    CombatDamage damage;
+    damage.primary.value = 0;
+    damage.primary.value /= 2;
+    EXPECT_EQ(damage.primary.value, 0);
+}
+
+// ---- MatrixArea (from combat.h) ----
+// Simplified re-implementation for testing
+class TestMatrixArea {
+public:
+    TestMatrixArea(uint32_t rows, uint32_t cols)
+        : centerX(0), centerY(0), rows_(rows), cols_(cols) {
+        data_.resize(rows * cols, false);
+    }
+
+    void setValue(uint32_t row, uint32_t col, bool value) {
+        data_[row * cols_ + col] = value;
+    }
+    bool getValue(uint32_t row, uint32_t col) const {
+        return data_[row * cols_ + col];
+    }
+    void setCenter(uint32_t y, uint32_t x) {
+        centerX = x;
+        centerY = y;
+    }
+    void getCenter(uint32_t& y, uint32_t& x) const {
+        x = centerX;
+        y = centerY;
+    }
+    uint32_t getRows() const { return rows_; }
+    uint32_t getCols() const { return cols_; }
+
+private:
+    uint32_t centerX, centerY;
+    uint32_t rows_, cols_;
+    std::vector<bool> data_;
+};
+
+TEST(MatrixArea, Create3x3) {
+    TestMatrixArea area(3, 3);
+    EXPECT_EQ(area.getRows(), 3u);
+    EXPECT_EQ(area.getCols(), 3u);
+    // All values should default to false
+    for (uint32_t r = 0; r < 3; ++r) {
+        for (uint32_t c = 0; c < 3; ++c) {
+            EXPECT_FALSE(area.getValue(r, c));
+        }
+    }
+}
+
+TEST(MatrixArea, SetAndGetValues) {
+    TestMatrixArea area(3, 3);
+    area.setValue(0, 0, true);
+    area.setValue(1, 1, true);
+    area.setValue(2, 2, true);
+    EXPECT_TRUE(area.getValue(0, 0));
+    EXPECT_FALSE(area.getValue(0, 1));
+    EXPECT_TRUE(area.getValue(1, 1));
+    EXPECT_TRUE(area.getValue(2, 2));
+}
+
+TEST(MatrixArea, Center) {
+    TestMatrixArea area(5, 5);
+    area.setCenter(2, 2);
+    uint32_t cy, cx;
+    area.getCenter(cy, cx);
+    EXPECT_EQ(cx, 2u);
+    EXPECT_EQ(cy, 2u);
+}
+
+TEST(MatrixArea, CrossPattern) {
+    // A 3x3 cross pattern (like a basic area spell)
+    TestMatrixArea area(3, 3);
+    area.setCenter(1, 1);
+    area.setValue(0, 1, true); // top
+    area.setValue(1, 0, true); // left
+    area.setValue(1, 1, true); // center
+    area.setValue(1, 2, true); // right
+    area.setValue(2, 1, true); // bottom
+
+    int count = 0;
+    for (uint32_t r = 0; r < 3; ++r) {
+        for (uint32_t c = 0; c < 3; ++c) {
+            if (area.getValue(r, c)) ++count;
+        }
+    }
+    EXPECT_EQ(count, 5);
+    // Corners should be empty
+    EXPECT_FALSE(area.getValue(0, 0));
+    EXPECT_FALSE(area.getValue(0, 2));
+    EXPECT_FALSE(area.getValue(2, 0));
+    EXPECT_FALSE(area.getValue(2, 2));
+}
+
+TEST(MatrixArea, SingleCell) {
+    TestMatrixArea area(1, 1);
+    area.setCenter(0, 0);
+    area.setValue(0, 0, true);
+    EXPECT_TRUE(area.getValue(0, 0));
+    EXPECT_EQ(area.getRows(), 1u);
+    EXPECT_EQ(area.getCols(), 1u);
+}
+
+TEST(MatrixArea, WideBeam) {
+    // Simulates a beam area: 1 row, 7 cols
+    TestMatrixArea area(1, 7);
+    area.setCenter(0, 0);
+    for (uint32_t c = 0; c < 7; ++c) {
+        area.setValue(0, c, true);
+    }
+    int count = 0;
+    for (uint32_t c = 0; c < 7; ++c) {
+        if (area.getValue(0, c)) ++count;
+    }
+    EXPECT_EQ(count, 7);
+}
+
+// ---- Total damage calculation ----
+TEST(DamageCalc, TotalDamageWithDualElement) {
+    CombatDamage damage;
+    damage.primary.type = COMBAT_PHYSICALDAMAGE;
+    damage.primary.value = -150;
+    damage.secondary.type = COMBAT_FIREDAMAGE;
+    damage.secondary.value = -75;
+    int32_t totalDamage = damage.primary.value + damage.secondary.value;
+    EXPECT_EQ(totalDamage, -225);
+}
+
+TEST(DamageCalc, CritThenPvPOrdering) {
+    // Simulate the doTargetCombat ordering: PvP halving first, then crit
+    CombatDamage damage;
+    damage.primary.value = -400;
+    damage.secondary.value = 0;
+
+    // Step 1: PvP halving
+    damage.primary.value /= 2; // -200
+
+    // Step 2: Critical hit (50% bonus)
+    simulateCriticalHit(damage, ORIGIN_MELEE, 100, 50, 1);
+    // -200 + round(-200 * 0.5) = -200 + -100 = -300
+    EXPECT_TRUE(damage.critical);
+    EXPECT_EQ(damage.primary.value, -300);
+}
+
+TEST(DamageCalc, NoDamageNoCrit) {
+    CombatDamage damage;
+    damage.primary.value = 0;
+    damage.secondary.value = 0;
+    // No damage means no crit (values are not < 0)
+    simulateCriticalHit(damage, ORIGIN_MELEE, 100, 50, 1);
+    EXPECT_FALSE(damage.critical);
 }
