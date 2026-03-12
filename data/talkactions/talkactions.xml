@@ -56,6 +56,13 @@
 	<talkaction words="!dungeon" separator=" " script="party.lua" />
 	<talkaction words="!house" separator=" " script="party.lua" />
 
+	<!-- Phase 1.3 + 5: PvP and Guild commands -->
+	<talkaction words="!duel" separator=" " script="pvp.lua" />
+	<talkaction words="!bounty" separator=" " script="pvp.lua" />
+	<talkaction words="!bountylist" script="pvp.lua" />
+	<talkaction words="!pvprank" script="pvp.lua" />
+	<talkaction words="!guildbank" separator=" " script="pvp.lua" />
+
 	<!-- test talkactions -->
 	<talkaction words="!z" separator=" " script="magiceffect.lua" />
 	<talkaction words="!x" separator=" " script="animationeffect.lua" />

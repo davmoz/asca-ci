@@ -33,3 +33,8 @@ dofile('data/lib/seasonal_events.lua')
 dofile('data/lib/housing_enhanced.lua')
 dofile('data/lib/party_enhanced.lua')
 dofile('data/lib/weekly_dungeons.lua')
+
+-- PvP and Guild systems (Phase 1.3 + 5)
+dofile('data/lib/retro_pvp.lua')
+dofile('data/lib/guild_enhanced.lua')
+dofile('data/lib/pvp_systems.lua')

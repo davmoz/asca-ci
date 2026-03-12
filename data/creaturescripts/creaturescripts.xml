@@ -6,4 +6,7 @@
 	<event type="kill" name="LootAttributes" script="loot_attributes.lua" />
 	<event type="death" name="LootAttributesDeath" script="loot_attributes.lua" />
 	<event type="kill" name="KillTracker" script="kill_tracker.lua" />
+	<event type="kill" name="PvPKill" script="pvp_handler.lua" />
+	<event type="death" name="PvPDeath" script="pvp_handler.lua" />
+	<event type="login" name="PvPLogin" script="pvp_handler.lua" />
 </creaturescripts>
