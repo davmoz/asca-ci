@@ -45,6 +45,17 @@
   63200 - 63208   Moderation              data/talkactions/scripts/moderation.lua
 
   63300 - 63999   (reserved for future use)
+
+  64000 - 64004   DailyRewards            data/lib/daily_rewards.lua
+  64005 - 64099   (reserved for daily rewards)
+
+  64100 - 64114   PreySystem              data/lib/prey_system.lua
+  64115 - 64199   (reserved for prey)
+
+  64200 - 64299   ImbuingSystem           data/lib/imbuing_system.lua
+
+  64300 - 64303   FactionSystem           data/lib/faction_system.lua
+  64304 - 64399   (reserved for factions)
 ]]
 
 print(">> Storage keys registry loaded")

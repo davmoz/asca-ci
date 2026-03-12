@@ -18,6 +18,7 @@ dofile('data/lib/crafting_mining.lua')
 dofile('data/lib/crafting_smithing.lua')
 dofile('data/lib/crafting_enchanting.lua')
 dofile('data/lib/crafting_farming.lua')
+dofile('data/lib/crafting_cooking.lua')
 
 -- Item systems (Phase 3)
 dofile('data/lib/item_attributes.lua')
@@ -41,6 +42,18 @@ dofile('data/lib/weekly_dungeons.lua')
 dofile('data/lib/retro_pvp.lua')
 dofile('data/lib/guild_enhanced.lua')
 dofile('data/lib/pvp_systems.lua')
+
+-- Daily Rewards system
+dofile('data/lib/daily_rewards.lua')
+
+-- Prey/Hunting Bonus system
+dofile('data/lib/prey_system.lua')
+
+-- Imbuing system
+dofile('data/lib/imbuing_system.lua')
+
+-- Faction/Reputation system
+dofile('data/lib/faction_system.lua')
 
 -- Server Monitoring and Admin Tools (Phase 6.5)
 dofile('data/lib/server_monitor.lua')

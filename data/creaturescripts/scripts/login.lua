@@ -42,5 +42,21 @@ function onLogin(player)
 		AchievementSystem.checkLevelAchievements(player)
 	end
 
+	-- Daily rewards check
+	if DailyRewards and DailyRewards.onLogin then
+		DailyRewards.onLogin(player)
+	end
+
+	-- Register PvP events
+	player:registerEvent("PvPKill")
+	player:registerEvent("PvPDeath")
+
+	-- Check expired cooking buffs
+	if Cooking and Cooking.isBuffActive then
+		if not Cooking.isBuffActive(player) then
+			Cooking.removeBuff(player)
+		end
+	end
+
 	return true
 end
