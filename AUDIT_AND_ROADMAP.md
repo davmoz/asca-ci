@@ -753,4 +753,68 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 
 ---
 
+## 8. Detailed Implementation Notes
+
+Detailed implementation plans with source code analysis, file change lists, starter code, and architecture decisions are maintained in the `docs/` directory:
+
+### Phase 1: Core Systems
+
+- **[docs/phase1-vocations.md](docs/phase1-vocations.md)** -- Vocation system overhaul
+  - Replace Paladin with Archer (Royal Archer promotion)
+  - Rename: Sorcerer->Mage (High Mage), Elder Druid->Guardian Druid, Elite Knight->Imperial Knight
+  - Complete stat rebalancing tables (HP/mana/cap/regen/skill multipliers per vocation)
+  - Spell redistribution plan for all vocation name references
+  - Wand/rod removal strategy (remove from items/shops/loot, keep engine code)
+  - War hammer as low-level mage weapon
+  - Key finding: Vocation system is entirely data-driven from `data/XML/vocations.xml`; no C++ changes required for the rename/rebalance
+
+- **[docs/phase1-skills.md](docs/phase1-skills.md)** -- Skill system extensions
+  - Add SKILL_COOKING (7) and SKILL_MINING (8) to the C++ engine
+  - Exact files and line numbers for all changes: `src/enums.h`, `src/vocation.h`, `src/vocation.cpp`, `src/iologindata.cpp`, `src/protocolgame.cpp`, `src/luascript.cpp`, `src/condition.cpp`, `src/items.cpp`
+  - Database migration script for new skill columns
+  - Protocol impact analysis: requires OTClient (standard client expects exactly 7 skills)
+  - Fishing upgrade from basic action to full species/location/rod-tier system
+  - Risk assessment: shifting SKILL_MAGLEVEL/SKILL_LEVEL constants requires careful audit
+
+- **[docs/phase1-retro-pvp.md](docs/phase1-retro-pvp.md)** -- Retro PvP mechanics
+  - Rune hotkey blocking: add check in `src/actions.cpp` to block `isHotkey` for rune items
+  - Rope hole blocking: Lua-side creature check on destination tile
+  - PvP damage reduction: configurable multipliers in `Combat::doTargetCombat()`
+  - Custom skull system: configurable thresholds, skull-based death penalties
+  - Guild war auto-accept: trigger on `Player::onKilledCreature()` when pending war exists
+  - All changes config-driven via `config.lua` for runtime tunability
+
+### Phase 2: Crafting & Gathering
+
+- **[docs/phase2-crafting-overview.md](docs/phase2-crafting-overview.md)** -- Architecture for all 6 crafting systems
+  - Shared crafting framework design (`data/lib/crafting.lua`) with recipe/ingredient data structures
+  - Skill progression curves (exponential formula analysis with projected training times)
+  - Individual system designs: Fishing (12+ species, pool system), Farming (growth cycles), Cooking (20+ recipes with stat buffs), Mining (11 ores, vein depletion/respawn), Smithing (two-phase smelting+forging), Enchanting (Painite crystals, attribute pools)
+  - Item ID range allocation (30001-30799)
+  - Database tables: `crafting_recipes`, `farming_plots`, `player_crafting_log`
+  - NPC interaction plans for each system
+  - Implementation order based on dependency graph
+
+### Phase 3: Item System
+
+- **[docs/phase3-items.md](docs/phase3-items.md)** -- Item system overhaul
+  - Random attribute system using existing `CustomAttribute` infrastructure (no new C++ types needed)
+  - 18 attribute types defined with pools per item category (weapons, armor, shields, boots)
+  - Attribute generation tied to monster difficulty level
+  - Item rank system (0-5) with exponential upgrade costs and failure penalties
+  - Properties system (STR/DEX/INT) derived from equipped item ranks and attributes
+  - Legendary item framework: fixed attributes, unique on-hit/on-equip effects, elite monster variants
+  - Combat integration points in `Player::getArmor()`, `Player::getDefense()`, combat event callbacks
+  - Key finding: existing `grade`, `attackModPassive`, `critPassive` etc. in `ItemType` suggest prior custom work that can be leveraged
+
+### Key Architectural Decisions
+
+1. **Data-driven vocation system**: All vocation changes are XML-only, minimizing C++ risk
+2. **CustomAttribute for item attributes**: Leverages existing serialization (`ATTR_CUSTOM_ATTRIBUTES`) -- no new binary format needed
+3. **Lua-first crafting**: All crafting logic in Lua for rapid iteration; C++ only for new skill enums and database columns
+4. **OTClient required**: Custom skills, attributes display, and crafting UI all require OTClient fork
+5. **Config-driven PvP**: All PvP tuning values in `config.lua` for live adjustment without recompilation
+
+---
+
 *This document serves as a living roadmap. Update checkboxes as features are completed. Each phase should be committed to git as a milestone.*
