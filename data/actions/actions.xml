@@ -220,6 +220,37 @@
 	<action itemid="30321" script="crafting/mining.lua" allowfaruse="1" />  <!-- Steel Pickaxe -->
 	<action itemid="30322" script="crafting/mining.lua" allowfaruse="1" />  <!-- Crystal Pickaxe -->
 
+	<!-- Farming (Phase 2.2) -->
+	<!-- Seeds: use on planting pot or farm plot -->
+	<action itemid="30100" script="crafting/farming.lua" />  <!-- Wheat Seeds -->
+	<action itemid="30101" script="crafting/farming.lua" />  <!-- Corn Seeds -->
+	<action itemid="30102" script="crafting/farming.lua" />  <!-- Potato Seeds -->
+	<action itemid="30103" script="crafting/farming.lua" />  <!-- Carrot Seeds -->
+	<action itemid="30104" script="crafting/farming.lua" />  <!-- Tomato Seeds -->
+	<action itemid="30105" script="crafting/farming.lua" />  <!-- Onion Seeds -->
+	<action itemid="30106" script="crafting/farming.lua" />  <!-- Garlic Seeds -->
+	<action itemid="30107" script="crafting/farming.lua" />  <!-- Lettuce Seeds -->
+	<action itemid="30108" script="crafting/farming.lua" />  <!-- Pumpkin Seeds -->
+	<action itemid="30109" script="crafting/farming.lua" />  <!-- Basil Seeds -->
+	<action itemid="30110" script="crafting/farming.lua" />  <!-- Thyme Seeds -->
+	<action itemid="30111" script="crafting/farming.lua" />  <!-- Rosemary Seeds -->
+	<action itemid="30112" script="crafting/farming.lua" />  <!-- Berry Seeds -->
+	<action itemid="30113" script="crafting/farming.lua" />  <!-- Grape Seeds -->
+	<action itemid="30114" script="crafting/farming.lua" />  <!-- Herb Seeds -->
+	<action itemid="30115" script="crafting/farming.lua" />  <!-- Mandrake Seeds -->
+	<action itemid="30116" script="crafting/farming.lua" />  <!-- Starflower Seeds -->
+	<!-- Watering Can: use on growing crops -->
+	<action itemid="30120" script="crafting/farming.lua" />  <!-- Watering Can -->
+	<!-- Garden Hoe: use on ready crops to harvest -->
+	<action itemid="30121" script="crafting/farming.lua" />  <!-- Garden Hoe -->
+	<!-- Farm plots: right-click to check/harvest -->
+	<action itemid="30130" script="crafting/farming.lua" />  <!-- Planting Pot -->
+	<action itemid="30131" script="crafting/farming.lua" />  <!-- Farm Plot (empty) -->
+	<action itemid="30132" script="crafting/farming.lua" />  <!-- Farm Plot (planted) -->
+	<action itemid="30133" script="crafting/farming.lua" />  <!-- Farm Plot (sprouting) -->
+	<action itemid="30134" script="crafting/farming.lua" />  <!-- Farm Plot (growing) -->
+	<action itemid="30135" script="crafting/farming.lua" />  <!-- Farm Plot (ready) -->
+
 	<!-- Enchanting Crystals (Phase 2.6) -->
 	<action itemid="30600" script="crafting/enchanting.lua" />  <!-- Small Painite Crystal -->
 	<action itemid="30601" script="crafting/enchanting.lua" />  <!-- Medium Painite Crystal -->
@@ -237,6 +268,19 @@
 	<action itemid="30308" script="crafting/smelting.lua" />  <!-- Adamantite Ore -->
 	<action itemid="30309" script="crafting/smelting.lua" />  <!-- Orichalcum Ore -->
 	<action itemid="30310" script="crafting/smelting.lua" />  <!-- Painite Crystal Shard -->
+
+	<!-- Smithing: use bars on anvil to forge equipment (Phase 2.5) -->
+	<action itemid="30400" script="crafting/smithing.lua" />  <!-- Copper Bar -->
+	<action itemid="30401" script="crafting/smithing.lua" />  <!-- Tin Bar -->
+	<action itemid="30402" script="crafting/smithing.lua" />  <!-- Bronze Bar -->
+	<action itemid="30403" script="crafting/smithing.lua" />  <!-- Iron Bar -->
+	<action itemid="30404" script="crafting/smithing.lua" />  <!-- Steel Bar -->
+	<action itemid="30405" script="crafting/smithing.lua" />  <!-- Silver Bar -->
+	<action itemid="30406" script="crafting/smithing.lua" />  <!-- Gold Bar -->
+	<action itemid="30407" script="crafting/smithing.lua" />  <!-- Mithril Bar -->
+	<action itemid="30408" script="crafting/smithing.lua" />  <!-- Platinum Bar -->
+	<action itemid="30409" script="crafting/smithing.lua" />  <!-- Adamantite Bar -->
+	<action itemid="30410" script="crafting/smithing.lua" />  <!-- Orichalcum Bar -->
 
 	<!-- Other -->
 	<action itemid="430" script="other/teleport.lua" />
