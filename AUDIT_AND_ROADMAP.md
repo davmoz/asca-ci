@@ -106,7 +106,7 @@
 - Compatibility layer for older scripts
 - Debug utilities
 
-#### Database Migrations: **28 migration files** (0.lua through 27.lua)
+#### Database Migrations: **34 migration files** (0.lua through 33.lua)
 
 ### 1.4 Game Systems Currently Implemented
 
@@ -350,7 +350,7 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 - [ ] Port or recreate map in compatible OTBM format
 - [ ] Migrate database schema (schema.sql -> TFS 1.6 schema + 28 existing migrations)
 - [ ] Verify build and basic server functionality
-- [ ] Set up Docker development environment
+- [x] Set up Docker development environment
 
 **Deliverable**: Server boots on TFS 1.6 with all existing content working
 
@@ -361,10 +361,10 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 **Goal**: Modify base systems to support Medivia-style gameplay
 
 #### 1.1 Custom Vocation System
-- [ ] Replace Paladin with Archer (Royal Archer promotion)
-- [ ] Rename promotions: Elite Knight -> Imperial Knight, Elder Druid -> Guardian Druid, Master Sorcerer -> High Mage
-- [ ] Rebalance vocation stats (HP/mana/cap/regen per level)
-- [ ] Remove wands and rods from game
+- [x] Replace Paladin with Archer (Royal Archer promotion)
+- [x] Rename promotions: Elite Knight -> Imperial Knight, Elder Druid -> Guardian Druid, Master Sorcerer -> High Mage
+- [x] Rebalance vocation stats (HP/mana/cap/regen per level)
+- [x] Remove wands and rods from game
 - [ ] Add war hammer as low-level mage weapon
 - [ ] Adjust spell availability per new vocation names
 - [ ] Create Archer-specific spells and abilities
@@ -379,11 +379,11 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 - [ ] Update protocol to send/display new skills to client
 
 #### 1.3 Retro PvP Mechanics
-- [ ] Disable rune hotkey functionality (require manual use)
-- [ ] Implement rope hole blocking mechanic
-- [ ] Adjust PvP damage formulas
-- [ ] Implement custom skull system
-- [ ] Add guild war auto-accept on pending kill
+- [x] Disable rune hotkey functionality (require manual use)
+- [x] Implement rope hole blocking mechanic
+- [x] Adjust PvP damage formulas
+- [x] Implement custom skull system
+- [x] Add guild war auto-accept on pending kill
 
 **Deliverable**: Custom vocations playable, new skills trackable, retro PvP active
 
@@ -394,58 +394,58 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 **Goal**: Implement the 6 interconnected crafting/gathering systems
 
 #### 2.1 Fishing System
-- [ ] Create fish species items (12+ types with different rarity tiers)
-- [ ] Implement fish pool map objects (spawning/despawning)
-- [ ] Create fishing rod tiers (basic -> advanced)
-- [ ] Implement fishing skill progression (affects catch rate/species)
-- [ ] Add location-based fish availability
-- [ ] Add time-of-day fishing modifiers
-- [ ] Create fishing-related NPCs
+- [x] Create fish species items (12+ types with different rarity tiers)
+- [x] Implement fish pool map objects (spawning/despawning)
+- [x] Create fishing rod tiers (basic -> advanced)
+- [x] Implement fishing skill progression (affects catch rate/species)
+- [x] Add location-based fish availability
+- [x] Add time-of-day fishing modifiers
+- [x] Create fishing-related NPCs
 
 #### 2.2 Farming System
-- [ ] Create seed/crop items (vegetables, fruits)
-- [ ] Implement planting pot house item
-- [ ] Create public farm locations on map
-- [ ] Implement growth cycle (plant -> grow -> harvest with timers)
-- [ ] Add watering/tending mechanics
-- [ ] Create farming tool items
-- [ ] Seasonal crop availability
+- [x] Create seed/crop items (vegetables, fruits)
+- [x] Implement planting pot house item
+- [x] Create public farm locations on map
+- [x] Implement growth cycle (plant -> grow -> harvest with timers)
+- [x] Add watering/tending mechanics
+- [x] Create farming tool items
+- [x] Seasonal crop availability
 
 #### 2.3 Cooking System
-- [ ] Implement cooking skill with progression
-- [ ] Create recipe system (ingredient combinations -> meals)
-- [ ] Design 20+ meal recipes with different stat buffs
-- [ ] Implement cooking stations (stoves, campfires)
-- [ ] Add buff duration and stacking rules
-- [ ] Create cooking-related NPCs (recipe teachers)
-- [ ] Fish as primary ingredient requirement
+- [x] Implement cooking skill with progression
+- [x] Create recipe system (ingredient combinations -> meals)
+- [x] Design 20+ meal recipes with different stat buffs
+- [x] Implement cooking stations (stoves, campfires)
+- [x] Add buff duration and stacking rules
+- [x] Create cooking-related NPCs (recipe teachers)
+- [x] Fish as primary ingredient requirement
 
 #### 2.4 Mining System
-- [ ] Create 11 ore types with rarity tiers
-- [ ] Place ore veins on world map (surface to deep caves)
-- [ ] Implement mining tool tiers (pickaxes)
-- [ ] Add mining skill progression
-- [ ] Implement ore respawn timers
-- [ ] Rarer ores in more dangerous locations
-- [ ] Mining-related sound/visual effects
+- [x] Create 11 ore types with rarity tiers
+- [x] Place ore veins on world map (surface to deep caves)
+- [x] Implement mining tool tiers (pickaxes)
+- [x] Add mining skill progression
+- [x] Implement ore respawn timers
+- [x] Rarer ores in more dangerous locations
+- [x] Mining-related sound/visual effects
 
 #### 2.5 Smithing System
-- [ ] Implement smelting: ore -> bars (furnace interaction)
-- [ ] Create smithing recipes: bars + materials -> equipment
-- [ ] Design crafted equipment tier list (some of best-in-slot)
-- [ ] Implement anvil/forge interaction
-- [ ] Add smithing skill progression
-- [ ] Create smith NPC trainers
-- [ ] Quality/grade system for crafted items
+- [x] Implement smelting: ore -> bars (furnace interaction)
+- [x] Create smithing recipes: bars + materials -> equipment
+- [x] Design crafted equipment tier list (some of best-in-slot)
+- [x] Implement anvil/forge interaction
+- [x] Add smithing skill progression
+- [x] Create smith NPC trainers
+- [x] Quality/grade system for crafted items
 
 #### 2.6 Enchanting System
-- [ ] Create Painite Crystal items (Small/Medium/Large shards)
-- [ ] Implement enchanting mechanic (crystal + item = attribute)
-- [ ] Design attribute pool per item type
-- [ ] Implement attribute generation with rarity weights
-- [ ] Add success/failure chances per crystal tier
-- [ ] Vocation-specific attributes (Intelligence for mages, etc.)
-- [ ] Attribute stacking rules and limits
+- [x] Create Painite Crystal items (Small/Medium/Large shards)
+- [x] Implement enchanting mechanic (crystal + item = attribute)
+- [x] Design attribute pool per item type
+- [x] Implement attribute generation with rarity weights
+- [x] Add success/failure chances per crystal tier
+- [x] Vocation-specific attributes (Intelligence for mages, etc.)
+- [x] Attribute stacking rules and limits
 
 **Deliverable**: All 6 crafting/gathering systems functional and interconnected
 
@@ -456,28 +456,28 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 **Goal**: Implement Medivia's advanced item system
 
 #### 3.1 Item Attributes (Random Bonuses)
-- [ ] Extend `item.h/cpp` to support random attribute generation
-- [ ] Define attribute types: Attack, Critical Hit, Berserk, Gauge, Crushing Blow, Dazing Blow, Lean, etc.
-- [ ] Implement attribute generation on monster loot drops
-- [ ] Create attribute display in item descriptions
-- [ ] Add vocation restrictions to certain attributes
-- [ ] Implement attribute effect processing in combat system
+- [x] Extend `item.h/cpp` to support random attribute generation
+- [x] Define attribute types: Attack, Critical Hit, Berserk, Gauge, Crushing Blow, Dazing Blow, Lean, etc.
+- [x] Implement attribute generation on monster loot drops
+- [x] Create attribute display in item descriptions
+- [x] Add vocation restrictions to certain attributes
+- [x] Implement attribute effect processing in combat system
 
 #### 3.2 Item Rank System
-- [ ] Design item rank progression (Rank 1-5 or similar)
-- [ ] Implement Properties system: Strength, Dexterity, Intelligence
-- [ ] Properties scale with Item Rank
-- [ ] Rank affects damage output and spellpower
-- [ ] Create rank upgrade mechanic (materials/gold cost)
-- [ ] Update client item tooltips for rank display
+- [x] Design item rank progression (Rank 1-5 or similar)
+- [x] Implement Properties system: Strength, Dexterity, Intelligence
+- [x] Properties scale with Item Rank
+- [x] Rank affects damage output and spellpower
+- [x] Create rank upgrade mechanic (materials/gold cost)
+- [x] Update client item tooltips for rank display
 
 #### 3.3 Legendary Items
-- [ ] Design 20+ legendary items with unique effects
-- [ ] Create elite/legendary monster variants
-- [ ] Implement unique on-use item effects
-- [ ] Legendary item visual indicators
-- [ ] Drop rate balancing for legendary items
-- [ ] Legendary items cannot be enchanted (or have special rules)
+- [x] Design 20+ legendary items with unique effects
+- [x] Create elite/legendary monster variants
+- [x] Implement unique on-use item effects
+- [x] Legendary item visual indicators
+- [x] Drop rate balancing for legendary items
+- [x] Legendary items cannot be enchanted (or have special rules)
 
 #### 3.4 Equipment Rebalancing
 - [ ] Rebalance all existing equipment for new systems
@@ -501,36 +501,36 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 - [ ] Create cave systems, mountains, underwater areas
 - [ ] Place ore veins, fish pools, farm plots across world
 - [ ] Design quest-specific dungeons
-- [ ] Create weekly dungeon instances
+- [x] Create weekly dungeon instances
 - [ ] Hidden areas and secret passages
 - [ ] Strategic PvP zones
 
 #### 4.2 NPC Network (100+ NPCs minimum)
-- [ ] City NPCs: Shopkeepers (weapons, armor, tools, runes, potions)
-- [ ] Service NPCs: Bankers, Blessers, Boat captains, Carpet riders
-- [ ] Quest NPCs: Faction leaders, quest givers, lore characters
-- [ ] Craft NPCs: Smithing trainers, cooking teachers, mining instructors
-- [ ] Task NPCs: Hunter's Guild masters, Tylar-equivalent
-- [ ] Special NPCs: Promotion NPCs, outfit/addon quest NPCs
-- [ ] Guard NPCs for cities and important locations
-- [ ] Each NPC needs unique dialogue, shop lists, and purpose
+- [x] City NPCs: Shopkeepers (weapons, armor, tools, runes, potions)
+- [x] Service NPCs: Bankers, Blessers, Boat captains, Carpet riders
+- [x] Quest NPCs: Faction leaders, quest givers, lore characters
+- [x] Craft NPCs: Smithing trainers, cooking teachers, mining instructors
+- [x] Task NPCs: Hunter's Guild masters, Tylar-equivalent
+- [x] Special NPCs: Promotion NPCs, outfit/addon quest NPCs
+- [x] Guard NPCs for cities and important locations
+- [x] Each NPC needs unique dialogue, shop lists, and purpose
 
 #### 4.3 Task & Faction Systems
-- [ ] Implement Hunter's Guild task system (in-game UI button)
-- [ ] Create 50+ tasks across all level ranges
+- [x] Implement Hunter's Guild task system (in-game UI button)
+- [x] Create 50+ tasks across all level ranges
 - [ ] Design 4+ faction questlines with branching rewards
 - [ ] Faction reputation tracking
 - [ ] Faction-specific rewards: spells, hunting grounds, travel routes, equipment recipes
-- [ ] Experience Tasks with kill-count XP bonuses
+- [x] Experience Tasks with kill-count XP bonuses
 
 #### 4.4 Quest Content
-- [ ] Design 30+ quests of varying difficulty
-- [ ] Access quests (unlock areas/features)
-- [ ] Equipment quests (craft specific gear sets)
-- [ ] Lore quests (world-building narrative)
-- [ ] Promotion quests
-- [ ] Outfit/addon quests
-- [ ] Boss fight quests
+- [x] Design 30+ quests of varying difficulty
+- [x] Access quests (unlock areas/features)
+- [x] Equipment quests (craft specific gear sets)
+- [x] Lore quests (world-building narrative)
+- [x] Promotion quests
+- [x] Outfit/addon quests
+- [x] Boss fight quests
 
 #### 4.5 Monster Content
 - [ ] Review and rebalance existing 703 monsters for new systems
@@ -541,24 +541,24 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 - [ ] Balance spawn rates and respawn times
 
 #### 4.6 Raid System Enhancement
-- [ ] Design 15+ new raids
-- [ ] Implement daily minimum raid guarantee
-- [ ] Create raid-specific boss monsters
-- [ ] Raid announcement system
-- [ ] Raid reward distribution
+- [x] Design 15+ new raids
+- [x] Implement daily minimum raid guarantee
+- [x] Create raid-specific boss monsters
+- [x] Raid announcement system
+- [x] Raid reward distribution
 
 #### 4.7 Bestiary System
-- [ ] Design bestiary UI/data structure
-- [ ] Track kill counts per creature
-- [ ] Unlock creature information progressively
-- [ ] Display skin/loot success chances
-- [ ] Bestiary completion rewards
+- [x] Design bestiary UI/data structure
+- [x] Track kill counts per creature
+- [x] Unlock creature information progressively
+- [x] Display skin/loot success chances
+- [x] Bestiary completion rewards
 
 #### 4.8 Achievement System
-- [ ] Design achievement categories (exploration, combat, crafting, quests)
-- [ ] Create 100+ achievements
-- [ ] Achievement points and reward tiers
-- [ ] Achievement display in character info
+- [x] Design achievement categories (exploration, combat, crafting, quests)
+- [x] Create 100+ achievements
+- [x] Achievement points and reward tiers
+- [x] Achievement display in character info
 
 **Deliverable**: Rich, explorable world with hundreds of NPCs, quests, tasks, and activities
 
@@ -569,39 +569,39 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 **Goal**: Create compelling multiplayer systems
 
 #### 5.1 Enhanced Guild System
-- [ ] Guild halls with custom decorating
-- [ ] Guild bank
-- [ ] Guild achievements/levels
-- [ ] Enhanced guild war system with auto-accept
-- [ ] Guild alliances
-- [ ] Guild rankings and leaderboards
+- [x] Guild halls with custom decorating
+- [x] Guild bank
+- [x] Guild achievements/levels
+- [x] Enhanced guild war system with auto-accept
+- [x] Guild alliances
+- [x] Guild rankings and leaderboards
 
 #### 5.2 PvP Enhancements
-- [ ] Arena/duel system
-- [ ] PvP zones with special rules
-- [ ] Bounty system
-- [ ] PvP rankings/leaderboard
-- [ ] Anti-griefing protections for low-levels
+- [x] Arena/duel system
+- [x] PvP zones with special rules
+- [x] Bounty system
+- [x] PvP rankings/leaderboard
+- [x] Anti-griefing protections for low-levels
 
 #### 5.3 Party System Enhancements
-- [ ] Party finder/matchmaking
-- [ ] Party quests (require full party)
-- [ ] Enhanced shared XP formulas
-- [ ] Party buffs (from druid healer role)
+- [x] Party finder/matchmaking
+- [x] Party quests (require full party)
+- [x] Enhanced shared XP formulas
+- [x] Party buffs (from druid healer role)
 
 #### 5.4 Housing Enhancements
-- [ ] Floor modification system
-- [ ] Expanded decoration options
-- [ ] House display/showroom feature
-- [ ] House-based crafting stations
-- [ ] Planting pots for farming in houses
+- [x] Floor modification system
+- [x] Expanded decoration options
+- [x] House display/showroom feature
+- [x] House-based crafting stations
+- [x] Planting pots for farming in houses
 
 #### 5.5 Seasonal Events
-- [ ] Christmas event with exclusive rewards
-- [ ] Halloween event
-- [ ] Easter event
-- [ ] Anniversary event
-- [ ] Design event-specific monsters, quests, and cosmetic rewards
+- [x] Christmas event with exclusive rewards
+- [x] Halloween event
+- [x] Easter event
+- [x] Anniversary event
+- [x] Design event-specific monsters, quests, and cosmetic rewards
 - [ ] Royal Outfit prestige system with annual XP event
 
 **Deliverable**: Social systems encourage community building and competitive play
@@ -638,9 +638,9 @@ Phase 7: Launch Preparation                    [Weeks 51-56]
 - [ ] Packet validation
 - [ ] Speed hack detection
 - [ ] Multi-client detection improvements
-- [ ] DDoS protection (network level)
-- [ ] SQL injection prevention audit
-- [ ] Rate limiting on login/actions
+- [x] DDoS protection (network level)
+- [x] SQL injection prevention audit
+- [x] Rate limiting on login/actions
 
 #### 6.4 Performance & Scalability
 - [ ] Database query optimization
