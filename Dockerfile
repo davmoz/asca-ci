@@ -1,13 +1,11 @@
 FROM alpine:3.21 AS build
 
-# crypto++-dev is in edge/testing (will be removed after OpenSSL migration)
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+RUN apk add --no-cache \
   binutils \
   boost-dev \
   build-base \
   clang \
   cmake \
-  crypto++-dev \
   openssl-dev \
   gcc \
   gmp-dev \
@@ -24,12 +22,9 @@ RUN cmake .. && make
 
 FROM alpine:3.21
 
-# crypto++ is in edge/testing (will be removed after OpenSSL migration)
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+RUN apk add --no-cache \
   boost-iostreams \
-  boost-system \
   boost-filesystem \
-  crypto++ \
   libssl3 \
   libcrypto3 \
   gmp \
@@ -37,8 +32,6 @@ RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/test
   mariadb-connector-c \
   pugixml \
   netcat-openbsd
-
-RUN ln -s /usr/lib/libcryptopp.so /usr/lib/libcryptopp.so.5.6
 
 # Create a non-root user to run the server
 RUN addgroup -S tfs && adduser -S tfs -G tfs

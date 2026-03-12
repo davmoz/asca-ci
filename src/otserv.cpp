@@ -49,7 +49,7 @@ ConfigManager g_config;
 Monsters g_monsters;
 Vocations g_vocations;
 extern Scripts* g_scripts;
-RSA g_RSA;
+RSACipher g_RSA;
 
 std::mutex g_loaderLock;
 std::condition_variable g_loaderSignal;

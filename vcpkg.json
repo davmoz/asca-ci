@@ -10,7 +10,7 @@
     "boost-asio",
     "pugixml",
     "luajit",
-    "cryptopp",
+    "openssl",
     {
       "name": "libmysql",
       "platform": "!linux"

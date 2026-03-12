@@ -24,7 +24,7 @@
 #include "rsa.h"
 #include "xtea.h"
 
-extern RSA g_RSA;
+extern RSACipher g_RSA;
 
 void Protocol::onSendMessage(const OutputMessage_ptr& msg) const
 {
