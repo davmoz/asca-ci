@@ -141,6 +141,7 @@ local testModules = {
     "tests/lua/test_npc_dialogues.lua",
     "tests/lua/test_events.lua",
     "tests/lua/test_negative_cases.lua",
+    "tests/lua/test_new_systems.lua",
 }
 
 -- Export the runner for test modules

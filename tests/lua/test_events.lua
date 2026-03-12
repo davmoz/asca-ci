@@ -233,6 +233,52 @@ T:test("movement scripts have valid Lua syntax", function()
 end)
 
 -- ============================================================
+-- Talkactions
+-- ============================================================
+
+-- Test: all talkaction scripts referenced in talkactions.xml exist
+T:test("all talkaction scripts exist", function()
+    local content = readFile("data/talkactions/talkactions.xml")
+    T:assertNotNil(content, "Cannot read talkactions.xml")
+
+    -- Strip XML comments
+    content = content:gsub("<!%-%-.-%%-%->", "")
+
+    local missing = {}
+    local checked = {}
+    for script in content:gmatch('script="([^"]+)"') do
+        if not checked[script] then
+            checked[script] = true
+            local path = "data/talkactions/scripts/" .. script
+            if not fileExists(path) then
+                table.insert(missing, script)
+            end
+        end
+    end
+
+    T:assert(#missing == 0,
+        "Missing talkaction scripts: " .. table.concat(missing, ", "))
+end)
+
+-- Test: talkaction scripts have valid Lua syntax
+T:test("talkaction scripts have valid Lua syntax", function()
+    local handle = io.popen('find data/talkactions/scripts -name "*.lua" -type f 2>/dev/null')
+    local bad = {}
+    if handle then
+        for path in handle:lines() do
+            local fn, err = loadfile(path)
+            if not fn then
+                table.insert(bad, path .. ": " .. tostring(err))
+            end
+        end
+        handle:close()
+    end
+
+    T:assert(#bad == 0,
+        "Talkaction script syntax errors:\n  " .. table.concat(bad, "\n  "))
+end)
+
+-- ============================================================
 -- Cross-system consistency
 -- ============================================================
 
