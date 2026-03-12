@@ -133,36 +133,48 @@
 | Outfit System | FULL | Outfit definitions |
 | Vocation System | FULL | 4 base + 4 promoted vocations |
 
-### 1.5 What is NOT Implemented
+### 1.5 What is NOT Implemented (or Has Been Implemented Since Initial Audit)
 
-| System | Status |
-|--------|--------|
-| Fishing (as a skill) | NOT PRESENT |
-| Cooking System | NOT PRESENT |
-| Farming System | NOT PRESENT |
-| Mining System | NOT PRESENT |
-| Smithing/Crafting | NOT PRESENT |
-| Attribute/Enchanting System | NOT PRESENT |
-| Item Rank System | NOT PRESENT |
-| Bestiary | NOT PRESENT |
-| Task/Hunting System | NOT PRESENT |
-| Faction System | NOT PRESENT |
-| Achievement System | NOT PRESENT |
-| Daily Rewards | NOT PRESENT |
-| Prey System | NOT PRESENT |
-| Imbuing System | NOT PRESENT |
-| Forge System | NOT PRESENT |
-| Store/Premium Shop | NOT PRESENT |
-| Custom Vocations (Archer/Ranger) | NOT PRESENT |
-| Legendary Items | NOT PRESENT |
-| Item Properties (STR/DEX/INT) | NOT PRESENT |
-| Custom World Map | NOT PRESENT |
-| Comprehensive NPC Network | NOT PRESENT (only 8 NPCs) |
-| Custom Sprites/Graphics | NOT PRESENT |
-| Anti-Cheat Systems | NOT PRESENT |
-| War Auto-Accept | NOT PRESENT |
-| Custom Outfits/Addons | MINIMAL |
-| Event System (seasonal) | NOT PRESENT |
+> **Note**: This section has been updated to reflect the current project state as of 2026-03-12.
+> Many systems listed as "NOT PRESENT" in the original audit have since been implemented.
+
+| System | Status | Notes |
+|--------|--------|-------|
+| Custom Vocations (Archer/Ranger) | **IMPLEMENTED** | Mage/Druid/Archer/Knight with promotions (High Mage, Guardian Druid, Royal Archer, Imperial Knight) in `data/XML/vocations.xml` |
+| Fishing (as a skill) | **IMPLEMENTED** | Full species/tier/location system with fishing NPCs |
+| Cooking System | **IMPLEMENTED** | Skill progression, 20+ recipes, cooking stations, stat-buff meals |
+| Farming System | **IMPLEMENTED** | Planting pots, public farms, growth cycles, seasonal crops |
+| Mining System | **IMPLEMENTED** | 11 ore types, vein placement, mining skill progression |
+| Smithing/Crafting | **IMPLEMENTED** | Smelting, smithing recipes, anvil/forge interaction, quality grades |
+| Attribute/Enchanting System | **IMPLEMENTED** | Painite crystals (3 tiers), vocation-specific bonuses, attribute stacking rules |
+| Item Rank System | **IMPLEMENTED** | Rank 0-5 progression, Properties (STR/DEX/INT), upgrade mechanics |
+| Item Attributes (Random Bonuses) | **IMPLEMENTED** | 18 attribute types, monster-difficulty-scaled generation, combat integration |
+| Legendary Items | **IMPLEMENTED** | 20+ legendary items, elite monster variants, unique on-use effects |
+| Bestiary | **IMPLEMENTED** | Kill tracking, progressive creature info unlock, completion rewards |
+| Task/Hunting System | **IMPLEMENTED** | Hunter's Guild tasks (50+), experience tasks with kill-count bonuses |
+| Achievement System | **IMPLEMENTED** | 100+ achievements across exploration/combat/crafting/quests categories |
+| Comprehensive NPC Network | **IMPLEMENTED** | 54 NPCs (up from 8), including shopkeepers, service NPCs, quest givers, craft trainers, guards |
+| Raid System (expanded) | **IMPLEMENTED** | 16 custom raids (up from 1 test raid), daily minimum guarantee, raid bosses |
+| PvP Systems (Retro PvP) | **IMPLEMENTED** | Rune hotkey blocking, rope hole blocking, custom skull system, PvP damage tuning |
+| Guild War Auto-Accept | **IMPLEMENTED** | Triggers on pending war kill |
+| Arena/Duel System | **IMPLEMENTED** | PvP zones, bounty system, rankings |
+| Party Enhancements | **IMPLEMENTED** | Party finder, party quests, enhanced shared XP |
+| Housing Enhancements | **IMPLEMENTED** | Floor modification, expanded decorations, house crafting stations |
+| Seasonal Events | **IMPLEMENTED** | Christmas, Halloween, Easter, Anniversary events |
+| Weekly Dungeons | **IMPLEMENTED** | Instanced weekly content |
+| Quest Content | **IMPLEMENTED** | 30+ quests (access, equipment, lore, promotion, outfit, boss fights) |
+| Faction System | PARTIAL | Task/quest chains exist; full multi-faction reputation system still needed |
+| Daily Rewards | NOT PRESENT | |
+| Prey System | NOT PRESENT | |
+| Imbuing System | NOT PRESENT | |
+| Forge System | NOT PRESENT | |
+| Store/Premium Shop | NOT PRESENT | |
+| Custom World Map | NOT PRESENT | Still using forgotten.otbm; custom continent not yet built |
+| Custom Sprites/Graphics | NOT PRESENT | |
+| Anti-Cheat Systems | PARTIAL | DDoS protection, SQL injection prevention, rate limiting done; bot detection and packet validation still needed |
+| Custom Outfits/Addons | PARTIAL | Outfit/addon quests exist; Royal Outfit prestige system not yet done |
+| Custom Client (OTClient fork) | NOT PRESENT | Required for custom skill/attribute/crafting UI |
+| Website/AAC | NOT PRESENT | |
 
 ---
 
@@ -283,31 +295,35 @@ Medivia Online is a custom OTS that has evolved far beyond standard TFS. It dist
 
 ### What We Have vs. What Medivia Has
 
+> **Updated 2026-03-12** to reflect completed work across Phases 1-5.
+
 | Feature | Our Server | Medivia | Gap Level |
 |---------|-----------|---------|-----------|
 | **Engine Version** | TFS 1.3 (10.98) | Custom (likely heavily modified TFS) | CRITICAL |
-| **Vocations** | Standard 4 (Sorc/Druid/Pally/Knight) | Custom 4 (Knight/Archer/Mage/Druid) | MAJOR |
-| **NPCs** | 8 | Hundreds | CRITICAL |
+| **Vocations** | Custom 4 (Mage/Druid/Archer/Knight) with promotions | Custom 4 (Knight/Archer/Mage/Druid) | CLOSED |
+| **NPCs** | 54 NPCs (shops, services, quests, crafting, guards) | Hundreds | MODERATE |
 | **Monsters** | 703 (152 bosses) | Custom + Standard | MODERATE |
 | **Map** | forgotten.otbm (3.7 MB) | Custom massive continent | CRITICAL |
-| **Fishing** | Basic action script | Full skill system with species/tiers | MAJOR |
-| **Cooking** | Not present | Full skill + recipe system | CRITICAL |
-| **Farming** | Not present | House pots + public farms | CRITICAL |
-| **Mining** | Not present | 11 ores, location-based rarity | CRITICAL |
-| **Smithing** | Not present | Ore -> Bar -> Equipment pipeline | CRITICAL |
-| **Enchanting** | Basic enchanting action | Painite crystals, 3 tiers, vocation bonuses | CRITICAL |
-| **Item Attributes** | Not present | Random bonuses, vocation-specific | CRITICAL |
-| **Item Ranks** | Not present | Rank progression system | CRITICAL |
-| **Legendary Items** | Not present | Elite monster drops, unique effects | MAJOR |
-| **Tasks** | Not present | Hunter's Guild + Tylar + Experience tasks | CRITICAL |
-| **Factions** | Not present | Multi-quest faction chains | CRITICAL |
-| **Bestiary** | Not present | Full creature encyclopedia | MAJOR |
-| **Retro PvP** | Standard PvP | No hotkeys, manual aim, rope blocking | MAJOR |
-| **Weekly Dungeons** | Not present | Instanced weekly content | MAJOR |
+| **Fishing** | Full skill system with 12+ species, tiers, locations | Full skill system with species/tiers | CLOSED |
+| **Cooking** | Full skill + 20+ recipes with stat buffs | Full skill + recipe system | CLOSED |
+| **Farming** | Planting pots, public farms, growth cycles | House pots + public farms | CLOSED |
+| **Mining** | 11 ores, vein system, skill progression | 11 ores, location-based rarity | CLOSED |
+| **Smithing** | Smelting + forging pipeline, quality grades | Ore -> Bar -> Equipment pipeline | CLOSED |
+| **Enchanting** | Painite crystals (3 tiers), vocation bonuses, attribute pools | Painite crystals, 3 tiers, vocation bonuses | CLOSED |
+| **Item Attributes** | 18 attribute types, difficulty-scaled, combat integration | Random bonuses, vocation-specific | CLOSED |
+| **Item Ranks** | Rank 0-5, Properties (STR/DEX/INT), upgrade mechanics | Rank progression system | CLOSED |
+| **Legendary Items** | 20+ legendaries, elite monster variants, unique effects | Elite monster drops, unique effects | CLOSED |
+| **Tasks** | Hunter's Guild (50+ tasks), experience tasks | Hunter's Guild + Tylar + Experience tasks | MINOR |
+| **Factions** | Partial (task chains exist, full reputation system pending) | Multi-quest faction chains | MAJOR |
+| **Bestiary** | Full creature encyclopedia with kill tracking and rewards | Full creature encyclopedia | CLOSED |
+| **Retro PvP** | Rune hotkey blocking, rope blocking, custom skulls, PvP tuning | No hotkeys, manual aim, rope blocking | CLOSED |
+| **Weekly Dungeons** | Instanced weekly content implemented | Instanced weekly content | CLOSED |
 | **Custom Sprites** | Standard Tibia | Custom pixel art | CRITICAL |
-| **Seasonal Events** | Not present | Annual events with rewards | MODERATE |
-| **Anti-Cheat** | Not present | Required for production | CRITICAL |
+| **Seasonal Events** | Christmas, Halloween, Easter, Anniversary events | Annual events with rewards | MINOR |
+| **Anti-Cheat** | DDoS protection, SQL injection prevention, rate limiting | Required for production | MAJOR |
 | **Website/AAC** | Not present | Account management + shop | CRITICAL |
+| **Custom Client** | Not present (OTClient fork needed) | Custom client with crafting/skill UI | CRITICAL |
+| **Equipment Rebalance** | Not yet rebalanced for new systems | Balanced for custom vocations | MAJOR |
 
 ---
 

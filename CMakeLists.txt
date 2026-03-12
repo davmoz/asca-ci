@@ -5,29 +5,35 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 project(tfs)
 
-if (NOT WIN32)
-    add_compile_options(-Wall -Werror -pipe -fvisibility=hidden)
-endif ()
-
-if (CMAKE_COMPILER_IS_GNUCXX)
-    add_compile_options(-fno-strict-aliasing)
-endif ()
-
 add_subdirectory(src)
 add_executable(tfs ${tfs_SRC})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set_target_properties(tfs PROPERTIES CXX_STANDARD 11)
+# Issue #120: Use target_compile_options (after add_executable) instead of the
+# global add_compile_options, so flags only apply to this target.
+if (NOT WIN32)
+    target_compile_options(tfs PRIVATE -Wall -Werror -pipe -fvisibility=hidden)
+endif ()
+
+if (CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(tfs PRIVATE -fno-strict-aliasing)
+endif ()
+
+# Issue #118: Upgrade from C++11 to C++17. TFS 1.3 builds cleanly with C++17
+# on GCC 7+, Clang 5+, and MSVC 2017+. This unlocks std::optional,
+# std::string_view, structured bindings, and other modern features.
+set_target_properties(tfs PROPERTIES CXX_STANDARD 17)
 set_target_properties(tfs PROPERTIES CXX_STANDARD_REQUIRED ON)
 
+# Issue #113: CMake 3.16+ is now widely available and supports
+# target_precompile_headers natively. The cotire fallback has been removed.
+# If building with CMake < 3.16, upgrade CMake instead of relying on cotire.
 if (${CMAKE_VERSION} VERSION_GREATER "3.16.0")
     target_precompile_headers(tfs PUBLIC src/otpch.h)
 else ()
-    include(cotire)
-    set_target_properties(tfs PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "src/otpch.h")
-    set_target_properties(tfs PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
-    cotire(tfs)
+    message(WARNING "CMake >= 3.16 is required for precompiled header support. "
+                    "Consider upgrading CMake. The cotire fallback has been removed.")
 endif ()
 
 set(CMAKE_CXX_FLAGS_PERFORMANCE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
