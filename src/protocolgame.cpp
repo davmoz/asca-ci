@@ -742,6 +742,10 @@ void ProtocolGame::parseAutoWalk(NetworkMessage& msg)
 		return;
 	}
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
 	msg.skipBytes(numdirs);
 
 	std::forward_list<Direction> path;

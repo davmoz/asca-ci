@@ -59,6 +59,9 @@ class NetworkMessage
 		}
 
 		uint8_t getPreviousByte() {
+			if (info.position == 0) {
+				return 0;
+			}
 			return buffer[--info.position];
 		}
 

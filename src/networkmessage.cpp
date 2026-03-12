@@ -85,6 +85,7 @@ void NetworkMessage::addPaddingBytes(size_t n)
 	}
 
 	memset(buffer + info.position, 0x33, n);
+	info.position += n;
 	info.length += n;
 }
 

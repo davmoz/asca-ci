@@ -167,7 +167,7 @@ bool Combat::isPlayerCombat(const Creature* target)
 		return true;
 	}
 
-	if (target->isSummon() && target->getMaster()->getPlayer()) {
+	if (target->isSummon() && target->getMaster() && target->getMaster()->getPlayer()) {
 		return true;
 	}
 
@@ -957,7 +957,7 @@ void Combat::checkCriticalHit(Player* caster, CombatDamage& damage)
 
 	uint16_t chance = caster->getSpecialSkill(SPECIALSKILL_CRITICALHITCHANCE);
 	uint16_t criticalHit = caster->getSpecialSkill(SPECIALSKILL_CRITICALHITAMOUNT);
-	if (criticalHit != 0 && chance != 0 && normal_random(1, 100) <= chance) {
+	if (criticalHit != 0 && chance != 0 && uniform_random(1, 100) <= chance) {
 		damage.primary.value += std::round(damage.primary.value * (criticalHit / 100.));
 		damage.secondary.value += std::round(damage.secondary.value * (criticalHit / 100.));
 		damage.critical = true;
