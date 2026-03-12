@@ -105,17 +105,17 @@ Mining.VeinTypes = {
 	-- actionId          pool name       minSkill  depleteHits  respawnSec
 	[9100] = { pool = "copper",      minSkill = 0,   depleteAfter = 5,  respawnTime = 300  },
 	[9101] = { pool = "tin",         minSkill = 0,   depleteAfter = 5,  respawnTime = 300  },
-	[9102] = { pool = "iron",        minSkill = 0,   depleteAfter = 4,  respawnTime = 600  },
+	[9102] = { pool = "iron",        minSkill = 10,  depleteAfter = 4,  respawnTime = 600  },
 	[9103] = { pool = "silver",      minSkill = 25,  depleteAfter = 3,  respawnTime = 900  },
-	[9104] = { pool = "gold",        minSkill = 25,  depleteAfter = 3,  respawnTime = 900  },
-	[9105] = { pool = "coal",        minSkill = 25,  depleteAfter = 5,  respawnTime = 300  },
+	[9104] = { pool = "gold",        minSkill = 35,  depleteAfter = 3,  respawnTime = 900  },
+	[9105] = { pool = "coal",        minSkill = 15,  depleteAfter = 5,  respawnTime = 300  },
 	[9106] = { pool = "mithril",     minSkill = 50,  depleteAfter = 2,  respawnTime = 1200 },
-	[9107] = { pool = "platinum",    minSkill = 50,  depleteAfter = 2,  respawnTime = 1200 },
+	[9107] = { pool = "platinum",    minSkill = 60,  depleteAfter = 2,  respawnTime = 1200 },
 	[9108] = { pool = "adamantite",  minSkill = 75,  depleteAfter = 2,  respawnTime = 1500 },
-	[9109] = { pool = "orichalcum",  minSkill = 75,  depleteAfter = 1,  respawnTime = 1800 },
+	[9109] = { pool = "orichalcum",  minSkill = 85,  depleteAfter = 1,  respawnTime = 1800 },
 	[9110] = { pool = "painite",     minSkill = 90,  depleteAfter = 1,  respawnTime = 3600 },
 	[9111] = { pool = "mixed_common",   minSkill = 0,   depleteAfter = 5,  respawnTime = 300  },
-	[9112] = { pool = "mixed_uncommon", minSkill = 25,  depleteAfter = 3,  respawnTime = 900  },
+	[9112] = { pool = "mixed_uncommon", minSkill = 15,  depleteAfter = 3,  respawnTime = 900  },
 	[9113] = { pool = "mixed_rare",     minSkill = 50,  depleteAfter = 2,  respawnTime = 1200 },
 	[9114] = { pool = "mixed_all",      minSkill = 75,  depleteAfter = 2,  respawnTime = 1500 },
 }
@@ -193,7 +193,7 @@ Mining.OrePools = {
 Mining.Pickaxes = {
 	[Mining.Items.BASIC_PICKAXE]   = { name = "basic pickaxe",   bonus = 0,   cooldown = 3000 },
 	[Mining.Items.STEEL_PICKAXE]   = { name = "steel pickaxe",   bonus = 10,  cooldown = 2500 },
-	[Mining.Items.CRYSTAL_PICKAXE] = { name = "crystal pickaxe", bonus = 20,  cooldown = 2000 },
+	[Mining.Items.CRYSTAL_PICKAXE] = { name = "crystal pickaxe", bonus = 25,  cooldown = 2000 },
 	[2553]                         = { name = "pick",            bonus = -5,  cooldown = 3500 }, -- vanilla pick as worst tier
 }
 
