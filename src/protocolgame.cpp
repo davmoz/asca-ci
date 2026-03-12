@@ -97,13 +97,11 @@ void ProtocolGame::login(const std::string& name, uint32_t accountId, OperatingS
 					banInfo.reason = "(none)";
 				}
 
-				std::ostringstream ss;
 				if (banInfo.expiresAt > 0) {
-					ss << "Your account has been banned until " << formatDateShort(banInfo.expiresAt) << " by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
+					disconnectClient(fmt::format("Your account has been banned until {} by {}.\n\nReason specified:\n{}", formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason));
 				} else {
-					ss << "Your account has been permanently banned by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
+					disconnectClient(fmt::format("Your account has been permanently banned by {}.\n\nReason specified:\n{}", banInfo.bannedBy, banInfo.reason));
 				}
-				disconnectClient(ss.str());
 				return;
 			}
 		}
@@ -111,14 +109,9 @@ void ProtocolGame::login(const std::string& name, uint32_t accountId, OperatingS
 		std::size_t currentSlot = WaitingList::getInstance().clientLogin(player);
 		if (currentSlot > 0) {
 			uint8_t retryTime = WaitingList::getTime(currentSlot);
-			std::ostringstream ss;
-
-			ss << "Too many players online.\nYou are at place "
-			   << currentSlot << " on the waiting list.";
-
 			auto output = OutputMessagePool::getOutputMessage();
 			output->addByte(0x16);
-			output->addString(ss.str());
+			output->addString(fmt::format("Too many players online.\nYou are at place {} on the waiting list.", currentSlot));
 			output->addByte(retryTime);
 			send(output);
 			disconnect();
@@ -322,9 +315,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 	}
 
 	if (version < CLIENT_VERSION_MIN || version > CLIENT_VERSION_MAX) {
-		std::ostringstream ss;
-		ss << "Only clients with protocol " << CLIENT_VERSION_STR << " allowed!";
-		disconnectClient(ss.str());
+		disconnectClient(fmt::format("Only clients with protocol {} allowed!", CLIENT_VERSION_STR));
 		return;
 	}
 
@@ -344,9 +335,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 			banInfo.reason = "(none)";
 		}
 
-		std::ostringstream ss;
-		ss << "Your IP has been banned until " << formatDateShort(banInfo.expiresAt) << " by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
-		disconnectClient(ss.str());
+		disconnectClient(fmt::format("Your IP has been banned until {} by {}.\n\nReason specified:\n{}", formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason));
 		return;
 	}
 
@@ -2010,9 +1999,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 		// example:
 		// "attack +x, chance to hit +y%, z fields"
 		if (it.abilities && it.abilities->elementType != COMBAT_NONE && it.abilities->elementDamage != 0) {
-			std::ostringstream ss;
-			ss << it.attack << " physical +" << it.abilities->elementDamage << ' ' << getCombatName(it.abilities->elementType);
-			msg.addString(ss.str());
+			msg.addString(fmt::format("{} physical +{} {}", it.attack, it.abilities->elementDamage, getCombatName(it.abilities->elementType)));
 		} else {
 			msg.addString(std::to_string(it.attack));
 		}
@@ -2028,9 +2015,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 
 	if (it.defense != 0) {
 		if (it.extraDefense != 0) {
-			std::ostringstream ss;
-			ss << it.defense << ' ' << std::showpos << it.extraDefense << std::noshowpos;
-			msg.addString(ss.str());
+			msg.addString(fmt::format("{} {:+}", it.defense, it.extraDefense));
 		} else {
 			msg.addString(std::to_string(it.defense));
 		}
@@ -2050,9 +2035,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	}
 
 	if (it.decayTime != 0) {
-		std::ostringstream ss;
-		ss << it.decayTime << " seconds";
-		msg.addString(ss.str());
+		msg.addString(fmt::format("{} seconds", it.decayTime));
 	} else {
 		msg.add<uint16_t>(0x00);
 	}
@@ -2156,18 +2139,15 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	msg.addString(weaponName);
 
 	if (it.weight != 0) {
-		std::ostringstream ss;
 		if (it.weight < 10) {
-			ss << "0.0" << it.weight;
+			msg.addString(fmt::format("0.0{} oz", it.weight));
 		} else if (it.weight < 100) {
-			ss << "0." << it.weight;
+			msg.addString(fmt::format("0.{} oz", it.weight));
 		} else {
 			std::string weightString = std::to_string(it.weight);
 			weightString.insert(weightString.end() - 2, '.');
-			ss << weightString;
+			msg.addString(fmt::format("{} oz", weightString));
 		}
-		ss << " oz";
-		msg.addString(ss.str());
 	} else {
 		msg.add<uint16_t>(0x00);
 	}

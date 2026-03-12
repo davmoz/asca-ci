@@ -466,17 +466,14 @@ bool Actions::useItemEx(Player* player, const Position& fromPos, const Position&
 
 void Actions::showUseHotkeyMessage(Player* player, const Item* item, uint32_t count)
 {
-	std::ostringstream ss;
-
 	const ItemType& it = Item::items[item->getID()];
 	if (!it.showCount) {
-		ss << "Using one of " << item->getName() << "...";
+		player->sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("Using one of {}...", item->getName()));
 	} else if (count == 1) {
-		ss << "Using the last " << item->getName() << "...";
+		player->sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("Using the last {}...", item->getName()));
 	} else {
-		ss << "Using one of " << count << ' ' << item->getPluralName() << "...";
+		player->sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("Using one of {} {}...", count, item->getPluralName()));
 	}
-	player->sendTextMessage(MESSAGE_INFO_DESCR, ss.str());
 }
 
 Action::Action(LuaScriptInterface* interface) :
