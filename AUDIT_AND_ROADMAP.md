@@ -75,7 +75,7 @@
 #### Items: **~1,600+ items**
 - items.xml (1.5 MB) + items.otb (1.1 MB binary)
 - Categories: Equipment, Weapons, Ammunition, Consumables, Quest Items, Containers, Fluids, Decorations
-- Standard Tibia item set, no custom items
+- Standard Tibia item set + 289 custom items (crafting materials, equipment, consumables)
 
 #### Actions: **209 action definitions, 39 Lua scripts**
 - Enchanting, Market, Quests, Tools (Rope, Crowbar, Machete, Scythe, Pick, Shovel, Kitchen Knife, Fishing Rod)
@@ -90,8 +90,8 @@
 #### Movements: **12 Lua scripts**
 - Citizen teleportation, doors (closing, level, quest), drowning, swimming, snow, traps, decay, dough, walkback
 
-#### Creature Scripts: **4 scripts**
-- login.lua, logout.lua, firstitems.lua, plus creature script lib
+#### Creature Scripts: **10 scripts**
+- login.lua, logout.lua, firstitems.lua, loot_attributes.lua, kill_tracker.lua, pvp_handler.lua, task_kill.lua, pvp_kill.lua, pvp_death.lua, achievement_check.lua
 
 #### Global Events: Present with XML + Lua scripts
 #### Raids: **16 raid definitions** in raids.xml (orc horde, dragon lord invasion, demon gate, undead rising, vampire night, frost dragon assault, and more)
@@ -107,7 +107,7 @@
 - Compatibility layer for older scripts
 - Debug utilities
 
-#### Database Migrations: **34 migration files** (0.lua through 33.lua)
+#### Database Migrations: **39 migration files** (0.lua through 38.lua, including prey, faction, and imbuing tables)
 
 ### 1.4 Game Systems Currently Implemented
 
@@ -157,6 +157,14 @@
 | Comprehensive NPC Network | **IMPLEMENTED** | 54 NPCs (up from 8), including shopkeepers, service NPCs, quest givers, craft trainers, guards |
 | Raid System (expanded) | **IMPLEMENTED** | 16 custom raids (up from 1 test raid), daily minimum guarantee, raid bosses |
 | PvP Systems (Retro PvP) | **IMPLEMENTED** | Rune hotkey blocking, rope hole blocking, custom skull system, PvP damage tuning |
+| Daily Rewards | **IMPLEMENTED** | 7-day escalating cycle, streak tracking, login hooks |
+| Prey/Hunting Bonus | **IMPLEMENTED** | 3 creature slots, XP/loot/damage/defense bonuses |
+| Imbuing System | **IMPLEMENTED** | 12 imbue types, 3 tiers, 20-hour duration |
+| Faction/Reputation | **IMPLEMENTED** | 4 factions, reputation ranks, daily quests |
+| Seasonal Events | **IMPLEMENTED** | Auto-detected holidays (Christmas, Easter, Halloween, Summer Festival) |
+| Weekly Dungeons | **IMPLEMENTED** | Instanced content with weekly cooldown validation |
+| Party Enhancements | **IMPLEMENTED** | Shared XP bonuses with level range checks |
+| Server Monitoring | **IMPLEMENTED** | Startup logging, system initialization tracking |
 | Guild War Auto-Accept | **IMPLEMENTED** | Triggers on pending war kill |
 | Arena/Duel System | **IMPLEMENTED** | PvP zones, bounty system, rankings |
 | Party Enhancements | **IMPLEMENTED** | Party finder, party quests, enhanced shared XP |
@@ -315,12 +323,16 @@ Medivia Online is a custom OTS that has evolved far beyond standard TFS. It dist
 | **Item Ranks** | Rank 0-5, Properties (STR/DEX/INT), upgrade mechanics | Rank progression system | CLOSED |
 | **Legendary Items** | 20+ legendaries, elite monster variants, unique effects | Elite monster drops, unique effects | CLOSED |
 | **Tasks** | Hunter's Guild (50+ tasks), experience tasks | Hunter's Guild + Tylar + Experience tasks | MINOR |
-| **Factions** | Partial (task chains exist, full reputation system pending) | Multi-quest faction chains | MAJOR |
+| **Daily Rewards** | 7-day escalating cycle with streak tracking | Daily login rewards | CLOSED |
+| **Prey System** | 3 slots, XP/loot/damage/defense bonuses | Hunting bonuses | CLOSED |
+| **Imbuing System** | 12 types, 3 tiers, duration-based | Equipment enchancement | CLOSED |
+| **Factions** | 4 factions, reputation ranks, daily quests | Multi-quest faction chains | MINOR |
 | **Bestiary** | Full creature encyclopedia with kill tracking and rewards | Full creature encyclopedia | CLOSED |
 | **Retro PvP** | Rune hotkey blocking, rope blocking, custom skulls, PvP tuning | No hotkeys, manual aim, rope blocking | CLOSED |
 | **Weekly Dungeons** | Instanced weekly content implemented | Instanced weekly content | CLOSED |
 | **Custom Sprites** | Standard Tibia | Custom pixel art | CRITICAL |
-| **Seasonal Events** | Christmas, Halloween, Easter, Anniversary events | Annual events with rewards | MINOR |
+| **Seasonal Events** | Auto-detected holidays (Christmas, Easter, Halloween, Summer) | Annual events with rewards | CLOSED |
+| **Achievements** | Achievement system with persistence validation | Progress tracking | CLOSED |
 | **Anti-Cheat** | DDoS protection, SQL injection prevention, rate limiting | Required for production | MAJOR |
 | **Website/AAC** | Not present | Account management + shop | CRITICAL |
 | **Custom Client** | Not present (OTClient fork needed) | Custom client with crafting/skill UI | CRITICAL |
