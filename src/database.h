@@ -163,6 +163,8 @@ class DBResult
 			try {
 				data = boost::lexical_cast<T>(row[it->second]);
 			} catch (boost::bad_lexical_cast&) {
+				std::cout << "[Error - DBResult::getNumber] Failed to convert column '" << s
+				          << "' value '" << row[it->second] << "' to numeric type" << std::endl;
 				data = 0;
 			}
 			return data;
