@@ -28,11 +28,11 @@
 
 extern ConfigManagerCompat g_config;
 
-Connection_ptr ConnectionManager::createConnection(boost::asio::io_context& io_service, ConstServicePort_ptr servicePort)
+Connection_ptr ConnectionManager::createConnection(boost::asio::io_context& ioContext, ConstServicePort_ptr servicePort)
 {
 	std::lock_guard<std::mutex> lockClass(connectionManagerLock);
 
-	auto connection = std::make_shared<Connection>(io_service, servicePort);
+	auto connection = std::make_shared<Connection>(ioContext, servicePort);
 	connections.insert(connection);
 	return connection;
 }
