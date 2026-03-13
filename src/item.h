@@ -25,7 +25,6 @@
 #include "items.h"
 #include "luascript.h"
 #include "tools.h"
-#include <typeinfo>
 
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
