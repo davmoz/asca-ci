@@ -15,6 +15,7 @@ on:
       - src/**
       - CMakeLists.txt
       - vcpkg.json
+      - .github/workflows/build-vcpkg.yml
 
   pull_request:
     paths:
@@ -22,6 +23,7 @@ on:
       - src/**
       - CMakeLists.txt
       - vcpkg.json
+      - .github/workflows/build-vcpkg.yml
 
 jobs:
   job:
