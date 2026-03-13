@@ -352,7 +352,7 @@ class Player final : public Creature, public Cylinder
 		bool canOpenCorpse(uint32_t ownerId) const;
 
 		void addStorageValue(const uint32_t key, const int32_t value, const bool isLogin = false);
-		bool getStorageValue(const uint32_t key, int32_t& value) const;
+		std::optional<int32_t> getStorageValue(const uint32_t key) const;
 		void genReservedStorageRange();
 
 		void setGroup(Group* newGroup) {

@@ -8885,12 +8885,8 @@ int LuaScriptInterface::luaPlayerGetStorageValue(lua_State* L)
 	}
 
 	uint32_t key = getNumber<uint32_t>(L, 2);
-	int32_t value;
-	if (player->getStorageValue(key, value)) {
-		lua_pushnumber(L, value);
-	} else {
-		lua_pushnumber(L, -1);
-	}
+	auto value = player->getStorageValue(key);
+	lua_pushnumber(L, value.value_or(-1));
 	return 1;
 }
 

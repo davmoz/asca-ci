@@ -644,8 +644,7 @@ void Player::addStorageValue(const uint32_t key, const int32_t value, const bool
 	}
 
 	if (value != -1) {
-		int32_t oldValue;
-		getStorageValue(key, oldValue);
+		int32_t oldValue = getStorageValue(key).value_or(-1);
 
 		storageMap[key] = value;
 
@@ -661,16 +660,13 @@ void Player::addStorageValue(const uint32_t key, const int32_t value, const bool
 	}
 }
 
-bool Player::getStorageValue(const uint32_t key, int32_t& value) const
+std::optional<int32_t> Player::getStorageValue(const uint32_t key) const
 {
 	auto it = storageMap.find(key);
 	if (it == storageMap.end()) {
-		value = -1;
-		return false;
+		return std::nullopt;
 	}
-
-	value = it->second;
-	return true;
+	return it->second;
 }
 
 bool Player::canSee(const Position& pos) const
@@ -4101,11 +4097,7 @@ GuildEmblems_t Player::getGuildEmblem(const Player* player) const
 
 uint8_t Player::getCurrentMount() const
 {
-	int32_t value;
-	if (getStorageValue(PSTRG_MOUNTS_CURRENTMOUNT, value)) {
-		return value;
-	}
-	return 0;
+	return getStorageValue(PSTRG_MOUNTS_CURRENTMOUNT).value_or(0);
 }
 
 void Player::setCurrentMount(uint8_t mountId)
@@ -4189,12 +4181,8 @@ bool Player::tameMount(uint8_t mountId)
 	const uint8_t tmpMountId = mountId - 1;
 	const uint32_t key = PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31);
 
-	int32_t value;
-	if (getStorageValue(key, value)) {
-		value |= (1 << (tmpMountId % 31));
-	} else {
-		value = (1 << (tmpMountId % 31));
-	}
+	int32_t value = getStorageValue(key).value_or(0);
+	value |= (1 << (tmpMountId % 31));
 
 	addStorageValue(key, value);
 	return true;
@@ -4209,12 +4197,12 @@ bool Player::untameMount(uint8_t mountId)
 	const uint8_t tmpMountId = mountId - 1;
 	const uint32_t key = PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31);
 
-	int32_t value;
-	if (!getStorageValue(key, value)) {
+	auto optValue = getStorageValue(key);
+	if (!optValue) {
 		return true;
 	}
 
-	value &= ~(1 << (tmpMountId % 31));
+	int32_t value = *optValue & ~(1 << (tmpMountId % 31));
 	addStorageValue(key, value);
 
 	if (getCurrentMount() == mountId) {
@@ -4241,12 +4229,12 @@ bool Player::hasMount(const Mount* mount) const
 
 	const uint8_t tmpMountId = mount->id - 1;
 
-	int32_t value;
-	if (!getStorageValue(PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31), value)) {
+	auto value = getStorageValue(PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31));
+	if (!value) {
 		return false;
 	}
 
-	return ((1 << (tmpMountId % 31)) & value) != 0;
+	return ((1 << (tmpMountId % 31)) & *value) != 0;
 }
 
 void Player::dismount()
