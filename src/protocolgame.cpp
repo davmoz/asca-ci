@@ -2035,24 +2035,20 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	}
 
 	if (it.abilities) {
-		std::ostringstream ss;
-		bool separator = false;
-
+		std::string ss;
 		for (size_t i = 0; i < COMBAT_COUNT; ++i) {
 			if (it.abilities->absorbPercent[i] == 0) {
 				continue;
 			}
 
-			if (separator) {
-				ss << ", ";
-			} else {
-				separator = true;
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << getCombatName(indexToCombatType(i)) << ' ' << std::showpos << it.abilities->absorbPercent[i] << std::noshowpos << '%';
+			ss += fmt::format("{} {:+}%", getCombatName(indexToCombatType(i)), it.abilities->absorbPercent[i]);
 		}
 
-		msg.addString(ss.str());
+		msg.addString(ss);
 	} else {
 		msg.add<uint16_t>(0x00);
 	}
@@ -2074,42 +2070,36 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	msg.addString(it.runeSpellName);
 
 	if (it.abilities) {
-		std::ostringstream ss;
-		bool separator = false;
-
+		std::string ss;
 		for (uint8_t i = SKILL_FIRST; i <= SKILL_LAST; i++) {
 			if (!it.abilities->skills[i]) {
 				continue;
 			}
 
-			if (separator) {
-				ss << ", ";
-			} else {
-				separator = true;
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << getSkillName(i) << ' ' << std::showpos << it.abilities->skills[i] << std::noshowpos;
+			ss += fmt::format("{} {:+}", getSkillName(i), it.abilities->skills[i]);
 		}
 
 		if (it.abilities->stats[STAT_MAGICPOINTS] != 0) {
-			if (separator) {
-				ss << ", ";
-			} else {
-				separator = true;
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << "magic level " << std::showpos << it.abilities->stats[STAT_MAGICPOINTS] << std::noshowpos;
+			ss += fmt::format("magic level {:+}", it.abilities->stats[STAT_MAGICPOINTS]);
 		}
 
 		if (it.abilities->speed != 0) {
-			if (separator) {
-				ss << ", ";
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << "speed " << std::showpos << (it.abilities->speed >> 1) << std::noshowpos;
+			ss += fmt::format("speed {:+}", it.abilities->speed >> 1);
 		}
 
-		msg.addString(ss.str());
+		msg.addString(ss);
 	} else {
 		msg.add<uint16_t>(0x00);
 	}

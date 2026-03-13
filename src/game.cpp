@@ -3487,18 +3487,16 @@ bool Game::playerYell(Player* player, const std::string& text)
 
 	uint32_t minimumLevel = g_config.getNumber(ConfigManager::YELL_MINIMUM_LEVEL);
 	if (player->getLevel() < minimumLevel) {
-		std::ostringstream ss;
-		ss << "You may not yell unless you have reached level " << minimumLevel;
 		if (g_config.getBoolean(ConfigManager::YELL_ALLOW_PREMIUM)) {
 			if (player->isPremium()) {
 				internalCreatureSay(player, TALKTYPE_YELL, asUpperCaseString(text), false);
 				return true;
-			} else {
-				ss << " or have a premium account";
 			}
 		}
-		ss << ".";
-		player->sendTextMessage(MESSAGE_STATUS_SMALL, ss.str());
+		std::string msg = fmt::format("You may not yell unless you have reached level {}{}.",
+			minimumLevel,
+			g_config.getBoolean(ConfigManager::YELL_ALLOW_PREMIUM) ? " or have a premium account" : "");
+		player->sendTextMessage(MESSAGE_STATUS_SMALL, msg);
 		return false;
 	}
 

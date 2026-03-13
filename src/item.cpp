@@ -1574,25 +1574,19 @@ std::string Item::getNameDescription() const
 
 std::string Item::getWeightDescription(const ItemType& it, uint32_t weight, uint32_t count /*= 1*/)
 {
-	std::ostringstream ss;
-	if (it.stackable && count > 1 && it.showCount != 0) {
-		ss << "They weigh ";
-	} else {
-		ss << "It weighs ";
-	}
-
+	std::string weightStr;
 	if (weight < 10) {
-		ss << "0.0" << weight;
+		weightStr = fmt::format("0.0{}", weight);
 	} else if (weight < 100) {
-		ss << "0." << weight;
+		weightStr = fmt::format("0.{}", weight);
 	} else {
-		std::string weightString = std::to_string(weight);
-		weightString.insert(weightString.end() - 2, '.');
-		ss << weightString;
+		weightStr = std::to_string(weight);
+		weightStr.insert(weightStr.end() - 2, '.');
 	}
 
-	ss << " oz.";
-	return ss.str();
+	return fmt::format("{} {} oz.",
+		(it.stackable && count > 1 && it.showCount != 0) ? "They weigh" : "It weighs",
+		weightStr);
 }
 
 std::string Item::getWeightDescription(uint32_t weight) const

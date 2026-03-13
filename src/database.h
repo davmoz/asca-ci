@@ -191,7 +191,6 @@ class DBInsert
 	public:
 		explicit DBInsert(std::string query);
 		bool addRow(const std::string& row);
-		bool addRow(std::ostringstream& row);
 		bool execute();
 
 	private:

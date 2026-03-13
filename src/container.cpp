@@ -161,11 +161,11 @@ uint32_t Container::getWeight() const
 
 std::string Container::getContentDescription() const
 {
-	std::ostringstream os;
-	return getContentDescription(os).str();
+	std::string s;
+	return getContentDescription(s);
 }
 
-std::ostringstream& Container::getContentDescription(std::ostringstream& os) const
+std::string& Container::getContentDescription(std::string& s) const
 {
 	bool firstitem = true;
 	for (ContainerIterator it = iterator(); it.hasNext(); it.advance()) {
@@ -179,16 +179,16 @@ std::ostringstream& Container::getContentDescription(std::ostringstream& os) con
 		if (firstitem) {
 			firstitem = false;
 		} else {
-			os << ", ";
+			s += ", ";
 		}
 
-		os << item->getNameDescription();
+		s += item->getNameDescription();
 	}
 
 	if (firstitem) {
-		os << "nothing";
+		s += "nothing";
 	}
-	return os;
+	return s;
 }
 
 Item* Container::getItemByIndex(size_t index) const

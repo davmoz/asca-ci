@@ -281,12 +281,6 @@ bool DBInsert::addRow(const std::string& row)
 	return true;
 }
 
-bool DBInsert::addRow(std::ostringstream& row)
-{
-	bool ret = addRow(row.str());
-	row.str(std::string());
-	return ret;
-}
 
 bool DBInsert::execute()
 {
