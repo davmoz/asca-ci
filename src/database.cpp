@@ -93,14 +93,14 @@ bool Database::commit()
 	return true;
 }
 
-bool Database::executeQuery(const std::string& query)
+bool Database::executeQuery(std::string_view query)
 {
 	bool success = true;
 
 	// executes the query
 	databaseLock.lock();
 
-	while (mysql_real_query(handle, query.c_str(), query.length()) != 0) {
+	while (mysql_real_query(handle, query.data(), query.length()) != 0) {
 		std::cout << "[Error - mysql_real_query] Query: " << query.substr(0, 256) << std::endl << "Message: " << mysql_error(handle) << std::endl;
 		auto error = mysql_errno(handle);
 		if (error != CR_SERVER_LOST && error != CR_SERVER_GONE_ERROR && error != CR_CONN_HOST_ERROR && error != 1053/*ER_SERVER_SHUTDOWN*/ && error != CR_CONNECTION_ERROR) {
@@ -120,7 +120,7 @@ bool Database::executeQuery(const std::string& query)
 	return success;
 }
 
-DBResult_ptr Database::storeQuery(const std::string& query)
+DBResult_ptr Database::storeQuery(std::string_view query)
 {
 	databaseLock.lock();
 
@@ -128,7 +128,7 @@ DBResult_ptr Database::storeQuery(const std::string& query)
 	int retryCount = 0;
 
 	retry:
-	while (mysql_real_query(handle, query.c_str(), query.length()) != 0) {
+	while (mysql_real_query(handle, query.data(), query.length()) != 0) {
 		std::cout << "[Error - mysql_real_query] Query: " << query << std::endl << "Message: " << mysql_error(handle) << std::endl;
 		auto error = mysql_errno(handle);
 		if (error != CR_SERVER_LOST && error != CR_SERVER_GONE_ERROR && error != CR_CONN_HOST_ERROR && error != 1053/*ER_SERVER_SHUTDOWN*/ && error != CR_CONNECTION_ERROR) {
@@ -164,9 +164,9 @@ DBResult_ptr Database::storeQuery(const std::string& query)
 	return result;
 }
 
-std::string Database::escapeString(const std::string& s) const
+std::string Database::escapeString(std::string_view s) const
 {
-	return escapeBlob(s.c_str(), s.length());
+	return escapeBlob(s.data(), s.length());
 }
 
 std::string Database::escapeBlob(const char* s, uint32_t length) const

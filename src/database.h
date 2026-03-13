@@ -63,7 +63,7 @@ class Database
 		 * @param query command
 		 * @return true on success, false on error
 		 */
-		[[nodiscard]] bool executeQuery(const std::string& query);
+		[[nodiscard]] bool executeQuery(std::string_view query);
 
 		/**
 		 * Queries database.
@@ -72,7 +72,7 @@ class Database
 		 *
 		 * @return results object (nullptr on error)
 		 */
-		[[nodiscard]] DBResult_ptr storeQuery(const std::string& query);
+		[[nodiscard]] DBResult_ptr storeQuery(std::string_view query);
 
 		/**
 		 * Escapes string for query.
@@ -82,7 +82,7 @@ class Database
 		 * @param s string to be escaped
 		 * @return quoted string
 		 */
-		[[nodiscard]] std::string escapeString(const std::string& s) const;
+		[[nodiscard]] std::string escapeString(std::string_view s) const;
 
 		/**
 		 * Escapes binary stream for query.
