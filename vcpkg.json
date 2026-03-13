@@ -9,6 +9,7 @@
     "boost-date-time",
     "boost-asio",
     "pugixml",
+    "lua",
     "luajit",
     "openssl",
     "fmt",
