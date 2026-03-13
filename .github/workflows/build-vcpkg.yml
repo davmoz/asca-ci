@@ -14,12 +14,14 @@ on:
       - cmake/**
       - src/**
       - CMakeLists.txt
+      - vcpkg.json
 
   pull_request:
     paths:
       - cmake/**
       - src/**
       - CMakeLists.txt
+      - vcpkg.json
 
 jobs:
   job:
@@ -38,50 +40,33 @@ jobs:
             cxx: cl.exe
             cc: cl.exe
             triplet: x64-windows
-            packages: >
-              boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua luajit libmariadb pugixml fmt
           - name: ubuntu-gcc
             os: ubuntu
             cxx: g++
             cc: gcc
             triplet: x64-linux
-            packages: >
-              boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua libmariadb pugixml fmt
           - name: ubuntu-clang
             os: ubuntu
             cxx: clang++
             cc: clang
             triplet: x64-linux
-            packages: >
-              boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua libmariadb pugixml fmt
           - name: macos-clang
             os: macos
             cxx: clang++
             cc: clang
             triplet: x64-osx
-            packages: >
-              boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua libmariadb pugixml fmt
+
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
-
-      - name: Unshallow
-        run: git fetch --prune --unshallow
 
       - name: Get latest CMake
-        # Using 'latest' branch, the latest CMake is installed.
         uses: lukka/get-cmake@latest
 
-      - name: Ubuntu - install luajit, remove libmysqlclient-dev
-        run: |
-          sudo apt-get install libluajit-5.1-dev
-          sudo apt-get remove -y libmysqlclient-dev
+      - name: Ubuntu - install luajit
+        run: sudo apt-get update && sudo apt-get install -y libluajit-5.1-dev
         if: contains( matrix.os, 'ubuntu')
 
       - name: MacOS - install luajit pkgconfig
@@ -91,30 +76,26 @@ jobs:
       - name: Windows - remove C:/mysql*
         run: rm -r -fo C:/mysql-5.7.21-winx64
         if: contains( matrix.os, 'windows')
-
-      - name: Set Environment vars
-        run: |
-          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
-          echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        continue-on-error: true
 
       - name: Run vcpkg
-        uses: lukka/run-vcpkg@main
+        uses: lukka/run-vcpkg@v11
         with:
-          vcpkgArguments: ${{ matrix.packages }}
-          vcpkgDirectory: ${{ runner.workspace }}/vcpkg/
-          vcpkgTriplet: ${{ matrix.triplet }}
-          vcpkgGitCommitId: a2f9e4c8605b3501b70e1c71178c57eada1bbcbe
+          vcpkgGitCommitId: 62159a45e18f3a9ac0548628dcaf74fcb60c6ff9
 
-      - name: Build with CMake
-        uses: lukka/run-cmake@main
-        with:
-          useVcpkgToolchainFile: true
-          buildDirectory: ${{ runner.workspace }}/build
-          cmakeBuildType: ${{ matrix.buildtype }}
-          cmakeAppendedArgs: -DUSE_LUAJIT=${{ matrix.luajit }}
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ runner.workspace }}/build
+          -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }}
+          -DUSE_LUAJIT=${{ matrix.luajit }}
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+        shell: bash
+        env:
+          CXX: ${{ matrix.cxx }}
+          CC: ${{ matrix.cc }}
 
-      - name: dir
-        run: find $RUNNER_WORKSPACE
+      - name: Build
+        run: cmake --build ${{ runner.workspace }}/build --config ${{ matrix.buildtype }}
         shell: bash
 
       - name: Upload artifact binary
@@ -128,22 +109,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
-          path: ${{ runner.workspace }}/build/tfs.exe
+          path: ${{ runner.workspace }}/build/${{ matrix.buildtype }}/tfs.exe
         if: contains( matrix.os, 'windows')
-
-      - name: Upload artifact binary (dlls)
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
-          path: ${{ runner.workspace }}/build/*.dll
-        if: contains( matrix.os, 'windows')
-
-      - name: Prepare datapack contents
-        run: find . -maxdepth 1 ! -name data ! -name config.lua.dist ! -name key.pem ! -name LICENSE ! -name README.md ! -name schema.sql -exec rm -r {} \;
-        shell: bash
-
-      - name: Upload datapack contents
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
-          path: ${{ github.workspace }}
