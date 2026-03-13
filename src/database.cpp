@@ -24,7 +24,7 @@
 
 #include <mysql/errmsg.h>
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 Database::~Database()
 {
@@ -93,14 +93,14 @@ bool Database::commit()
 	return true;
 }
 
-bool Database::executeQuery(const std::string& query)
+bool Database::executeQuery(std::string_view query)
 {
 	bool success = true;
 
 	// executes the query
 	databaseLock.lock();
 
-	while (mysql_real_query(handle, query.c_str(), query.length()) != 0) {
+	while (mysql_real_query(handle, query.data(), query.length()) != 0) {
 		std::cout << "[Error - mysql_real_query] Query: " << query.substr(0, 256) << std::endl << "Message: " << mysql_error(handle) << std::endl;
 		auto error = mysql_errno(handle);
 		if (error != CR_SERVER_LOST && error != CR_SERVER_GONE_ERROR && error != CR_CONN_HOST_ERROR && error != 1053/*ER_SERVER_SHUTDOWN*/ && error != CR_CONNECTION_ERROR) {
@@ -120,12 +120,15 @@ bool Database::executeQuery(const std::string& query)
 	return success;
 }
 
-DBResult_ptr Database::storeQuery(const std::string& query)
+DBResult_ptr Database::storeQuery(std::string_view query)
 {
 	databaseLock.lock();
 
+	constexpr int MAX_RETRIES = 5;
+	int retryCount = 0;
+
 	retry:
-	while (mysql_real_query(handle, query.c_str(), query.length()) != 0) {
+	while (mysql_real_query(handle, query.data(), query.length()) != 0) {
 		std::cout << "[Error - mysql_real_query] Query: " << query << std::endl << "Message: " << mysql_error(handle) << std::endl;
 		auto error = mysql_errno(handle);
 		if (error != CR_SERVER_LOST && error != CR_SERVER_GONE_ERROR && error != CR_CONN_HOST_ERROR && error != 1053/*ER_SERVER_SHUTDOWN*/ && error != CR_CONNECTION_ERROR) {
@@ -144,6 +147,11 @@ DBResult_ptr Database::storeQuery(const std::string& query)
 			databaseLock.unlock();
 			return nullptr;
 		}
+		if (++retryCount > MAX_RETRIES) {
+			std::cout << "[Error - mysql_store_result] Query failed after " << MAX_RETRIES << " retries: " << query << std::endl;
+			databaseLock.unlock();
+			return nullptr;
+		}
 		goto retry;
 	}
 	databaseLock.unlock();
@@ -156,9 +164,9 @@ DBResult_ptr Database::storeQuery(const std::string& query)
 	return result;
 }
 
-std::string Database::escapeString(const std::string& s) const
+std::string Database::escapeString(std::string_view s) const
 {
-	return escapeBlob(s.c_str(), s.length());
+	return escapeBlob(s.data(), s.length());
 }
 
 std::string Database::escapeBlob(const char* s, uint32_t length) const
@@ -171,10 +179,9 @@ std::string Database::escapeBlob(const char* s, uint32_t length) const
 	escaped.push_back('\'');
 
 	if (length != 0) {
-		char* output = new char[maxLength];
-		mysql_real_escape_string(handle, output, s, length);
-		escaped.append(output);
-		delete[] output;
+		std::vector<char> output(maxLength);
+		mysql_real_escape_string(handle, output.data(), s, length);
+		escaped.append(output.data());
 	}
 
 	escaped.push_back('\'');
@@ -274,12 +281,6 @@ bool DBInsert::addRow(const std::string& row)
 	return true;
 }
 
-bool DBInsert::addRow(std::ostringstream& row)
-{
-	bool ret = addRow(row.str());
-	row.str(std::string());
-	return ret;
-}
 
 bool DBInsert::execute()
 {

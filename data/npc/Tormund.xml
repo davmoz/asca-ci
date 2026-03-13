@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Tormund" script="tormund.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="132" head="57" body="40" legs="96" feet="114" addons="0" />
+	<parameters>
+		<parameter key="message_greet" value="Hail, |PLAYERNAME|! Need tools for your adventures? Ask me for a {trade}!" />
+	</parameters>
+</npc>

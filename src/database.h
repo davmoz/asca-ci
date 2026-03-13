@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_DATABASE_H_A484B0CDFDE542838F506DCE3D40C693
-#define FS_DATABASE_H_A484B0CDFDE542838F506DCE3D40C693
+#ifndef FS_DATABASE_H
+#define FS_DATABASE_H
 
 #include <boost/lexical_cast.hpp>
 
@@ -63,7 +63,7 @@ class Database
 		 * @param query command
 		 * @return true on success, false on error
 		 */
-		bool executeQuery(const std::string& query);
+		[[nodiscard]] bool executeQuery(std::string_view query);
 
 		/**
 		 * Queries database.
@@ -72,7 +72,7 @@ class Database
 		 *
 		 * @return results object (nullptr on error)
 		 */
-		DBResult_ptr storeQuery(const std::string& query);
+		[[nodiscard]] DBResult_ptr storeQuery(std::string_view query);
 
 		/**
 		 * Escapes string for query.
@@ -82,7 +82,7 @@ class Database
 		 * @param s string to be escaped
 		 * @return quoted string
 		 */
-		std::string escapeString(const std::string& s) const;
+		[[nodiscard]] std::string escapeString(std::string_view s) const;
 
 		/**
 		 * Escapes binary stream for query.
@@ -93,7 +93,7 @@ class Database
 		 * @param length stream length
 		 * @return quoted string
 		 */
-		std::string escapeBlob(const char* s, uint32_t length) const;
+		[[nodiscard]] std::string escapeBlob(const char* s, uint32_t length) const;
 
 		/**
 		 * Retrieve id of last inserted row
@@ -163,6 +163,8 @@ class DBResult
 			try {
 				data = boost::lexical_cast<T>(row[it->second]);
 			} catch (boost::bad_lexical_cast&) {
+				std::cout << "[Error - DBResult::getNumber] Failed to convert column '" << s
+				          << "' value '" << row[it->second] << "' to numeric type" << std::endl;
 				data = 0;
 			}
 			return data;
@@ -190,9 +192,8 @@ class DBInsert
 {
 	public:
 		explicit DBInsert(std::string query);
-		bool addRow(const std::string& row);
-		bool addRow(std::ostringstream& row);
-		bool execute();
+		[[nodiscard]] bool addRow(const std::string& row);
+		[[nodiscard]] bool execute();
 
 	private:
 		std::string query;

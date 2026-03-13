@@ -15,6 +15,18 @@
 	<action fromid="1747" toid="1749" script="quests/quests.lua" />
 	<action uniqueid="30015" script="quests/annihilator.lua" />
 
+	<!-- Phase 4: NPC Quest Reward Chests (uniqueid-based) -->
+	<action uniqueid="50301" script="quests/hunter_task_reward.lua" />
+	<action uniqueid="50402" script="quests/royal_faction_reward.lua" />
+	<action uniqueid="50502" script="quests/shadow_faction_reward.lua" />
+	<action uniqueid="50602" script="quests/nature_faction_reward.lua" />
+	<action uniqueid="50901" script="quests/dragon_quest_reward.lua" />
+	<action uniqueid="51001" script="quests/pirate_treasure.lua" />
+	<action uniqueid="50801" script="quests/catacombs_entrance.lua" />
+	<action uniqueid="50702" script="quests/wanderer_treasure.lua" />
+	<action uniqueid="51201" script="quests/arena_champion.lua" />
+	<action uniqueid="51102" script="quests/dungeon_boss_reward.lua" />
+
 	<!-- Tools -->
 	<action itemid="2120" script="tools/rope.lua" />
 	<action itemid="2416" script="tools/crowbar.lua" />
@@ -23,7 +35,9 @@
 	<action itemid="2550" script="tools/scythe.lua" />
 	<action itemid="2553" script="tools/pick.lua" />
 	<action itemid="2566" script="tools/kitchen_knife.lua" />
-	<action itemid="2580" script="tools/fishing.lua" allowfaruse="1" />
+	<action itemid="2580" script="tools/fishing_enhanced.lua" allowfaruse="1" />
+	<action itemid="30020" script="tools/fishing_enhanced.lua" allowfaruse="1" />
+	<action itemid="30021" script="tools/fishing_enhanced.lua" allowfaruse="1" />
 	<action itemid="2554" script="tools/shovel.lua" />
 	<action itemid="5710" script="tools/shovel.lua" />
 	<action itemid="7731" script="tools/rope.lua" />
@@ -192,6 +206,94 @@
 	<action fromid="19974" toid="19975" script="other/windows.lua" />
 	<action fromid="20180" toid="20185" script="other/windows.lua" />
 
+	<!-- Cooking Stations (Phase 2.3) -->
+	<!-- Custom cooking stove -->
+	<action itemid="30240" script="crafting/cooking.lua" />
+	<!-- Existing campfires (basic recipes only) -->
+	<action itemid="1423" script="crafting/cooking.lua" />
+	<action itemid="1424" script="crafting/cooking.lua" />
+	<action itemid="1425" script="crafting/cooking.lua" />
+	<!-- Existing ovens -->
+	<action itemid="1786" script="crafting/cooking.lua" />
+	<action itemid="1787" script="crafting/cooking.lua" />
+	<action itemid="1788" script="crafting/cooking.lua" />
+	<action itemid="1789" script="crafting/cooking.lua" />
+	<!-- Existing stoves -->
+	<action itemid="1791" script="crafting/cooking.lua" />
+	<action itemid="1792" script="crafting/cooking.lua" />
+	<action itemid="1793" script="crafting/cooking.lua" />
+
+	<!-- Cooked Meals (eating for buffs, Phase 2.3) -->
+	<action fromid="30200" toid="30230" script="crafting/cooking.lua" />
+
+	<!-- Mining (Phase 2.4) -->
+	<!-- Pickaxes: use on ore veins (veins identified by actionId 9100-9114) -->
+	<action itemid="30320" script="crafting/mining.lua" allowfaruse="1" />  <!-- Basic Pickaxe -->
+	<action itemid="30321" script="crafting/mining.lua" allowfaruse="1" />  <!-- Steel Pickaxe -->
+	<action itemid="30322" script="crafting/mining.lua" allowfaruse="1" />  <!-- Crystal Pickaxe -->
+
+	<!-- Farming (Phase 2.2) -->
+	<!-- Seeds: use on planting pot or farm plot -->
+	<action itemid="30100" script="crafting/farming.lua" />  <!-- Wheat Seeds -->
+	<action itemid="30101" script="crafting/farming.lua" />  <!-- Corn Seeds -->
+	<action itemid="30102" script="crafting/farming.lua" />  <!-- Potato Seeds -->
+	<action itemid="30103" script="crafting/farming.lua" />  <!-- Carrot Seeds -->
+	<action itemid="30104" script="crafting/farming.lua" />  <!-- Tomato Seeds -->
+	<action itemid="30105" script="crafting/farming.lua" />  <!-- Onion Seeds -->
+	<action itemid="30106" script="crafting/farming.lua" />  <!-- Garlic Seeds -->
+	<action itemid="30107" script="crafting/farming.lua" />  <!-- Lettuce Seeds -->
+	<action itemid="30108" script="crafting/farming.lua" />  <!-- Pumpkin Seeds -->
+	<action itemid="30109" script="crafting/farming.lua" />  <!-- Basil Seeds -->
+	<action itemid="30110" script="crafting/farming.lua" />  <!-- Thyme Seeds -->
+	<action itemid="30111" script="crafting/farming.lua" />  <!-- Rosemary Seeds -->
+	<action itemid="30112" script="crafting/farming.lua" />  <!-- Berry Seeds -->
+	<action itemid="30113" script="crafting/farming.lua" />  <!-- Grape Seeds -->
+	<action itemid="30114" script="crafting/farming.lua" />  <!-- Herb Seeds -->
+	<action itemid="30115" script="crafting/farming.lua" />  <!-- Mandrake Seeds -->
+	<action itemid="30116" script="crafting/farming.lua" />  <!-- Starflower Seeds -->
+	<!-- Watering Can: use on growing crops -->
+	<action itemid="30120" script="crafting/farming.lua" />  <!-- Watering Can -->
+	<!-- Garden Hoe: use on ready crops to harvest -->
+	<action itemid="30121" script="crafting/farming.lua" />  <!-- Garden Hoe -->
+	<!-- Farm plots: right-click to check/harvest -->
+	<action itemid="30130" script="crafting/farming.lua" />  <!-- Planting Pot -->
+	<action itemid="30131" script="crafting/farming.lua" />  <!-- Farm Plot (empty) -->
+	<action itemid="30132" script="crafting/farming.lua" />  <!-- Farm Plot (planted) -->
+	<action itemid="30133" script="crafting/farming.lua" />  <!-- Farm Plot (sprouting) -->
+	<action itemid="30134" script="crafting/farming.lua" />  <!-- Farm Plot (growing) -->
+	<action itemid="30135" script="crafting/farming.lua" />  <!-- Farm Plot (ready) -->
+
+	<!-- Enchanting Crystals (Phase 2.6) -->
+	<action itemid="30600" script="crafting/enchanting.lua" />  <!-- Small Painite Crystal -->
+	<action itemid="30601" script="crafting/enchanting.lua" />  <!-- Medium Painite Crystal -->
+	<action itemid="30602" script="crafting/enchanting.lua" />  <!-- Large Painite Crystal -->
+
+	<!-- Smelting: use ore on furnace -->
+	<action itemid="30300" script="crafting/smelting.lua" />  <!-- Copper Ore -->
+	<action itemid="30301" script="crafting/smelting.lua" />  <!-- Tin Ore -->
+	<action itemid="30302" script="crafting/smelting.lua" />  <!-- Iron Ore -->
+	<action itemid="30303" script="crafting/smelting.lua" />  <!-- Coal -->
+	<action itemid="30304" script="crafting/smelting.lua" />  <!-- Silver Ore -->
+	<action itemid="30305" script="crafting/smelting.lua" />  <!-- Gold Ore -->
+	<action itemid="30306" script="crafting/smelting.lua" />  <!-- Mithril Ore -->
+	<action itemid="30307" script="crafting/smelting.lua" />  <!-- Platinum Ore -->
+	<action itemid="30308" script="crafting/smelting.lua" />  <!-- Adamantite Ore -->
+	<action itemid="30309" script="crafting/smelting.lua" />  <!-- Orichalcum Ore -->
+	<action itemid="30310" script="crafting/smelting.lua" />  <!-- Painite Crystal Shard -->
+
+	<!-- Smithing: use bars on anvil to forge equipment (Phase 2.5) -->
+	<action itemid="30400" script="crafting/smithing.lua" />  <!-- Copper Bar -->
+	<action itemid="30401" script="crafting/smithing.lua" />  <!-- Tin Bar -->
+	<action itemid="30402" script="crafting/smithing.lua" />  <!-- Bronze Bar -->
+	<action itemid="30403" script="crafting/smithing.lua" />  <!-- Iron Bar -->
+	<action itemid="30404" script="crafting/smithing.lua" />  <!-- Steel Bar -->
+	<action itemid="30405" script="crafting/smithing.lua" />  <!-- Silver Bar -->
+	<action itemid="30406" script="crafting/smithing.lua" />  <!-- Gold Bar -->
+	<action itemid="30407" script="crafting/smithing.lua" />  <!-- Mithril Bar -->
+	<action itemid="30408" script="crafting/smithing.lua" />  <!-- Platinum Bar -->
+	<action itemid="30409" script="crafting/smithing.lua" />  <!-- Adamantite Bar -->
+	<action itemid="30410" script="crafting/smithing.lua" />  <!-- Orichalcum Bar -->
+
 	<!-- Other -->
 	<action itemid="430" script="other/teleport.lua" />
 	<action itemid="486" script="other/snow_heap.lua" />
@@ -233,4 +335,23 @@
 	<action fromid="9443" toid="9444" script="other/watch.lua" />
 	<action fromid="18488" toid="18492" script="other/skill_trainer.lua" />
 	<action itemid="20252" script="other/bed_modification_kits.lua" />
+
+	<!-- Crafting Station (generic handler for direct station interaction) -->
+	<action itemid="2555" script="crafting_station.lua" />  <!-- Anvil -->
+	<action itemid="2556" script="crafting_station.lua" />  <!-- Anvil (variant) -->
+	<action itemid="30421" script="crafting_station.lua" /> <!-- Custom Crafting Anvil -->
+
+	<!-- Mining Nodes (direct right-click interaction on ore nodes) -->
+	<action itemid="8637" script="mining_node.lua" />  <!-- Copper ore node -->
+	<action itemid="8638" script="mining_node.lua" />  <!-- Iron ore node -->
+	<action itemid="8639" script="mining_node.lua" />  <!-- Silver ore node -->
+	<action itemid="8640" script="mining_node.lua" />  <!-- Gold ore node -->
+	<action itemid="8641" script="mining_node.lua" />  <!-- Mithril ore node -->
+
+	<!-- Phase 5: Weekly Dungeon Entrances (actionid 9001-9005) -->
+	<action actionid="9001" script="dungeon_entrance.lua" />
+	<action actionid="9002" script="dungeon_entrance.lua" />
+	<action actionid="9003" script="dungeon_entrance.lua" />
+	<action actionid="9004" script="dungeon_entrance.lua" />
+	<action actionid="9005" script="dungeon_entrance.lua" />
 </actions>

@@ -1,6 +1,6 @@
 function onLogout(player)
 	local playerId = player:getId()
-	if nextUseStaminaTime[playerId] then
+	if nextUseStaminaTime and nextUseStaminaTime[playerId] then
 		nextUseStaminaTime[playerId] = nil
 	end
 	return true

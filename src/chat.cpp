@@ -47,16 +47,15 @@ void PrivateChatChannel::invitePlayer(const Player& player, Player& invitePlayer
 		return;
 	}
 
-	std::ostringstream ss;
-	ss << player.getName() << " invites you to " << (player.getSex() == PLAYERSEX_FEMALE ? "her" : "his") << " private chat channel.";
-	invitePlayer.sendTextMessage(MESSAGE_INFO_DESCR, ss.str());
+	invitePlayer.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{} invites you to {} private chat channel.",
+		player.getName(), player.getSex() == PLAYERSEX_FEMALE ? "her" : "his"));
 
-	ss.str(std::string());
-	ss << invitePlayer.getName() << " has been invited.";
-	player.sendTextMessage(MESSAGE_INFO_DESCR, ss.str());
+	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{} has been invited.", invitePlayer.getName()));
 
 	for (const auto& it : users) {
-		it.second->sendChannelEvent(id, invitePlayer.getName(), CHANNELEVENT_INVITE);
+		if (it.second) {
+			it.second->sendChannelEvent(id, invitePlayer.getName(), CHANNELEVENT_INVITE);
+		}
 	}
 }
 
@@ -68,21 +67,23 @@ void PrivateChatChannel::excludePlayer(const Player& player, Player& excludePlay
 
 	removeUser(excludePlayer);
 
-	std::ostringstream ss;
-	ss << excludePlayer.getName() << " has been excluded.";
-	player.sendTextMessage(MESSAGE_INFO_DESCR, ss.str());
+	player.sendTextMessage(MESSAGE_INFO_DESCR, fmt::format("{} has been excluded.", excludePlayer.getName()));
 
 	excludePlayer.sendClosePrivate(id);
 
 	for (const auto& it : users) {
-		it.second->sendChannelEvent(id, excludePlayer.getName(), CHANNELEVENT_EXCLUDE);
+		if (it.second) {
+			it.second->sendChannelEvent(id, excludePlayer.getName(), CHANNELEVENT_EXCLUDE);
+		}
 	}
 }
 
 void PrivateChatChannel::closeChannel() const
 {
 	for (const auto& it : users) {
-		it.second->sendClosePrivate(id);
+		if (it.second) {
+			it.second->sendClosePrivate(id);
+		}
 	}
 }
 
@@ -100,13 +101,15 @@ bool ChatChannel::addUser(Player& player)
 	if (id == CHANNEL_GUILD) {
 		Guild* guild = player.getGuild();
 		if (guild && !guild->getMotd().empty()) {
-			g_scheduler.addEvent(createSchedulerTask(150, std::bind(&Game::sendGuildMotd, &g_game, player.getID())));
+			g_scheduler.addEvent(createSchedulerTask(150, [playerId = player.getID()]() { g_game.sendGuildMotd(playerId); }));
 		}
 	}
 
 	if (!publicChannel) {
 		for (const auto& it : users) {
-			it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_JOIN);
+			if (it.second) {
+				it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_JOIN);
+			}
 		}
 	}
 
@@ -125,7 +128,9 @@ bool ChatChannel::removeUser(const Player& player)
 
 	if (!publicChannel) {
 		for (const auto& it : users) {
-			it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_LEAVE);
+			if (it.second) {
+				it.second->sendChannelEvent(id, player.getName(), CHANNELEVENT_LEAVE);
+			}
 		}
 	}
 
@@ -140,7 +145,9 @@ bool ChatChannel::hasUser(const Player& player) {
 void ChatChannel::sendToAll(const std::string& message, SpeakClasses type) const
 {
 	for (const auto& it : users) {
-		it.second->sendChannelMessage("", message, type, id);
+		if (it.second) {
+			it.second->sendChannelMessage("", message, type, id);
+		}
 	}
 }
 
@@ -151,7 +158,9 @@ bool ChatChannel::talk(const Player& fromPlayer, SpeakClasses type, const std::s
 	}
 
 	for (const auto& it : users) {
-		it.second->sendToChannel(&fromPlayer, type, text, id);
+		if (it.second) {
+			it.second->sendToChannel(&fromPlayer, type, text, id);
+		}
 	}
 	return true;
 }

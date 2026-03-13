@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Blackbeard" script="blackbeard.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="129" head="38" body="0" legs="76" feet="0" addons="3" />
+	<parameters>
+		<parameter key="message_greet" value="Yarr harr! Welcome aboard, |PLAYERNAME|! Looking for {adventure} on the high seas?" />
+	</parameters>
+</npc>

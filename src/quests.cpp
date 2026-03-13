@@ -25,8 +25,7 @@
 
 std::string Mission::getDescription(Player* player) const
 {
-	int32_t value;
-	player->getStorageValue(storageID, value);
+	int32_t value = player->getStorageValue(storageID).value_or(-1);
 
 	if (!mainDescription.empty()) {
 		std::string desc = mainDescription;
@@ -63,16 +62,16 @@ bool Mission::isStarted(Player* player) const
 		return false;
 	}
 
-	int32_t value;
-	if (!player->getStorageValue(storageID, value)) {
+	auto value = player->getStorageValue(storageID);
+	if (!value) {
 		return false;
 	}
 
-	if (value < startValue) {
+	if (*value < startValue) {
 		return false;
 	}
 
-	if (!ignoreEndValue && value > endValue) {
+	if (!ignoreEndValue && *value > endValue) {
 		return false;
 	}
 
@@ -85,16 +84,16 @@ bool Mission::isCompleted(Player* player) const
 		return false;
 	}
 
-	int32_t value;
-	if (!player->getStorageValue(storageID, value)) {
+	auto value = player->getStorageValue(storageID);
+	if (!value) {
 		return false;
 	}
 
 	if (ignoreEndValue) {
-		return value >= endValue;
+		return *value >= endValue;
 	}
 
-	return value == endValue;
+	return *value == endValue;
 }
 
 std::string Mission::getName(Player* player) const
@@ -132,8 +131,8 @@ bool Quest::isStarted(Player* player) const
 		return false;
 	}
 
-	int32_t value;
-	if (!player->getStorageValue(startStorageID, value) || value < startStorageValue) {
+	auto value = player->getStorageValue(startStorageID);
+	if (!value || *value < startStorageValue) {
 		return false;
 	}
 

@@ -25,7 +25,7 @@
 #include "configmanager.h"
 #include "ban.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 Ban g_bans;
 
 ServiceManager::~ServiceManager()
@@ -35,14 +35,14 @@ ServiceManager::~ServiceManager()
 
 void ServiceManager::die()
 {
-	io_service.stop();
+	ioContext.stop();
 }
 
 void ServiceManager::run()
 {
 	assert(!running);
 	running = true;
-	io_service.run();
+	ioContext.run();
 }
 
 void ServiceManager::stop()
@@ -55,7 +55,7 @@ void ServiceManager::stop()
 
 	for (auto& servicePortIt : acceptors) {
 		try {
-			io_service.post(std::bind(&ServicePort::onStopServer, servicePortIt.second));
+			boost::asio::post(ioContext, [servicePort = servicePortIt.second]() { servicePort->onStopServer(); });
 		} catch (boost::system::system_error& e) {
 			std::cout << "[ServiceManager::stop] Network Error: " << e.what() << std::endl;
 		}
@@ -63,8 +63,8 @@ void ServiceManager::stop()
 
 	acceptors.clear();
 
-	death_timer.expires_from_now(boost::posix_time::seconds(3));
-	death_timer.async_wait(std::bind(&ServiceManager::die, this));
+	death_timer.expires_after(std::chrono::seconds(3));
+	death_timer.async_wait([this](const boost::system::error_code&) { die(); });
 }
 
 ServicePort::~ServicePort()
@@ -98,8 +98,10 @@ void ServicePort::accept()
 		return;
 	}
 
-	auto connection = ConnectionManager::getInstance().createConnection(io_service, shared_from_this());
-	acceptor->async_accept(connection->getSocket(), std::bind(&ServicePort::onAccept, shared_from_this(), connection, std::placeholders::_1));
+	auto connection = ConnectionManager::getInstance().createConnection(ioContext, shared_from_this());
+	acceptor->async_accept(connection->getSocket(), [thisPtr = shared_from_this(), connection](const boost::system::error_code& error) {
+		thisPtr->onAccept(connection, error);
+	});
 }
 
 void ServicePort::onAccept(Connection_ptr connection, const boost::system::error_code& error)
@@ -127,7 +129,7 @@ void ServicePort::onAccept(Connection_ptr connection, const boost::system::error
 			close();
 			pendingStart = true;
 			g_scheduler.addEvent(createSchedulerTask(15000,
-			                     std::bind(&ServicePort::openAcceptor, std::weak_ptr<ServicePort>(shared_from_this()), serverPort)));
+			                     [weak = std::weak_ptr<ServicePort>(shared_from_this()), port = serverPort]() { ServicePort::openAcceptor(weak, port); }));
 		}
 	}
 }
@@ -168,11 +170,11 @@ void ServicePort::open(uint16_t port)
 
 	try {
 		if (g_config.getBoolean(ConfigManager::BIND_ONLY_GLOBAL_ADDRESS)) {
-			acceptor.reset(new boost::asio::ip::tcp::acceptor(io_service, boost::asio::ip::tcp::endpoint(
-			            boost::asio::ip::address(boost::asio::ip::address_v4::from_string(g_config.getString(ConfigManager::IP))), serverPort)));
+			acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(ioContext, boost::asio::ip::tcp::endpoint(
+			            boost::asio::ip::make_address_v4(g_config.getString(ConfigManager::IP)), serverPort));
 		} else {
-			acceptor.reset(new boost::asio::ip::tcp::acceptor(io_service, boost::asio::ip::tcp::endpoint(
-			            boost::asio::ip::address(boost::asio::ip::address_v4(INADDR_ANY)), serverPort)));
+			acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(ioContext, boost::asio::ip::tcp::endpoint(
+			            boost::asio::ip::address(boost::asio::ip::address_v4(INADDR_ANY)), serverPort));
 		}
 
 		acceptor->set_option(boost::asio::ip::tcp::no_delay(true));
@@ -183,7 +185,7 @@ void ServicePort::open(uint16_t port)
 
 		pendingStart = true;
 		g_scheduler.addEvent(createSchedulerTask(15000,
-		                     std::bind(&ServicePort::openAcceptor, std::weak_ptr<ServicePort>(shared_from_this()), port)));
+		                     [weak = std::weak_ptr<ServicePort>(shared_from_this()), port]() { ServicePort::openAcceptor(weak, port); }));
 	}
 }
 

@@ -11,7 +11,7 @@ local config = {
 		[3] = {id = 2465, chance = 3029}, -- Brass Armor
 		[4] = {id = 2463, chance = 1559}, -- Plate Armor
 		[5] = {id = 2476, chance = 595}, -- Knight Armor
-		[6] = {id = 8891, chance = 283}, -- Paladin Armor
+		[6] = {id = 8891, chance = 283}, -- Archer Armor
 		[7] = {id = 2487, chance = 49} -- Crown Armor
 	},
 	[9810] = { -- Rusty Armor (Rare)
@@ -19,7 +19,7 @@ local config = {
 		[2] = {id = 2463, chance = 3767}, -- Plate Armor
 		[3] = {id = 2476, chance = 1832}, -- Knight Armor
 		[4] = {id = 2487, chance = 177}, -- Crown Armor
-		[5] = {id = 8891, chance = 31}, -- Paladin Armor
+		[5] = {id = 8891, chance = 31}, -- Archer Armor
 		[6] = {id = 2466, chance = 10} -- Golden Armor
 	},
 	[9811] = { -- Rusty Legs (Common)

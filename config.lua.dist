@@ -1,71 +1,166 @@
--- Combat settings
--- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"
+-- ============================================================================
+-- TFS Configuration File
+-- ============================================================================
+-- Copy this file to config.lua and adjust the values for your server.
+-- Lines starting with -- are comments and are ignored by the server.
+-- ============================================================================
+
+-- ============================================================================
+-- Combat Settings
+-- ============================================================================
+-- worldType: Determines PvP rules for the entire server.
+--   "pvp"          - Open PvP. Players can attack each other but get skull marks
+--                    and may lose equipment on death. Most common mode.
+--   "no-pvp"       - Non-PvP. Players cannot attack each other directly.
+--                    Good for PvE-focused servers.
+--   "pvp-enforced" - Hardcore PvP. No skull system, no protection zones have
+--                    effect. Players can attack freely everywhere.
 worldType = "pvp"
+
+-- hotkeyAimbotEnabled: Allow clients to use hotkey targeting (auto-aim).
+-- Disabling this makes the server more skill-based but may frustrate players.
 hotkeyAimbotEnabled = true
+
+-- protectionLevel: Players at or below this level cannot be attacked by other
+-- players and do not lose items/exp on death. Set higher for a more
+-- newbie-friendly server.
 protectionLevel = 1
+
+-- Skull system: Controls PvP consequences.
+-- killsToRedSkull: Number of unjustified kills to get a red skull.
+-- killsToBlackSkull: Number of unjustified kills to get a black skull
+--   (black skull = full loot drop on death, cannot use most items).
 killsToRedSkull = 3
 killsToBlackSkull = 6
+
+-- pzLocked: Duration in milliseconds a player is "PZ locked" (cannot enter
+-- protection zones) after attacking another player. 60000 = 1 minute.
 pzLocked = 60000
+
+-- Item consumption settings: Whether items lose charges/ammo on use.
 removeChargesFromRunes = true
 removeChargesFromPotions = true
 removeWeaponAmmunition = true
 removeWeaponCharges = true
+
+-- timeToDecreaseFrags: Seconds until an unjustified kill (frag) expires.
+-- Default: 24 hours. Lower = more forgiving PvP, higher = harsher.
 timeToDecreaseFrags = 24 * 60 * 60
+
+-- whiteSkullTime: Seconds a white skull lasts after an unjustified attack.
 whiteSkullTime = 15 * 60
+
+-- stairJumpExhaustion: Milliseconds between allowed stair/ladder uses.
+-- Prevents stair-hopping abuse in PvP.
 stairJumpExhaustion = 2000
+
+-- Experience from PvP kills. Generally disabled to prevent abuse.
 experienceByKillingPlayers = false
 expFromPlayersLevelRange = 75
 
+-- ============================================================================
 -- Connection Config
--- NOTE: maxPlayers set to 0 means no limit
--- NOTE: allowWalkthrough is only applicable to players
+-- ============================================================================
+-- SECURITY: In production, set 'ip' to your server's public IP address.
+-- Do NOT leave it as 127.0.0.1 for a public server.
 ip = "127.0.0.1"
+
+-- bindOnlyGlobalAddress: If true, only listen on the 'ip' address above.
+-- If false, listen on all interfaces (0.0.0.0). Set to true in production.
 bindOnlyGlobalAddress = false
+
+-- Server ports. Standard Tibia ports are 7171 (login) and 7172 (game).
+-- SECURITY: Only these ports should be open in your firewall.
 loginProtocolPort = 7171
 gameProtocolPort = 7172
 statusProtocolPort = 7171
+
+-- maxPlayers: Maximum simultaneous players. 0 = unlimited.
+-- PERFORMANCE: Set a reasonable limit based on your server's resources.
+-- A typical VPS can handle 200-500 players depending on specs.
 maxPlayers = 0
-motd = "Welcome to The Forgotten Server!"
+
+-- Message of the Day shown on login.
+motd = "Welcome to ASCA!"
+
+-- Account/character restrictions.
 onePlayerOnlinePerAccount = true
 allowClones = false
+
+-- allowWalkthrough: Let players walk through each other. Recommended true
+-- to prevent blocking abuse.
 allowWalkthrough = true
-serverName = "Forgotten"
+
+-- Server identity.
+serverName = "ASCA"
 statusTimeout = 5000
 replaceKickOnLogin = true
+
+-- maxPacketsPerSecond: Anti-flood protection. Clients sending more packets
+-- than this per second are disconnected.
+-- SECURITY: Lower values catch bots faster but may disconnect laggy players.
+-- Recommended range: 15-50. Default: 25.
 maxPacketsPerSecond = 25
 
+-- ============================================================================
 -- Deaths
--- NOTE: Leave deathLosePercent as -1 if you want to use the default
--- death penalty formula. For the old formula, set it to 10. For
--- no skill/experience loss, set it to 0.
+-- ============================================================================
+-- deathLosePercent: Percentage of experience/skills lost on death.
+--   -1 = Use default Tibia formula (varies by level).
+--   10 = Old-school 10% flat loss.
+--    0 = No loss (casual server).
 deathLosePercent = -1
 
+-- ============================================================================
 -- Houses
--- NOTE: set housePriceEachSQM to -1 to disable the ingame buy house functionality
--- NOTE: valid values for houseRentPeriod are: "daily", "weekly", "monthly", "yearly"
--- use any other value to disable the rent system
+-- ============================================================================
+-- housePriceEachSQM: Gold cost per square meter when buying a house in-game.
+-- Set to -1 to disable in-game house purchases (admin-only assignment).
 housePriceEachSQM = 1000
+
+-- houseRentPeriod: How often rent is charged.
+-- Valid: "daily", "weekly", "monthly", "yearly", "never"
 houseRentPeriod = "never"
+
+-- houseOwnedByAccount: If true, owning a house locks it to the entire
+-- account (one house per account). Prevents house hoarding.
 houseOwnedByAccount = false
 houseDoorShowPrice = true
 onlyInvitedCanMoveHouseItems = true
 
+-- ============================================================================
 -- Item Usage
+-- ============================================================================
+-- Cooldowns between item uses in milliseconds.
+-- PERFORMANCE: Lower values mean more actions per second = more CPU usage.
+-- timeBetweenActions: Regular use (e.g., eating food). Default: 200ms.
+-- timeBetweenExActions: Extended use (e.g., runes, potions). Default: 1000ms.
 timeBetweenActions = 200
 timeBetweenExActions = 1000
 
+-- ============================================================================
 -- Map
--- NOTE: set mapName WITHOUT .otbm at the end
+-- ============================================================================
+-- mapName: Name of the map file WITHOUT the .otbm extension.
+-- Place your map file in data/world/<mapName>.otbm
 mapName = "forgotten"
 mapAuthor = "Komic"
 
+-- ============================================================================
 -- Market
+-- ============================================================================
 marketOfferDuration = 30 * 24 * 60 * 60
 premiumToCreateMarketOffer = true
 checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
 
--- MySQL
+-- ============================================================================
+-- MySQL Database
+-- ============================================================================
+-- SECURITY: Change these credentials immediately! Do not use defaults in
+-- production. See SECURITY.md for database hardening recommendations.
+-- SECURITY: Use a dedicated MySQL user with minimal privileges.
+-- SECURITY: Never use the MySQL root account here.
 mysqlHost = "127.0.0.1"
 mysqlUser = "forgottenserver"
 mysqlPass = ""
@@ -73,61 +168,139 @@ mysqlDatabase = "forgottenserver"
 mysqlPort = 3306
 mysqlSock = ""
 
--- Misc.
--- NOTE: classicAttackSpeed set to true makes players constantly attack at regular
--- intervals regardless of other actions such as item (potion) use. This setting
--- may cause high CPU usage with many players and potentially affect performance!
--- NOTE: forceMonsterTypesOnLoad loads all monster types on startup to validate them.
--- You can disable it to save some memory if you don't see any errors at startup.
+-- ============================================================================
+-- Miscellaneous
+-- ============================================================================
 allowChangeOutfit = true
+
+-- freePremium: Give all players premium status for free.
 freePremium = false
+
+-- kickIdlePlayerAfterMinutes: AFK kick timer. Set to 0 to disable.
+-- PERFORMANCE: Lower values free up player slots faster.
 kickIdlePlayerAfterMinutes = 15
+
+-- maxMessageBuffer: Messages a player can send before being muted.
+-- SECURITY: Helps prevent spam. Lower = stricter.
 maxMessageBuffer = 4
+
 emoteSpells = false
 classicEquipmentSlots = false
+
+-- classicAttackSpeed: If true, players attack at a constant rate regardless
+-- of other actions (potion use, etc.).
+-- PERFORMANCE WARNING: Can cause high CPU usage with many players online.
+-- Only enable if you understand the performance implications.
 classicAttackSpeed = false
+
+-- showScriptsLogInConsole: Log Lua script activity to console.
+-- PERFORMANCE: Disable in production to reduce I/O.
 showScriptsLogInConsole = true
+
 showOnlineStatusInCharlist = false
 yellMinimumLevel = 2
 yellAlwaysAllowPremium = false
 forceMonsterTypesOnLoad = true
 cleanProtectionZones = false
 
+-- ============================================================================
 -- Server Save
--- NOTE: serverSaveNotifyDuration in minutes
+-- ============================================================================
+-- serverSaveNotifyDuration: Minutes before server save to warn players.
 serverSaveNotifyMessage = true
 serverSaveNotifyDuration = 5
 serverSaveCleanMap = false
 serverSaveClose = false
 serverSaveShutdown = true
 
+-- ============================================================================
 -- Rates
--- NOTE: rateExp is not used if you have enabled stages in data/XML/stages.xml
+-- ============================================================================
+-- Multipliers for experience, skills, loot, magic, and spawn speed.
+-- BALANCE: Higher rates = faster progression. Adjust to taste.
+-- NOTE: rateExp is ignored if stages are enabled in data/XML/stages.xml.
+-- PERFORMANCE: Very high rateSpawn values can cause lag from too many monsters.
 rateExp = 5
 rateSkill = 3
 rateLoot = 2
 rateMagic = 3
 rateSpawn = 1
 
+-- ============================================================================
 -- Monsters
+-- ============================================================================
+-- deSpawnRange: Vertical range (floors) at which monsters despawn from
+-- their spawn point.
+-- deSpawnRadius: Horizontal radius (tiles) at which monsters despawn.
+-- PERFORMANCE: Smaller values reduce active monster count.
 deSpawnRange = 2
 deSpawnRadius = 50
 
+-- ============================================================================
 -- Stamina
+-- ============================================================================
+-- staminaSystem: Enable the stamina system (reduced exp after extended play).
 staminaSystem = true
 
+-- ============================================================================
 -- Scripts
+-- ============================================================================
+-- warnUnsafeScripts: Log warnings for scripts using unsafe patterns.
+-- convertUnsafeScripts: Automatically convert unsafe scripts to safe versions.
+-- SECURITY: Keep both enabled.
 warnUnsafeScripts = true
 convertUnsafeScripts = true
 
+-- ============================================================================
 -- Startup
--- NOTE: defaultPriority only works on Windows and sets process
--- priority, valid values are: "normal", "above-normal", "high"
+-- ============================================================================
+-- defaultPriority: Process priority (Windows only).
+-- Valid: "normal", "above-normal", "high"
 defaultPriority = "high"
+
+-- startupDatabaseOptimization: Run OPTIMIZE TABLE on startup.
+-- PERFORMANCE: Useful for databases with heavy write activity, but slows
+-- startup. Consider running optimization during off-peak hours instead.
 startupDatabaseOptimization = false
 
+-- ============================================================================
 -- Status Server Information
-ownerName = ""
-ownerEmail = ""
-url = "https://otland.net/"
+-- ============================================================================
+-- Public information shown in server lists and status queries.
+ownerName = "ASCA Team"
+ownerEmail = "admin@asca-server.com"
+url = "https://asca-server.com"
 location = "Sweden"
+
+-- ============================================================================
+-- Custom Systems Configuration
+-- ============================================================================
+dailyRewardsEnabled = true
+preySystemEnabled = true
+imbuingSystemEnabled = true
+factionSystemEnabled = true
+craftingSystemEnabled = true
+taskSystemEnabled = true
+bestiaryEnabled = true
+achievementSystemEnabled = true
+pvpSystemEnabled = true
+
+-- Crafting Settings
+craftingBaseSuccessRate = 80
+miningExhaustTime = 2
+cookingExhaustTime = 3
+smithingExhaustTime = 5
+enchantingExhaustTime = 4
+
+-- Prey Settings
+preySlotCount = 3
+preyBonusDuration = 7200
+preyRerollCost = 2000
+
+-- Imbuing Settings
+imbuingBaseDuration = 72000
+imbuingCostMultiplier = 1.0
+
+-- Faction Settings
+factionMaxReputation = 10000
+factionDailyQuestLimit = 3

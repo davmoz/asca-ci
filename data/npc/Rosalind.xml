@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Rosalind" script="rosalind.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="139" head="39" body="122" legs="76" feet="116" addons="0" />
+	<parameters>
+		<parameter key="message_greet" value="Hello, |PLAYERNAME|! The earth provides for those who tend it. Ask about {farming} or see my {trade}!" />
+	</parameters>
+</npc>

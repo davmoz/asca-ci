@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_TILE_H_96C7EE7CF8CD48E59D5D554A181F0C56
-#define FS_TILE_H_96C7EE7CF8CD48E59D5D554A181F0C56
+#ifndef FS_TILE_H
+#define FS_TILE_H
 
 #include "cylinder.h"
 #include "item.h"
@@ -367,7 +367,7 @@ class StaticTile final : public Tile
 		}
 		TileItemVector* makeItemList() override {
 			if (!items) {
-				items.reset(new TileItemVector);
+				items = std::make_unique<TileItemVector>();
 			}
 			return items.get();
 		}
@@ -380,7 +380,7 @@ class StaticTile final : public Tile
 		}
 		CreatureVector* makeCreatures() override {
 			if (!creatures) {
-				creatures.reset(new CreatureVector);
+				creatures = std::make_unique<CreatureVector>();
 			}
 			return creatures.get();
 		}

@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_IOMARKET_H_B981E52C218C42D3B9EF726EBF0E92C9
-#define FS_IOMARKET_H_B981E52C218C42D3B9EF726EBF0E92C9
+#ifndef FS_IOMARKET_H
+#define FS_IOMARKET_H
 
 #include "enums.h"
 #include "database.h"

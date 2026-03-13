@@ -6,4 +6,20 @@
 	<!--
 	<globalevent name="timer_example" time="12:00:00" script="my_script.lua" />
 	-->
+
+	<!-- Seasonal Event Checker: runs at startup and daily at midnight -->
+	<globalevent type="startup" name="SeasonalCheckerStartup" script="seasonal_checker.lua" />
+	<globalevent name="SeasonalCheckerDaily" time="00:00:30" script="seasonal_checker.lua" />
+
+	<!-- Daily Raid Guarantee: runs at startup and every 15 minutes -->
+	<globalevent type="startup" name="DailyRaidStartup" script="daily_raid.lua" />
+	<globalevent name="DailyRaidCheck" time="00:15:00" script="daily_raid.lua" />
+
+	<!-- Phase 6.5: Server Monitor - startup init and periodic collection -->
+	<globalevent type="startup" name="ServerMonitorStartup" script="server_monitor.lua" />
+	<globalevent name="ServerMonitorCollect" interval="1800000" script="server_monitor.lua" />
+	<globalevent name="ServerMonitorDaily" time="23:00:00" script="server_monitor.lua" />
+
+	<!-- Daily Reward Reset: runs at midnight to log daily limit resets -->
+	<globalevent name="DailyReset" time="00:00" script="daily_reset.lua" />
 </globalevents>

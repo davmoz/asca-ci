@@ -17,12 +17,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_CONNECTION_H_FC8E1B4392D24D27A2F129D8B93A6348
-#define FS_CONNECTION_H_FC8E1B4392D24D27A2F129D8B93A6348
+#ifndef FS_CONNECTION_H
+#define FS_CONNECTION_H
 
 #include <unordered_set>
 
 #include "networkmessage.h"
+
+enum ConnectionState_t
+{
+	CONNECTION_STATE_OPEN,
+	CONNECTION_STATE_CLOSED,
+};
 
 static constexpr int32_t CONNECTION_WRITE_TIMEOUT = 30;
 static constexpr int32_t CONNECTION_READ_TIMEOUT = 30;
@@ -48,7 +54,7 @@ class ConnectionManager
 			return instance;
 		}
 
-		Connection_ptr createConnection(boost::asio::io_service& io_service, ConstServicePort_ptr servicePort);
+		Connection_ptr createConnection(boost::asio::io_context& ioContext, ConstServicePort_ptr servicePort);
 		void releaseConnection(const Connection_ptr& connection);
 		void closeAll();
 
@@ -68,12 +74,12 @@ class Connection : public std::enable_shared_from_this<Connection>
 
 		enum { FORCE_CLOSE = true };
 
-		Connection(boost::asio::io_service& io_service,
+		Connection(boost::asio::io_context& ioContext,
 		           ConstServicePort_ptr service_port) :
-			readTimer(io_service),
-			writeTimer(io_service),
+			readTimer(ioContext),
+			writeTimer(ioContext),
 			service_port(std::move(service_port)),
-			socket(io_service),
+			socket(ioContext),
 			timeConnected(time(nullptr)) {}
 		~Connection();
 
@@ -106,8 +112,8 @@ class Connection : public std::enable_shared_from_this<Connection>
 
 		NetworkMessage msg;
 
-		boost::asio::deadline_timer readTimer;
-		boost::asio::deadline_timer writeTimer;
+		boost::asio::steady_timer readTimer;
+		boost::asio::steady_timer writeTimer;
 
 		std::recursive_mutex connectionLock;
 
@@ -121,7 +127,7 @@ class Connection : public std::enable_shared_from_this<Connection>
 		time_t timeConnected;
 		uint32_t packetsSent = 0;
 
-		bool closed = false;
+		ConnectionState_t connectionState = CONNECTION_STATE_OPEN;
 		bool receivedFirst = false;
 };
 

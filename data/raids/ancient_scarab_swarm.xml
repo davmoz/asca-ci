@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="The desert sands shift! An Ancient Scarab Swarm erupts from the dunes!" />
+	<announce delay="25000" type="warning" message="A colossal Ancient Scarab burrows to the surface!" />
+	<announce delay="90000" type="warning" message="Scarabs continue to swarm from beneath the sands!" />
+
+	<areaspawn delay="2000" radius="8" centerx="135" centery="140" centerz="7">
+		<monster name="Scarab" minamount="6" maxamount="12" />
+	</areaspawn>
+
+	<areaspawn delay="6000" radius="6" centerx="138" centery="137" centerz="7">
+		<monster name="Larva" minamount="4" maxamount="8" />
+	</areaspawn>
+
+	<areaspawn delay="10000" radius="5" centerx="132" centery="143" centerz="7">
+		<monster name="Ancient Scarab" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="16000" radius="7" centerx="135" centery="140" centerz="7">
+		<monster name="Scarab" minamount="4" maxamount="8" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="25000" name="Ancient Scarab" x="135" y="140" z="7" />
+	<singlespawn delay="25000" name="Ancient Scarab" x="136" y="141" z="7" />
+
+	<areaspawn delay="30000" radius="5" centerx="135" centery="140" centerz="7">
+		<monster name="Ancient Scarab" minamount="2" maxamount="3" />
+	</areaspawn>
+</raid>

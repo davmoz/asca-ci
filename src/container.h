@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_CONTAINER_H_5590165FD8A2451B98D71F13CD3ED8DC
-#define FS_CONTAINER_H_5590165FD8A2451B98D71F13CD3ED8DC
+#ifndef FS_CONTAINER_H
+#define FS_CONTAINER_H
 
 #include <queue>
 
@@ -165,7 +165,7 @@ class Container : public Item, public Cylinder
 		ItemDeque itemlist;
 
 	private:
-		std::ostringstream& getContentDescription(std::ostringstream& os) const;
+		std::string& getContentDescription(std::string& s) const;
 
 		uint32_t maxSize;
 		uint32_t totalWeight = 0;

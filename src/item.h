@@ -17,15 +17,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_ITEM_H_009A319FB13D477D9EEFFBBD9BB83562
-#define FS_ITEM_H_009A319FB13D477D9EEFFBBD9BB83562
+#ifndef FS_ITEM_H
+#define FS_ITEM_H
 
 #include "cylinder.h"
 #include "thing.h"
 #include "items.h"
 #include "luascript.h"
 #include "tools.h"
-#include <typeinfo>
 
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
@@ -105,7 +104,9 @@ enum AttrTypes_t {
 	ATTR_CUSTOM_ATTRIBUTES = 34,
 	ATTR_DECAYTO = 35,
 	ATTR_WRAPID = 36,
-	ATTR_STOREITEM = 37
+	ATTR_STOREITEM = 37,
+	ATTR_ATTACK_SPEED = 38,
+	ATTR_OPENCONTAINER = 39
 };
 
 enum Attr_ReadValue {
@@ -427,6 +428,15 @@ class ItemAttributes
 		const Attribute* getExistingAttr(itemAttrTypes type) const;
 		Attribute& getAttr(itemAttrTypes type);
 
+		const CustomAttributeMap* getCustomAttributeMap() const {
+			if (!hasAttribute(ITEM_ATTRIBUTE_CUSTOM)) {
+				return nullptr;
+			}
+
+			const Attribute* attr = getExistingAttr(ITEM_ATTRIBUTE_CUSTOM);
+			return attr ? attr->value.custom : nullptr;
+		}
+
 		CustomAttributeMap* getCustomAttributeMap() {
 			if (!hasAttribute(ITEM_ATTRIBUTE_CUSTOM)) {
 				return nullptr;
@@ -467,12 +477,12 @@ class ItemAttributes
 			getAttr(ITEM_ATTRIBUTE_CUSTOM).value.custom->insert(std::make_pair(std::move(key), std::move(value)));
 		}
 
-		const CustomAttribute* getCustomAttribute(int64_t key) {
+		const CustomAttribute* getCustomAttribute(int64_t key) const {
 			std::string tmp = boost::lexical_cast<std::string>(key);
 			return getCustomAttribute(tmp);
 		}
 
-		const CustomAttribute* getCustomAttribute(const std::string& key) {
+		const CustomAttribute* getCustomAttribute(const std::string& key) const {
 			if (const CustomAttributeMap* customAttrMap = getCustomAttributeMap()) {
 				auto it = customAttrMap->find(asLowerCaseString(key));
 				if (it != customAttrMap->end()) {
@@ -502,7 +512,8 @@ class ItemAttributes
 			| ITEM_ATTRIBUTE_WEIGHT | ITEM_ATTRIBUTE_ATTACK | ITEM_ATTRIBUTE_DEFENSE | ITEM_ATTRIBUTE_EXTRADEFENSE
 			| ITEM_ATTRIBUTE_ARMOR | ITEM_ATTRIBUTE_HITCHANCE | ITEM_ATTRIBUTE_SHOOTRANGE | ITEM_ATTRIBUTE_OWNER
 			| ITEM_ATTRIBUTE_DURATION | ITEM_ATTRIBUTE_DECAYSTATE | ITEM_ATTRIBUTE_CORPSEOWNER | ITEM_ATTRIBUTE_CHARGES
-			| ITEM_ATTRIBUTE_FLUIDTYPE | ITEM_ATTRIBUTE_DOORID | ITEM_ATTRIBUTE_DECAYTO | ITEM_ATTRIBUTE_WRAPID | ITEM_ATTRIBUTE_STOREITEM;
+			| ITEM_ATTRIBUTE_FLUIDTYPE | ITEM_ATTRIBUTE_DOORID | ITEM_ATTRIBUTE_DECAYTO | ITEM_ATTRIBUTE_WRAPID | ITEM_ATTRIBUTE_STOREITEM
+		| ITEM_ATTRIBUTE_ATTACK_SPEED | ITEM_ATTRIBUTE_OPENCONTAINER;
 		const static uint32_t stringAttributeTypes = ITEM_ATTRIBUTE_DESCRIPTION | ITEM_ATTRIBUTE_TEXT | ITEM_ATTRIBUTE_WRITER
 			| ITEM_ATTRIBUTE_NAME | ITEM_ATTRIBUTE_ARTICLE | ITEM_ATTRIBUTE_PLURALNAME;
 
@@ -632,18 +643,18 @@ class Item : virtual public Thing
 			getAttributes()->setCustomAttribute(key, value);
 		}
 
-		const ItemAttributes::CustomAttribute* getCustomAttribute(int64_t key) {
+		const ItemAttributes::CustomAttribute* getCustomAttribute(int64_t key) const {
 			if (!attributes) {
 				return nullptr;
 			}
-			return getAttributes()->getCustomAttribute(key);
+			return attributes->getCustomAttribute(key);
 		}
 
-		const ItemAttributes::CustomAttribute* getCustomAttribute(const std::string& key) {
+		const ItemAttributes::CustomAttribute* getCustomAttribute(const std::string& key) const {
 			if (!attributes) {
 				return nullptr;
 			}
-			return getAttributes()->getCustomAttribute(key);
+			return attributes->getCustomAttribute(key);
 		}
 
 		bool removeCustomAttribute(int64_t key) {
@@ -850,6 +861,12 @@ class Item : virtual public Thing
 			}
 			return items[id].attack;
 		}
+		uint32_t getAttackSpeed() const {
+			if (hasAttribute(ITEM_ATTRIBUTE_ATTACK_SPEED)) {
+				return getIntAttr(ITEM_ATTRIBUTE_ATTACK_SPEED);
+			}
+			return items[id].attackSpeedBonus;
+		}
 		int32_t getArmor() const {
 			if (hasAttribute(ITEM_ATTRIBUTE_ARMOR)) {
 				return getIntAttr(ITEM_ATTRIBUTE_ARMOR);
@@ -1003,7 +1020,7 @@ class Item : virtual public Thing
 
 		std::unique_ptr<ItemAttributes>& getAttributes() {
 			if (!attributes) {
-				attributes.reset(new ItemAttributes());
+				attributes = std::make_unique<ItemAttributes>();
 			}
 			return attributes;
 		}

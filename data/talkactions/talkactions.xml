@@ -46,6 +46,50 @@
 	<talkaction words="!online;/online" script="online.lua" />
 	<talkaction words="!serverinfo" script="serverinfo.lua" />
 
+	<!-- Phase 4: Task, Bestiary, Achievement commands -->
+	<talkaction words="!tasks" separator=" " script="tasks.lua" />
+	<talkaction words="!bestiary" separator=" " script="tasks.lua" />
+	<talkaction words="!achievements" separator=" " script="tasks.lua" />
+
+	<!-- Phase 5: Party, Dungeon, Housing commands -->
+	<talkaction words="!party" separator=" " script="party.lua" />
+	<talkaction words="!dungeon" separator=" " script="party.lua" />
+	<talkaction words="!house" separator=" " script="party.lua" />
+
+	<!-- Phase 1.3 + 5: PvP and Guild commands -->
+	<talkaction words="!duel" separator=" " script="pvp.lua" />
+	<talkaction words="!bounty" separator=" " script="pvp.lua" />
+	<talkaction words="!bountylist" script="pvp.lua" />
+	<talkaction words="!pvprank" script="pvp.lua" />
+	<talkaction words="!guildbank" separator=" " script="pvp.lua" />
+
+	<!-- Phase 6.5: Admin Panel commands -->
+	<talkaction words="/admin" script="admin_panel.lua" />
+	<talkaction words="/economy" script="admin_panel.lua" />
+	<talkaction words="/serverstats" script="admin_panel.lua" />
+	<talkaction words="/playerinfo" separator=" " script="admin_panel.lua" />
+	<talkaction words="/teleportall" separator=" " script="admin_panel.lua" />
+	<talkaction words="/eventstart" separator=" " script="admin_panel.lua" />
+	<talkaction words="/eventstop" separator=" " script="admin_panel.lua" />
+	<talkaction words="/raidstart" separator=" " script="admin_panel.lua" />
+	<talkaction words="/craftingstats" script="admin_panel.lua" />
+	<talkaction words="/taskreset" separator=" " script="admin_panel.lua" />
+	<talkaction words="/grantachievement" separator=" " script="admin_panel.lua" />
+
+	<!-- Phase 6.5: Moderation commands -->
+	<talkaction words="/warn" separator=" " script="moderation.lua" />
+	<talkaction words="/mute" separator=" " script="moderation.lua" />
+	<talkaction words="/jail" separator=" " script="moderation.lua" />
+	<talkaction words="/freeze" separator=" " script="moderation.lua" />
+	<talkaction words="/unfreeze" separator=" " script="moderation.lua" />
+	<talkaction words="/watchlist" separator=" " script="moderation.lua" />
+
+	<!-- Phase 7: Player-facing game system interfaces -->
+	<talkaction words="!recipes" separator=" " script="recipes.lua" />
+	<talkaction words="!prey" separator=" " script="prey.lua" />
+	<talkaction words="!imbue" separator=" " script="imbue.lua" />
+	<talkaction words="!faction" separator=" " script="faction.lua" />
+
 	<!-- test talkactions -->
 	<talkaction words="!z" separator=" " script="magiceffect.lua" />
 	<talkaction words="!x" separator=" " script="animationeffect.lua" />

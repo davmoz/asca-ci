@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Pyraxis" script="pyraxis.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="134" head="94" body="20" legs="39" feet="95" addons="2" />
+	<parameters>
+		<parameter key="message_greet" value="Greetings, |PLAYERNAME|. I am Pyraxis, keeper of dragon lore. Do you dare face the {dragons}?" />
+	</parameters>
+</npc>

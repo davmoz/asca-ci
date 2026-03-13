@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Guard Captain" script="guard_ambient.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="131" head="38" body="38" legs="38" feet="38" addons="2" />
+	<parameters>
+		<parameter key="message_greet" value="Halt! State your business, |PLAYERNAME|. The city is under my protection." />
+		<parameter key="npc_role" value="guard_captain" />
+	</parameters>
+</npc>

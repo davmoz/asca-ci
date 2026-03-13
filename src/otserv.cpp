@@ -45,11 +45,11 @@ Dispatcher g_dispatcher;
 Scheduler g_scheduler;
 
 Game g_game;
-ConfigManager g_config;
+ConfigManagerCompat g_config;
 Monsters g_monsters;
 Vocations g_vocations;
 extern Scripts* g_scripts;
-RSA g_RSA;
+RSACipher g_RSA;
 
 std::mutex g_loaderLock;
 std::condition_variable g_loaderSignal;
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 	g_dispatcher.start();
 	g_scheduler.start();
 
-	g_dispatcher.addTask(createTask(std::bind(mainLoader, argc, argv, &serviceManager)));
+	g_dispatcher.addTask(createTask([argc, argv, &serviceManager]() { mainLoader(argc, argv, &serviceManager); }));
 
 	g_loaderSignal.wait(g_loaderUniqueLock);
 
@@ -279,9 +279,7 @@ void mainLoader(int, char*[], ServiceManager* services)
 	} else {
 		std::cout << std::endl;
 
-		std::ostringstream ss;
-		ss << "> ERROR: Unknown world type: " << g_config.getString(ConfigManager::WORLD_TYPE) << ", valid world types are: pvp, no-pvp and pvp-enforced.";
-		startupErrorMessage(ss.str());
+		startupErrorMessage(fmt::format("> ERROR: Unknown world type: {}, valid world types are: pvp, no-pvp and pvp-enforced.", g_config.getString(ConfigManager::WORLD_TYPE)));
 		return;
 	}
 	std::cout << asUpperCaseString(worldType) << std::endl;

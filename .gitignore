@@ -181,3 +181,10 @@ pip-log.txt
 ## TFS / OT
 #############
 config.lua
+key.pem
+.env
+.claude/
+build_test/
+tests/cpp/build/
+tests/xml/__pycache__/
+*.dSYM/

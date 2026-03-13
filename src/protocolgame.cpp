@@ -19,24 +19,21 @@
 
 #include "otpch.h"
 
-#include <boost/range/adaptor/reversed.hpp>
-
 #include "protocolgame.h"
 
-#include "outputmessage.h"
-
-#include "player.h"
-
-#include "configmanager.h"
 #include "actions.h"
+#include "ban.h"
+#include "configmanager.h"
 #include "game.h"
 #include "iologindata.h"
 #include "iomarket.h"
-#include "waitlist.h"
-#include "ban.h"
+#include "outputmessage.h"
+#include "player.h"
 #include "scheduler.h"
 
-extern ConfigManager g_config;
+#include <boost/range/adaptor/reversed.hpp>
+
+extern ConfigManagerCompat g_config;
 extern Actions actions;
 extern CreatureEvents* g_creatureEvents;
 extern Chat* g_chat;
@@ -97,31 +94,19 @@ void ProtocolGame::login(const std::string& name, uint32_t accountId, OperatingS
 					banInfo.reason = "(none)";
 				}
 
-				std::ostringstream ss;
 				if (banInfo.expiresAt > 0) {
-					ss << "Your account has been banned until " << formatDateShort(banInfo.expiresAt) << " by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
+					disconnectClient(fmt::format("Your account has been banned until {} by {}.\n\nReason specified:\n{}", formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason));
 				} else {
-					ss << "Your account has been permanently banned by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
+					disconnectClient(fmt::format("Your account has been permanently banned by {}.\n\nReason specified:\n{}", banInfo.bannedBy, banInfo.reason));
 				}
-				disconnectClient(ss.str());
 				return;
 			}
 		}
 
-		std::size_t currentSlot = WaitingList::getInstance().clientLogin(player);
-		if (currentSlot > 0) {
-			uint8_t retryTime = WaitingList::getTime(currentSlot);
-			std::ostringstream ss;
-
-			ss << "Too many players online.\nYou are at place "
-			   << currentSlot << " on the waiting list.";
-
-			auto output = OutputMessagePool::getOutputMessage();
-			output->addByte(0x16);
-			output->addString(ss.str());
-			output->addByte(retryTime);
-			send(output);
-			disconnect();
+		uint32_t maxPlayers = static_cast<uint32_t>(g_config.getNumber(ConfigManager::MAX_PLAYERS));
+		if (maxPlayers > 0 && g_game.getPlayersOnline() >= maxPlayers &&
+		    !player->hasFlag(PlayerFlag_CanAlwaysLogin) && player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER) {
+			disconnectClient("Too many players online. Please try again later.");
 			return;
 		}
 
@@ -157,7 +142,7 @@ void ProtocolGame::login(const std::string& name, uint32_t accountId, OperatingS
 			foundPlayer->disconnect();
 			foundPlayer->isConnecting = true;
 
-			eventConnect = g_scheduler.addEvent(createSchedulerTask(1000, std::bind(&ProtocolGame::connect, getThis(), foundPlayer->getID(), operatingSystem)));
+			eventConnect = g_scheduler.addEvent(createSchedulerTask(1000, [thisPtr = getThis(), playerId = foundPlayer->getID(), operatingSystem]() { thisPtr->connect(playerId, operatingSystem); }));
 		} else {
 			connect(foundPlayer->getID(), operatingSystem);
 		}
@@ -241,7 +226,23 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
-	OperatingSystem_t operatingSystem = static_cast<OperatingSystem_t>(msg.get<uint16_t>());
+	uint16_t operatingSystemRaw = msg.get<uint16_t>();
+	// Validate operatingSystem to a known enum value to prevent untrusted network input
+	// from being used unchecked. Clamp unknown values to CLIENTOS_NONE.
+	OperatingSystem_t operatingSystem;
+	switch (operatingSystemRaw) {
+		case CLIENTOS_LINUX:
+		case CLIENTOS_WINDOWS:
+		case CLIENTOS_FLASH:
+		case CLIENTOS_OTCLIENT_LINUX:
+		case CLIENTOS_OTCLIENT_WINDOWS:
+		case CLIENTOS_OTCLIENT_MAC:
+			operatingSystem = static_cast<OperatingSystem_t>(operatingSystemRaw);
+			break;
+		default:
+			operatingSystem = CLIENTOS_NONE;
+			break;
+	}
 	version = msg.get<uint16_t>();
 
 	msg.skipBytes(7); // U32 client version, U8 client type, U16 dat revision
@@ -306,9 +307,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 	}
 
 	if (version < CLIENT_VERSION_MIN || version > CLIENT_VERSION_MAX) {
-		std::ostringstream ss;
-		ss << "Only clients with protocol " << CLIENT_VERSION_STR << " allowed!";
-		disconnectClient(ss.str());
+		disconnectClient(fmt::format("Only clients with protocol {} allowed!", CLIENT_VERSION_STR));
 		return;
 	}
 
@@ -328,9 +327,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 			banInfo.reason = "(none)";
 		}
 
-		std::ostringstream ss;
-		ss << "Your IP has been banned until " << formatDateShort(banInfo.expiresAt) << " by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
-		disconnectClient(ss.str());
+		disconnectClient(fmt::format("Your IP has been banned until {} by {}.\n\nReason specified:\n{}", formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason));
 		return;
 	}
 
@@ -340,7 +337,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
-	g_dispatcher.addTask(createTask(std::bind(&ProtocolGame::login, getThis(), characterName, accountId, operatingSystem)));
+	g_dispatcher.addTask(createTask([thisPtr = getThis(), characterName, accountId, operatingSystem]() { thisPtr->login(characterName, accountId, operatingSystem); }));
 }
 
 void ProtocolGame::onConnect()
@@ -358,6 +355,9 @@ void ProtocolGame::onConnect()
 	output->addByte(0x1F);
 
 	// Add timestamp & random number
+	// TODO: challengeTimestamp uses time(nullptr) which is predictable. In a future update,
+	// consider mixing in additional entropy (e.g., from std::random_device) to make the
+	// challenge less guessable, while preserving protocol compatibility with existing clients.
 	challengeTimestamp = static_cast<uint32_t>(time(nullptr));
 	output->add<uint32_t>(challengeTimestamp);
 
@@ -415,7 +415,7 @@ void ProtocolGame::parsePacket(NetworkMessage& msg)
 	}
 
 	switch (recvbyte) {
-		case 0x14: g_dispatcher.addTask(createTask(std::bind(&ProtocolGame::logout, getThis(), true, false))); break;
+		case 0x14: g_dispatcher.addTask(createTask([thisPtr = getThis()]() { thisPtr->logout(true, false); })); break;
 		case 0x1D: addGameTask(&Game::playerReceivePingBack, player->getID()); break;
 		case 0x1E: addGameTask(&Game::playerReceivePing, player->getID()); break;
 		case 0x32: parseExtendedOpcode(msg); break; //otclient extended opcode
@@ -708,12 +708,18 @@ bool ProtocolGame::canSee(int32_t x, int32_t y, int32_t z) const
 void ProtocolGame::parseChannelInvite(NetworkMessage& msg)
 {
 	const std::string name = msg.getString();
+	if (name.empty() || name.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerChannelInvite, player->getID(), name);
 }
 
 void ProtocolGame::parseChannelExclude(NetworkMessage& msg)
 {
 	const std::string name = msg.getString();
+	if (name.empty() || name.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerChannelExclude, player->getID(), name);
 }
 
@@ -732,6 +738,9 @@ void ProtocolGame::parseCloseChannel(NetworkMessage& msg)
 void ProtocolGame::parseOpenPrivateChannel(NetworkMessage& msg)
 {
 	const std::string receiver = msg.getString();
+	if (receiver.empty() || receiver.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerOpenPrivateChannel, player->getID(), receiver);
 }
 
@@ -742,20 +751,24 @@ void ProtocolGame::parseAutoWalk(NetworkMessage& msg)
 		return;
 	}
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
 	msg.skipBytes(numdirs);
 
-	std::forward_list<Direction> path;
+	std::vector<Direction> path;
 	for (uint8_t i = 0; i < numdirs; ++i) {
 		uint8_t rawdir = msg.getPreviousByte();
 		switch (rawdir) {
-			case 1: path.push_front(DIRECTION_EAST); break;
-			case 2: path.push_front(DIRECTION_NORTHEAST); break;
-			case 3: path.push_front(DIRECTION_NORTH); break;
-			case 4: path.push_front(DIRECTION_NORTHWEST); break;
-			case 5: path.push_front(DIRECTION_WEST); break;
-			case 6: path.push_front(DIRECTION_SOUTHWEST); break;
-			case 7: path.push_front(DIRECTION_SOUTH); break;
-			case 8: path.push_front(DIRECTION_SOUTHEAST); break;
+			case 1: path.push_back(DIRECTION_EAST); break;
+			case 2: path.push_back(DIRECTION_NORTHEAST); break;
+			case 3: path.push_back(DIRECTION_NORTH); break;
+			case 4: path.push_back(DIRECTION_NORTHWEST); break;
+			case 5: path.push_back(DIRECTION_WEST); break;
+			case 6: path.push_back(DIRECTION_SOUTHWEST); break;
+			case 7: path.push_back(DIRECTION_SOUTH); break;
+			case 8: path.push_back(DIRECTION_SOUTHEAST); break;
 			default: break;
 		}
 	}
@@ -777,6 +790,21 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 	newOutfit.lookFeet = msg.getByte();
 	newOutfit.lookAddons = msg.getByte();
 	newOutfit.lookMount = msg.get<uint16_t>();
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Validate color values are within the allowed palette range (0-132)
+	if (newOutfit.lookHead > 132 || newOutfit.lookBody > 132 ||
+	    newOutfit.lookLegs > 132 || newOutfit.lookFeet > 132) {
+		return;
+	}
+
+	// Validate addons bitmask (only bits 0 and 1 are valid)
+	if (newOutfit.lookAddons > 3) {
+		return;
+	}
+
 	addGameTask(&Game::playerChangeOutfit, player->getID(), newOutfit);
 }
 
@@ -841,6 +869,14 @@ void ProtocolGame::parseThrow(NetworkMessage& msg)
 	Position toPos = msg.getPosition();
 	uint8_t count = msg.getByte();
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (count == 0) {
+		return;
+	}
+
 	if (toPos != fromPos) {
 		addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerMoveThing, player->getID(), fromPos, spriteId, fromStackpos, toPos, count);
 	}
@@ -870,6 +906,9 @@ void ProtocolGame::parseSay(NetworkMessage& msg)
 		case TALKTYPE_PRIVATE_TO:
 		case TALKTYPE_PRIVATE_RED_TO:
 			receiver = msg.getString();
+			if (receiver.empty() || receiver.length() > 255) {
+				return;
+			}
 			channelId = 0;
 			break;
 
@@ -883,8 +922,12 @@ void ProtocolGame::parseSay(NetworkMessage& msg)
 			break;
 	}
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
 	const std::string text = msg.getString();
-	if (text.length() > 255) {
+	if (text.empty() || text.length() > 255) {
 		return;
 	}
 
@@ -936,6 +979,15 @@ void ProtocolGame::parseTextWindow(NetworkMessage& msg)
 {
 	uint32_t windowTextId = msg.get<uint32_t>();
 	const std::string newText = msg.getString();
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit writable text to prevent oversized payloads
+	if (newText.length() > 8192) {
+		return;
+	}
+
 	addGameTask(&Game::playerWriteItem, player->getID(), windowTextId, newText);
 }
 
@@ -944,6 +996,15 @@ void ProtocolGame::parseHouseWindow(NetworkMessage& msg)
 	uint8_t doorId = msg.getByte();
 	uint32_t id = msg.get<uint32_t>();
 	const std::string text = msg.getString();
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit house list text size
+	if (text.length() > 8192) {
+		return;
+	}
+
 	addGameTask(&Game::playerUpdateHouseWindow, player->getID(), doorId, id, text);
 }
 
@@ -969,6 +1030,15 @@ void ProtocolGame::parsePlayerPurchase(NetworkMessage& msg)
 	uint8_t amount = msg.getByte();
 	bool ignoreCap = msg.getByte() != 0;
 	bool inBackpacks = msg.getByte() != 0;
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (amount == 0) {
+		return;
+	}
+
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerPurchaseItem, player->getID(), id, count, amount, ignoreCap, inBackpacks);
 }
 
@@ -978,6 +1048,15 @@ void ProtocolGame::parsePlayerSale(NetworkMessage& msg)
 	uint8_t count = msg.getByte();
 	uint8_t amount = msg.getByte();
 	bool ignoreEquipped = msg.getByte() != 0;
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (amount == 0) {
+		return;
+	}
+
 	addGameTaskTimed(DISPATCHER_TASK_EXPIRATION, &Game::playerSellItem, player->getID(), id, count, amount, ignoreEquipped);
 }
 
@@ -1000,6 +1079,9 @@ void ProtocolGame::parseLookInTrade(NetworkMessage& msg)
 void ProtocolGame::parseAddVip(NetworkMessage& msg)
 {
 	const std::string name = msg.getString();
+	if (name.empty() || name.length() > 255 || msg.isOverrun()) {
+		return;
+	}
 	addGameTask(&Game::playerRequestAddVip, player->getID(), name);
 }
 
@@ -1015,6 +1097,16 @@ void ProtocolGame::parseEditVip(NetworkMessage& msg)
 	const std::string description = msg.getString();
 	uint32_t icon = std::min<uint32_t>(10, msg.get<uint32_t>()); // 10 is max icon in 9.63
 	bool notify = msg.getByte() != 0;
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit VIP description length
+	if (description.length() > 128) {
+		return;
+	}
+
 	addGameTask(&Game::playerRequestEditVip, player->getID(), guid, description, icon, notify);
 }
 
@@ -1040,6 +1132,16 @@ void ProtocolGame::parseRuleViolationReport(NetworkMessage& msg)
 		msg.get<uint32_t>(); // statement id, used to get whatever player have said, we don't log that.
 	}
 
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Validate string sizes to prevent oversized report payloads
+	if (targetName.empty() || targetName.length() > 255 ||
+	    comment.length() > 4096 || translation.length() > 4096) {
+		return;
+	}
+
 	addGameTask(&Game::playerReportRuleViolation, player->getID(), targetName, reportType, reportReason, comment, translation);
 }
 
@@ -1051,6 +1153,15 @@ void ProtocolGame::parseBugReport(NetworkMessage& msg)
 	Position position;
 	if (category == BUG_CATEGORY_MAP) {
 		position = msg.getPosition();
+	}
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit bug report message size
+	if (message.empty() || message.length() > 4096) {
+		return;
 	}
 
 	addGameTask(&Game::playerReportBug, player->getID(), message, position, category);
@@ -1068,6 +1179,17 @@ void ProtocolGame::parseDebugAssert(NetworkMessage& msg)
 	std::string date = msg.getString();
 	std::string description = msg.getString();
 	std::string comment = msg.getString();
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit debug assert string sizes to prevent abuse
+	if (assertLine.length() > 1024 || date.length() > 64 ||
+	    description.length() > 1024 || comment.length() > 1024) {
+		return;
+	}
+
 	addGameTask(&Game::playerDebugAssert, player->getID(), assertLine, date, description, comment);
 }
 
@@ -1132,6 +1254,21 @@ void ProtocolGame::parseMarketCreateOffer(NetworkMessage& msg)
 	uint16_t amount = msg.get<uint16_t>();
 	uint32_t price = msg.get<uint32_t>();
 	bool anonymous = (msg.getByte() != 0);
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Validate market offer parameters
+	if (amount == 0 || price == 0) {
+		return;
+	}
+
+	// Type must be buy (0) or sell (1)
+	if (type > 1) {
+		return;
+	}
+
 	addGameTask(&Game::playerCreateMarketOffer, player->getID(), type, spriteId, amount, price, anonymous);
 }
 
@@ -1147,6 +1284,15 @@ void ProtocolGame::parseMarketAcceptOffer(NetworkMessage& msg)
 	uint32_t timestamp = msg.get<uint32_t>();
 	uint16_t counter = msg.get<uint16_t>();
 	uint16_t amount = msg.get<uint16_t>();
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	if (amount == 0) {
+		return;
+	}
+
 	addGameTask(&Game::playerAcceptMarketOffer, player->getID(), timestamp, counter, amount);
 }
 
@@ -1845,9 +1991,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 		// example:
 		// "attack +x, chance to hit +y%, z fields"
 		if (it.abilities && it.abilities->elementType != COMBAT_NONE && it.abilities->elementDamage != 0) {
-			std::ostringstream ss;
-			ss << it.attack << " physical +" << it.abilities->elementDamage << ' ' << getCombatName(it.abilities->elementType);
-			msg.addString(ss.str());
+			msg.addString(fmt::format("{} physical +{} {}", it.attack, it.abilities->elementDamage, getCombatName(it.abilities->elementType)));
 		} else {
 			msg.addString(std::to_string(it.attack));
 		}
@@ -1863,9 +2007,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 
 	if (it.defense != 0) {
 		if (it.extraDefense != 0) {
-			std::ostringstream ss;
-			ss << it.defense << ' ' << std::showpos << it.extraDefense << std::noshowpos;
-			msg.addString(ss.str());
+			msg.addString(fmt::format("{} {:+}", it.defense, it.extraDefense));
 		} else {
 			msg.addString(std::to_string(it.defense));
 		}
@@ -1885,32 +2027,26 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	}
 
 	if (it.decayTime != 0) {
-		std::ostringstream ss;
-		ss << it.decayTime << " seconds";
-		msg.addString(ss.str());
+		msg.addString(fmt::format("{} seconds", it.decayTime));
 	} else {
 		msg.add<uint16_t>(0x00);
 	}
 
 	if (it.abilities) {
-		std::ostringstream ss;
-		bool separator = false;
-
+		std::string ss;
 		for (size_t i = 0; i < COMBAT_COUNT; ++i) {
 			if (it.abilities->absorbPercent[i] == 0) {
 				continue;
 			}
 
-			if (separator) {
-				ss << ", ";
-			} else {
-				separator = true;
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << getCombatName(indexToCombatType(i)) << ' ' << std::showpos << it.abilities->absorbPercent[i] << std::noshowpos << '%';
+			ss += fmt::format("{} {:+}%", getCombatName(indexToCombatType(i)), it.abilities->absorbPercent[i]);
 		}
 
-		msg.addString(ss.str());
+		msg.addString(ss);
 	} else {
 		msg.add<uint16_t>(0x00);
 	}
@@ -1932,42 +2068,36 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	msg.addString(it.runeSpellName);
 
 	if (it.abilities) {
-		std::ostringstream ss;
-		bool separator = false;
-
+		std::string ss;
 		for (uint8_t i = SKILL_FIRST; i <= SKILL_LAST; i++) {
 			if (!it.abilities->skills[i]) {
 				continue;
 			}
 
-			if (separator) {
-				ss << ", ";
-			} else {
-				separator = true;
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << getSkillName(i) << ' ' << std::showpos << it.abilities->skills[i] << std::noshowpos;
+			ss += fmt::format("{} {:+}", getSkillName(i), it.abilities->skills[i]);
 		}
 
 		if (it.abilities->stats[STAT_MAGICPOINTS] != 0) {
-			if (separator) {
-				ss << ", ";
-			} else {
-				separator = true;
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << "magic level " << std::showpos << it.abilities->stats[STAT_MAGICPOINTS] << std::noshowpos;
+			ss += fmt::format("magic level {:+}", it.abilities->stats[STAT_MAGICPOINTS]);
 		}
 
 		if (it.abilities->speed != 0) {
-			if (separator) {
-				ss << ", ";
+			if (!ss.empty()) {
+				ss += ", ";
 			}
 
-			ss << "speed " << std::showpos << (it.abilities->speed >> 1) << std::noshowpos;
+			ss += fmt::format("speed {:+}", it.abilities->speed >> 1);
 		}
 
-		msg.addString(ss.str());
+		msg.addString(ss);
 	} else {
 		msg.add<uint16_t>(0x00);
 	}
@@ -1991,18 +2121,15 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId)
 	msg.addString(weaponName);
 
 	if (it.weight != 0) {
-		std::ostringstream ss;
 		if (it.weight < 10) {
-			ss << "0.0" << it.weight;
+			msg.addString(fmt::format("0.0{} oz", it.weight));
 		} else if (it.weight < 100) {
-			ss << "0." << it.weight;
+			msg.addString(fmt::format("0.{} oz", it.weight));
 		} else {
 			std::string weightString = std::to_string(it.weight);
 			weightString.insert(weightString.end() - 2, '.');
-			ss << weightString;
+			msg.addString(fmt::format("{} oz", weightString));
 		}
-		ss << " oz";
-		msg.addString(ss.str());
 	} else {
 		msg.add<uint16_t>(0x00);
 	}
@@ -3092,6 +3219,15 @@ void ProtocolGame::parseExtendedOpcode(NetworkMessage& msg)
 {
 	uint8_t opcode = msg.getByte();
 	const std::string& buffer = msg.getString();
+
+	if (msg.isOverrun()) {
+		return;
+	}
+
+	// Limit extended opcode buffer size to prevent abuse
+	if (buffer.length() > 65535) {
+		return;
+	}
 
 	// process additional opcodes via lua script event
 	addGameTask(&Game::parsePlayerExtendedOpcode, player->getID(), opcode, buffer);

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Mystic Aria" script="mystic_aria.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="138" head="0" body="19" legs="113" feet="95" addons="3" />
+	<parameters>
+		<parameter key="message_greet" value="The crystals whisper your name, |PLAYERNAME|. Ask about {enchanting} or see my {trade} for crystals." />
+	</parameters>
+</npc>

@@ -20,9 +20,10 @@
 #include "otpch.h"
 
 #include "creature.h"
+
+#include "configmanager.h"
 #include "game.h"
 #include "monster.h"
-#include "configmanager.h"
 #include "scheduler.h"
 
 double Creature::speedA = 857.36;
@@ -30,7 +31,7 @@ double Creature::speedB = 261.29;
 double Creature::speedC = -4795.01;
 
 extern Game g_game;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern CreatureEvents* g_creatureEvents;
 
 Creature::Creature()
@@ -241,13 +242,13 @@ bool Creature::getNextStep(Direction& dir, uint32_t&)
 		return false;
 	}
 
-	dir = listWalkDir.front();
-	listWalkDir.pop_front();
+	dir = listWalkDir.back();
+	listWalkDir.pop_back();
 	onWalk(dir);
 	return true;
 }
 
-void Creature::startAutoWalk(const std::forward_list<Direction>& listDir)
+void Creature::startAutoWalk(const std::vector<Direction>& listDir)
 {
 	Player* player = getPlayer();
 	if (player && player->isMovementBlocked()) {
@@ -256,12 +257,7 @@ void Creature::startAutoWalk(const std::forward_list<Direction>& listDir)
 	}
 
 	listWalkDir = listDir;
-
-	size_t size = 0;
-	for (auto it = listDir.begin(); it != listDir.end() && size <= 1; ++it) {
-		size++;
-	}
-	addEventWalk(size == 1);
+	addEventWalk(listDir.size() == 1);
 }
 
 void Creature::addEventWalk(bool firstStep)
@@ -286,7 +282,7 @@ void Creature::addEventWalk(bool firstStep)
 		g_game.checkCreatureWalk(getID());
 	}
 
-	eventWalk = g_scheduler.addEvent(createSchedulerTask(ticks, std::bind(&Game::checkCreatureWalk, &g_game, getID())));
+	eventWalk = g_scheduler.addEvent(createSchedulerTask(ticks, [creatureId = getID()]() { g_game.checkCreatureWalk(creatureId); }));
 }
 
 void Creature::stopEventWalk()
@@ -502,7 +498,7 @@ void Creature::onCreatureMove(Creature* creature, const Tile* newTile, const Pos
 				if (oldPos.y > newPos.y) { //north
 					//shift y south
 					for (int32_t y = mapWalkHeight - 1; --y >= 0;) {
-						memcpy(localMapCache[y + 1], localMapCache[y], sizeof(localMapCache[y]));
+						localMapCache[y + 1] = localMapCache[y];
 					}
 
 					//update 0
@@ -513,7 +509,7 @@ void Creature::onCreatureMove(Creature* creature, const Tile* newTile, const Pos
 				} else if (oldPos.y < newPos.y) { // south
 					//shift y north
 					for (int32_t y = 0; y <= mapWalkHeight - 2; ++y) {
-						memcpy(localMapCache[y], localMapCache[y + 1], sizeof(localMapCache[y]));
+						localMapCache[y] = localMapCache[y + 1];
 					}
 
 					//update mapWalkHeight - 1
@@ -604,7 +600,7 @@ void Creature::onCreatureMove(Creature* creature, const Tile* newTile, const Pos
 		} else {
 			if (hasExtraSwing()) {
 				//our target is moving lets see if we can get in hit
-				g_dispatcher.addTask(createTask(std::bind(&Game::checkCreatureAttack, &g_game, getID())));
+				g_dispatcher.addTask(createTask([creatureId = getID()]() { g_game.checkCreatureAttack(creatureId); }));
 			}
 
 			if (newTile->getZone() != oldTile->getZone()) {
@@ -770,7 +766,7 @@ void Creature::changeHealth(int32_t healthChange, bool sendHealthChange/* = true
 	}
 
 	if (health <= 0) {
-		g_dispatcher.addTask(createTask(std::bind(&Game::executeDeath, &g_game, getID())));
+		g_dispatcher.addTask(createTask([creatureId = getID()]() { g_game.executeDeath(creatureId); }));
 	}
 }
 
@@ -904,7 +900,7 @@ void Creature::goToFollowCreature()
 
 			if (dir != DIRECTION_NONE) {
 				listWalkDir.clear();
-				listWalkDir.push_front(dir);
+				listWalkDir.push_back(dir);
 
 				hasFollowPath = true;
 				startAutoWalk(listWalkDir);
@@ -1143,7 +1139,7 @@ bool Creature::addCondition(Condition* condition, bool force/* = false*/)
 	if (!force && condition->getType() == CONDITION_HASTE && hasCondition(CONDITION_PARALYZE)) {
 		int64_t walkDelay = getWalkDelay();
 		if (walkDelay > 0) {
-			g_scheduler.addEvent(createSchedulerTask(walkDelay, std::bind(&Game::forceAddCondition, &g_game, getID(), condition)));
+			g_scheduler.addEvent(createSchedulerTask(walkDelay, [creatureId = getID(), condition]() { g_game.forceAddCondition(creatureId, condition); }));
 			return false;
 		}
 	}
@@ -1191,7 +1187,7 @@ void Creature::removeCondition(ConditionType_t type, bool force/* = false*/)
 		if (!force && type == CONDITION_PARALYZE) {
 			int64_t walkDelay = getWalkDelay();
 			if (walkDelay > 0) {
-				g_scheduler.addEvent(createSchedulerTask(walkDelay, std::bind(&Game::forceRemoveCondition, &g_game, getID(), type)));
+				g_scheduler.addEvent(createSchedulerTask(walkDelay, [creatureId = getID(), type]() { g_game.forceRemoveCondition(creatureId, type); }));
 				return;
 			}
 		}
@@ -1218,7 +1214,7 @@ void Creature::removeCondition(ConditionType_t type, ConditionId_t conditionId, 
 		if (!force && type == CONDITION_PARALYZE) {
 			int64_t walkDelay = getWalkDelay();
 			if (walkDelay > 0) {
-				g_scheduler.addEvent(createSchedulerTask(walkDelay, std::bind(&Game::forceRemoveCondition, &g_game, getID(), type)));
+				g_scheduler.addEvent(createSchedulerTask(walkDelay, [creatureId = getID(), type]() { g_game.forceRemoveCondition(creatureId, type); }));
 				return;
 			}
 		}
@@ -1256,7 +1252,7 @@ void Creature::removeCondition(Condition* condition, bool force/* = false*/)
 	if (!force && condition->getType() == CONDITION_PARALYZE) {
 		int64_t walkDelay = getWalkDelay();
 		if (walkDelay > 0) {
-			g_scheduler.addEvent(createSchedulerTask(walkDelay, std::bind(&Game::forceRemoveCondition, &g_game, getID(), condition->getType())));
+			g_scheduler.addEvent(createSchedulerTask(walkDelay, [creatureId = getID(), condType = condition->getType()]() { g_game.forceRemoveCondition(creatureId, condType); }));
 			return;
 		}
 	}
@@ -1586,12 +1582,12 @@ bool Creature::isInvisible() const
 	}) != conditions.end();
 }
 
-bool Creature::getPathTo(const Position& targetPos, std::forward_list<Direction>& dirList, const FindPathParams& fpp) const
+bool Creature::getPathTo(const Position& targetPos, std::vector<Direction>& dirList, const FindPathParams& fpp) const
 {
 	return g_game.map.getPathMatching(*this, dirList, FrozenPathingConditionCall(targetPos), fpp);
 }
 
-bool Creature::getPathTo(const Position& targetPos, std::forward_list<Direction>& dirList, int32_t minTargetDist, int32_t maxTargetDist, bool fullPathSearch /*= true*/, bool clearSight /*= true*/, int32_t maxSearchDist /*= 0*/) const
+bool Creature::getPathTo(const Position& targetPos, std::vector<Direction>& dirList, int32_t minTargetDist, int32_t maxTargetDist, bool fullPathSearch /*= true*/, bool clearSight /*= true*/, int32_t maxSearchDist /*= 0*/) const
 {
 	FindPathParams fpp;
 	fpp.fullPathSearch = fullPathSearch;

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Grubbin" script="grubbin.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="129" head="97" body="69" legs="95" feet="114" addons="1" />
+	<parameters>
+		<parameter key="message_greet" value="Oi, |PLAYERNAME|! Welcome to the mines! Ask about {mining} or check my {trade} for pickaxes." />
+	</parameters>
+</npc>

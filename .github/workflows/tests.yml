@@ -1,0 +1,113 @@
+name: Test Suite
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'claude/**'
+      - v*
+
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  lua-tests:
+    name: Lua Script Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lua
+        run: sudo apt-get update && sudo apt-get install -y lua5.3
+
+      - name: Run Lua tests
+        run: lua tests/lua/run_tests.lua
+
+      - name: Validate lib loading references
+        run: lua tests/lua/run_tests.lua lib_loading
+
+  xml-validation:
+    name: XML Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate all XML files
+        run: python3 tests/xml/validate_all.py
+
+  db-tests:
+    name: Database Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Test migrations
+        run: python3 tests/db/test_migrations.py
+
+      - name: Test queries
+        run: python3 tests/db/test_queries.py
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Test server boot prerequisites
+        run: bash tests/integration/test_server_boot.sh
+
+      - name: Test login protocol
+        run: python3 tests/integration/test_login.py
+
+      - name: Test player creation logic
+        run: python3 tests/integration/test_player_create.py
+
+      - name: Test Docker configuration
+        run: bash tests/integration/test_docker.sh
+
+  cpp-tests:
+    name: C++ Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: >
+          sudo apt-get update && sudo apt-get install -y
+          cmake build-essential libpugixml-dev
+          libboost-date-time-dev libboost-system-dev
+          libboost-iostreams-dev libboost-filesystem-dev
+
+      - name: Configure tests
+        run: |
+          mkdir -p tests/cpp/build
+          cd tests/cpp/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build tests
+        run: |
+          cd tests/cpp/build
+          make -j$(nproc)
+
+      - name: Run tests
+        run: |
+          cd tests/cpp/build
+          ctest --output-on-failure

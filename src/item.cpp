@@ -20,16 +20,16 @@
 #include "otpch.h"
 
 #include "item.h"
-#include "container.h"
-#include "teleport.h"
-#include "trashholder.h"
-#include "mailbox.h"
-#include "house.h"
-#include "game.h"
-#include "bed.h"
 
 #include "actions.h"
+#include "bed.h"
+#include "container.h"
+#include "game.h"
+#include "house.h"
+#include "mailbox.h"
 #include "spells.h"
+#include "teleport.h"
+#include "trashholder.h"
 
 extern Game g_game;
 extern Spells* g_spells;
@@ -172,7 +172,7 @@ Item::Item(const Item& i) :
 	Thing(), id(i.id), count(i.count), loadedFromMap(i.loadedFromMap)
 {
 	if (i.attributes) {
-		attributes.reset(new ItemAttributes(*i.attributes));
+		attributes = std::make_unique<ItemAttributes>(*i.attributes);
 	}
 }
 
@@ -180,7 +180,7 @@ Item* Item::clone() const
 {
 	Item* item = Item::CreateItem(id, count);
 	if (attributes) {
-		item->attributes.reset(new ItemAttributes(*attributes));
+		item->attributes = std::make_unique<ItemAttributes>(*attributes);
 		if (item->getDuration() > 0) {
 			item->incrementReferenceCounter();
 			item->setDecaying(DECAYING_TRUE);
@@ -526,6 +526,16 @@ Attr_ReadValue Item::readAttr(AttrTypes_t attr, PropStream& propStream)
 			break;
 		}
 
+		case ATTR_ATTACK_SPEED: {
+			uint32_t attackSpeed;
+			if (!propStream.read<uint32_t>(attackSpeed)) {
+				return ATTR_READ_ERROR;
+			}
+
+			setIntAttr(ITEM_ATTRIBUTE_ATTACK_SPEED, attackSpeed);
+			break;
+		}
+
 		case ATTR_DEFENSE: {
 			int32_t defense;
 			if (!propStream.read<int32_t>(defense)) {
@@ -606,6 +616,15 @@ Attr_ReadValue Item::readAttr(AttrTypes_t attr, PropStream& propStream)
 			break;
 		}
 
+		case ATTR_OPENCONTAINER: {
+			uint8_t openContainer;
+			if (!propStream.read<uint8_t>(openContainer)) {
+				return ATTR_READ_ERROR;
+			}
+
+			setIntAttr(ITEM_ATTRIBUTE_OPENCONTAINER, openContainer);
+			break;
+		}
 
 		//these should be handled through derived classes
 		//If these are called then something has changed in the items.xml since the map was saved
@@ -787,6 +806,11 @@ void Item::serializeAttr(PropWriteStream& propWriteStream) const
 		propWriteStream.write<int32_t>(getIntAttr(ITEM_ATTRIBUTE_ATTACK));
 	}
 
+	if (hasAttribute(ITEM_ATTRIBUTE_ATTACK_SPEED)) {
+		propWriteStream.write<uint8_t>(ATTR_ATTACK_SPEED);
+		propWriteStream.write<uint32_t>(getIntAttr(ITEM_ATTRIBUTE_ATTACK_SPEED));
+	}
+
 	if (hasAttribute(ITEM_ATTRIBUTE_DEFENSE)) {
 		propWriteStream.write<uint8_t>(ATTR_DEFENSE);
 		propWriteStream.write<int32_t>(getIntAttr(ITEM_ATTRIBUTE_DEFENSE));
@@ -825,6 +849,11 @@ void Item::serializeAttr(PropWriteStream& propWriteStream) const
 	if (hasAttribute(ITEM_ATTRIBUTE_STOREITEM)) {
 		propWriteStream.write<uint8_t>(ATTR_STOREITEM);
 		propWriteStream.write<uint8_t>(getIntAttr(ITEM_ATTRIBUTE_STOREITEM));
+	}
+
+	if (hasAttribute(ITEM_ATTRIBUTE_OPENCONTAINER)) {
+		propWriteStream.write<uint8_t>(ATTR_OPENCONTAINER);
+		propWriteStream.write<uint8_t>(getIntAttr(ITEM_ATTRIBUTE_OPENCONTAINER));
 	}
 
 	if (hasAttribute(ITEM_ATTRIBUTE_CUSTOM)) {
@@ -1545,25 +1574,19 @@ std::string Item::getNameDescription() const
 
 std::string Item::getWeightDescription(const ItemType& it, uint32_t weight, uint32_t count /*= 1*/)
 {
-	std::ostringstream ss;
-	if (it.stackable && count > 1 && it.showCount != 0) {
-		ss << "They weigh ";
-	} else {
-		ss << "It weighs ";
-	}
-
+	std::string weightStr;
 	if (weight < 10) {
-		ss << "0.0" << weight;
+		weightStr = fmt::format("0.0{}", weight);
 	} else if (weight < 100) {
-		ss << "0." << weight;
+		weightStr = fmt::format("0.{}", weight);
 	} else {
-		std::string weightString = std::to_string(weight);
-		weightString.insert(weightString.end() - 2, '.');
-		ss << weightString;
+		weightStr = std::to_string(weight);
+		weightStr.insert(weightStr.end() - 2, '.');
 	}
 
-	ss << " oz.";
-	return ss.str();
+	return fmt::format("{} {} oz.",
+		(it.stackable && count > 1 && it.showCount != 0) ? "They weigh" : "It weighs",
+		weightStr);
 }
 
 std::string Item::getWeightDescription(uint32_t weight) const

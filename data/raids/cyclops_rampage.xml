@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="The ground shakes! A horde of Cyclops charges toward the city!" />
+	<announce delay="30000" type="warning" message="Cyclops Smiths have joined the rampage with devastating force!" />
+	<announce delay="90000" type="warning" message="The Cyclops rampage continues! Barricade the gates!" />
+
+	<areaspawn delay="2000" radius="8" centerx="140" centery="130" centerz="7">
+		<monster name="Cyclops" minamount="5" maxamount="8" />
+	</areaspawn>
+
+	<areaspawn delay="8000" radius="6" centerx="143" centery="127" centerz="7">
+		<monster name="Cyclops Smith" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="14000" radius="5" centerx="137" centery="133" centerz="7">
+		<monster name="Cyclops Drone" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="20000" radius="7" centerx="140" centery="130" centerz="7">
+		<monster name="Cyclops" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="28000" name="Cyclops Smith" x="140" y="130" z="7" />
+
+	<areaspawn delay="35000" radius="5" centerx="140" centery="130" centerz="7">
+		<monster name="Cyclops Smith" minamount="2" maxamount="3" />
+	</areaspawn>
+</raid>

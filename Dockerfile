@@ -1,12 +1,12 @@
-FROM alpine:edge AS build
-# crypto++-dev is in edge/testing
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+FROM alpine:3.21 AS build
+
+RUN apk add --no-cache \
   binutils \
   boost-dev \
   build-base \
   clang \
   cmake \
-  crypto++-dev \
+  openssl-dev \
   gcc \
   gmp-dev \
   luajit-dev \
@@ -20,24 +20,35 @@ COPY CMakeLists.txt /usr/src/forgottenserver/
 WORKDIR /usr/src/forgottenserver/build
 RUN cmake .. && make
 
-FROM alpine:edge
-# crypto++-dev is in edge/testing
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+FROM alpine:3.21
+
+RUN apk add --no-cache \
   boost-iostreams \
-  boost-system \
   boost-filesystem \
-  crypto++ \
+  libssl3 \
+  libcrypto3 \
   gmp \
   luajit \
   mariadb-connector-c \
-  pugixml
+  pugixml \
+  netcat-openbsd
 
-RUN ln -s /usr/lib/libcryptopp.so /usr/lib/libcryptopp.so.5.6
+# Create a non-root user to run the server
+RUN addgroup -S tfs && adduser -S tfs -G tfs
+
 COPY --from=build /usr/src/forgottenserver/build/tfs /bin/tfs
 COPY data /srv/data/
-COPY LICENSE README.md *.dist *.sql key.pem /srv/
+COPY LICENSE README.md *.dist *.sql /srv/
+
+# Do NOT copy key.pem into the image -- mount it at runtime instead.
+# Generate one with: openssl genrsa -out key.pem 2048
+
+RUN chown -R tfs:tfs /srv
 
 EXPOSE 7171 7172
 WORKDIR /srv
-VOLUME /srv
+
+HEALTHCHECK --interval=30s --timeout=3s CMD nc -z localhost 7171 || exit 1
+
+USER tfs
 ENTRYPOINT ["/bin/tfs"]

@@ -16005,7 +16005,7 @@
 		<attribute key="absorbPercentDeath" value="12" />
 		<attribute key="absorbPercentHoly" value="-12" />
 	</item>
-	<item id="8891" article="a" name="paladin armor">
+	<item id="8891" article="an" name="archer armor">
 		<attribute key="armor" value="12" />
 		<attribute key="slotType" value="body" />
 		<attribute key="weight" value="6500" />
@@ -22719,13 +22719,14 @@
 		<attribute key="description" value="This small whistle seems used. It seems to make absolutely no sound at all when it is blown." />
 		<attribute key="weight" value="5000" />
 	</item>
-	<item id="13760" article="a" name="wand of dimensions">
-		<attribute key="description" value="This wand controls the rift between time and space." />
-		<attribute key="weight" value="2800" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="death" />
-		<attribute key="range" value="3" />
-	</item>
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+	<!-- article="a" name="wand of dimensions"> -->
+	<!-- <attribute key="description" value="This wand controls the rift between time and space." /> -->
+	<!-- <attribute key="weight" value="2800" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="death" /> -->
+	<!-- <attribute key="range" value="3" /> -->
+	<!-- </item> -->
 	<item fromid="13761" toid="13773" name="rubbish" />
 	<item id="13774" name="torn teddy">
 		<attribute key="weight" value="100" />
@@ -22944,16 +22945,17 @@
 		<attribute key="duration" value="604800" />
 		<attribute key="showduration" value="0" />
 	</item>
-	<item id="13872" article="a" name="shimmer rod">
-		<attribute key="description" value="It feels cold and smooth." />
-		<attribute key="weight" value="3100" />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="smallice" />
-		<attribute key="range" value="4" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="duration" value="604800" />
-		<attribute key="showduration" value="0" />
-	</item>
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+	<!-- article="a" name="shimmer rod"> -->
+	<!-- <attribute key="description" value="It feels cold and smooth." /> -->
+	<!-- <attribute key="weight" value="3100" /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="smallice" /> -->
+	<!-- <attribute key="range" value="4" /> -->
+	<!-- <attribute key="decayTo" value="0" /> -->
+	<!-- <attribute key="duration" value="604800" /> -->
+	<!-- <attribute key="showduration" value="0" /> -->
+	<!-- </item> -->
 	<item id="13873" article="a" name="shimmer bow">
 		<attribute key="weight" value="4800" />
 		<attribute key="weaponType" value="distance" />
@@ -22982,16 +22984,17 @@
 		<attribute key="description" value="This is a quest item and cannot be used for anything else." />
 		<attribute key="weight" value="40" />
 	</item>
-	<item id="13880" article="a" name="shimmer wand">
-		<attribute key="weight" value="3100" />
-		<attribute key="description" value="It feels cold and smooth." />
-		<attribute key="weaponType" value="wand" />
-		<attribute key="shootType" value="energy" />
-		<attribute key="range" value="4" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="duration" value="604800" />
-		<attribute key="showduration" value="0" />
-	</item>
+	<!-- DEPRECATED: Wand/Rod disabled for Medivia-style gameplay -->
+	<!-- article="a" name="shimmer wand"> -->
+	<!-- <attribute key="weight" value="3100" /> -->
+	<!-- <attribute key="description" value="It feels cold and smooth." /> -->
+	<!-- <attribute key="weaponType" value="wand" /> -->
+	<!-- <attribute key="shootType" value="energy" /> -->
+	<!-- <attribute key="range" value="4" /> -->
+	<!-- <attribute key="decayTo" value="0" /> -->
+	<!-- <attribute key="duration" value="604800" /> -->
+	<!-- <attribute key="showduration" value="0" /> -->
+	<!-- </item> -->
 	<item id="13881" name="yielowax">
 		<attribute key="description" value="Fine wax for various different uses." />
 		<attribute key="weight" value="475" />
@@ -26256,7 +26259,7 @@
 		<attribute key="maxHitChance" value="76" />
 		<attribute key="range" value="3" />
 	</item>
-	<item id="19391" article="a" name="sorc and druid staff">
+	<item id="19391" article="a" name="mage and druid staff">
 		<attribute key="weaponType" value="wand" />
 		<attribute key="weight" value="1900" />
 		<attribute key="shootType" value="energy" />
@@ -26643,7 +26646,7 @@
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="210" />
 	</item>
-	<item id="19792" article="a" name="sorc and druid rune">
+	<item id="19792" article="a" name="mage and druid rune">
 		<attribute key="type" value="rune" />
 		<attribute key="weight" value="21" />
 	</item>
@@ -36278,4 +36281,1044 @@
 	<item id="26379" article="a" name="golden dragon tapestry" />
 	<item id="26380" article="a" name="sword tapestry" />
 	<item id="26381" article="a" name="brocade tapestry" />
+
+	<!-- ==================== Phase 2.1: Fishing System Items ==================== -->
+
+	<!-- Common Fish (Fishing Skill 0+) -->
+	<item id="30001" article="a" name="sardine" plural="sardines">
+		<attribute key="weight" value="180" />
+		<attribute key="description" value="A small, silvery fish commonly found in coastal waters." />
+	</item>
+	<item id="30002" article="a" name="herring" plural="herrings">
+		<attribute key="weight" value="250" />
+		<attribute key="description" value="A common fish that swims in large schools." />
+	</item>
+	<item id="30003" article="a" name="cod" plural="cod">
+		<attribute key="weight" value="420" />
+		<attribute key="description" value="A staple catch for any fisherman." />
+	</item>
+
+	<!-- Uncommon Fish (Fishing Skill 20+) -->
+	<item id="30004" article="a" name="salmon" plural="salmon">
+		<attribute key="weight" value="550" />
+		<attribute key="description" value="A prized pink-fleshed fish that swims upstream." />
+	</item>
+	<item id="30005" article="a" name="trout" plural="trout">
+		<attribute key="weight" value="480" />
+		<attribute key="description" value="A freshwater fish with distinctive spotted skin." />
+	</item>
+	<item id="30006" article="a" name="bass" plural="bass">
+		<attribute key="weight" value="620" />
+		<attribute key="description" value="A strong-fighting freshwater game fish." />
+	</item>
+
+	<!-- Rare Fish (Fishing Skill 50+) -->
+	<item id="30007" article="a" name="swordfish" plural="swordfish">
+		<attribute key="weight" value="1800" />
+		<attribute key="description" value="A large fish with a distinctive sword-like bill." />
+	</item>
+	<item id="30008" article="a" name="tuna" plural="tuna">
+		<attribute key="weight" value="2200" />
+		<attribute key="description" value="A massive ocean fish prized by expert anglers." />
+	</item>
+	<item id="30009" article="a" name="lobster" plural="lobsters">
+		<attribute key="weight" value="900" />
+		<attribute key="description" value="A prized crustacean with powerful claws." />
+	</item>
+
+	<!-- Epic Fish (Fishing Skill 80+) -->
+	<item id="30010" article="a" name="golden carp" plural="golden carps">
+		<attribute key="weight" value="750" />
+		<attribute key="description" value="A shimmering golden fish of extraordinary rarity." />
+	</item>
+	<item id="30011" article="a" name="giant squid tentacle" plural="giant squid tentacles">
+		<attribute key="weight" value="3500" />
+		<attribute key="description" value="A massive tentacle from a deep-sea giant squid." />
+	</item>
+	<item id="30012" article="a" name="crystal fish" plural="crystal fish">
+		<attribute key="weight" value="600" />
+		<attribute key="description" value="A translucent fish that seems to glow with inner light." />
+	</item>
+
+	<!-- Fishing Rods -->
+	<item id="30020" article="an" name="improved fishing rod" plural="improved fishing rods">
+		<attribute key="weight" value="950" />
+		<attribute key="description" value="A well-crafted fishing rod with better line and hook. +10% catch bonus." />
+	</item>
+	<item id="30021" article="a" name="master fishing rod" plural="master fishing rods">
+		<attribute key="weight" value="1100" />
+		<attribute key="description" value="A masterwork fishing rod made by expert craftsmen. +25% catch bonus." />
+	</item>
+
+	<!-- Treasure Items (fishing loot) -->
+	<item id="30030" article="a" name="waterlogged boot" plural="waterlogged boots">
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A soggy old boot. Not exactly what you were hoping for." />
+	</item>
+	<item id="30031" article="a" name="rusty tin can" plural="rusty tin cans">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A rusty tin can pulled from the water." />
+	</item>
+	<item id="30032" article="a" name="seaweed clump" plural="seaweed clumps">
+		<attribute key="weight" value="150" />
+		<attribute key="description" value="A tangled mass of seaweed." />
+	</item>
+	<item id="30033" article="a" name="barnacle-encrusted chest" plural="barnacle-encrusted chests">
+		<attribute key="weight" value="5000" />
+		<attribute key="containerSize" value="8" />
+		<attribute key="description" value="A small chest covered in barnacles, pulled from the depths." />
+	</item>
+
+	<!-- ==================== Phase 2.2: Farming System Items ==================== -->
+
+	<!-- Seeds (30100-30116) -->
+	<item id="30100" article="a" name="wheat seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of wheat seeds ready to be planted." />
+	</item>
+	<item id="30101" article="a" name="corn seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of corn seeds ready to be planted." />
+	</item>
+	<item id="30102" article="a" name="potato seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of potato seeds ready to be planted." />
+	</item>
+	<item id="30103" article="a" name="carrot seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of carrot seeds ready to be planted." />
+	</item>
+	<item id="30104" article="a" name="tomato seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of tomato seeds ready to be planted." />
+	</item>
+	<item id="30105" article="a" name="onion seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of onion seeds ready to be planted." />
+	</item>
+	<item id="30106" article="a" name="garlic seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of garlic seeds ready to be planted." />
+	</item>
+	<item id="30107" article="a" name="lettuce seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of lettuce seeds ready to be planted." />
+	</item>
+	<item id="30108" article="a" name="pumpkin seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of pumpkin seeds ready to be planted." />
+	</item>
+	<item id="30109" article="a" name="basil seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of basil seeds ready to be planted." />
+	</item>
+	<item id="30110" article="a" name="thyme seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of thyme seeds ready to be planted." />
+	</item>
+	<item id="30111" article="a" name="rosemary seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of rosemary seeds ready to be planted." />
+	</item>
+	<item id="30112" article="a" name="berry seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of mixed berry seeds ready to be planted." />
+	</item>
+	<item id="30113" article="a" name="grape seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of grape seeds ready to be planted." />
+	</item>
+	<item id="30114" article="a" name="herb seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="A handful of herb seeds ready to be planted." />
+	</item>
+	<item id="30115" article="a" name="mandrake seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="Rare mandrake seeds pulsing with faint magic." />
+	</item>
+	<item id="30116" article="a" name="starflower seeds">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="Rare starflower seeds that shimmer in the light." />
+	</item>
+
+	<!-- Farming Tools (30120-30121) -->
+	<item id="30120" article="a" name="watering can">
+		<attribute key="weight" value="1500" />
+		<attribute key="description" value="A sturdy watering can for tending crops." />
+	</item>
+	<item id="30121" article="a" name="garden hoe">
+		<attribute key="weight" value="2000" />
+		<attribute key="description" value="A sharp garden hoe for preparing soil." />
+	</item>
+
+	<!-- Farm Plots (30130-30135) -->
+	<item id="30130" article="a" name="planting pot">
+		<attribute key="weight" value="3000" />
+		<attribute key="description" value="A clay pot suitable for planting seeds indoors." />
+	</item>
+	<item id="30131" article="a" name="farm plot">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="An empty farm plot ready for planting." />
+	</item>
+	<item id="30132" article="a" name="farm plot">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A farm plot with freshly planted seeds." />
+	</item>
+	<item id="30133" article="a" name="farm plot">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A farm plot with small green sprouts emerging." />
+	</item>
+	<item id="30134" article="a" name="farm plot">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A farm plot with a growing plant." />
+	</item>
+	<item id="30135" article="a" name="farm plot">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A farm plot with a crop ready to harvest." />
+	</item>
+
+	<!-- Harvested Crops (30140-30156) -->
+	<item id="30140" article="a" name="wheat bundle" plural="wheat bundles">
+		<attribute key="weight" value="300" />
+		<attribute key="description" value="A bundle of freshly harvested wheat." />
+	</item>
+	<item id="30141" article="an" name="ear of corn" plural="ears of corn">
+		<attribute key="weight" value="250" />
+		<attribute key="description" value="A ripe ear of golden corn." />
+	</item>
+	<item id="30142" article="a" name="potato" plural="potatoes">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A freshly dug potato." />
+	</item>
+	<item id="30143" article="a" name="carrot" plural="carrots">
+		<attribute key="weight" value="150" />
+		<attribute key="description" value="A crisp orange carrot." />
+	</item>
+	<item id="30144" article="a" name="tomato" plural="tomatoes">
+		<attribute key="weight" value="180" />
+		<attribute key="description" value="A ripe red tomato." />
+	</item>
+	<item id="30145" article="an" name="onion" plural="onions">
+		<attribute key="weight" value="170" />
+		<attribute key="description" value="A pungent onion." />
+	</item>
+	<item id="30146" article="a" name="garlic bulb" plural="garlic bulbs">
+		<attribute key="weight" value="100" />
+		<attribute key="description" value="A bulb of fresh garlic." />
+	</item>
+	<item id="30147" article="a" name="head of lettuce" plural="heads of lettuce">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A fresh head of crisp lettuce." />
+	</item>
+	<item id="30148" article="a" name="pumpkin" plural="pumpkins">
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A large orange pumpkin." />
+	</item>
+	<item id="30149" article="a" name="basil leaf" plural="basil leaves">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="Fresh aromatic basil leaves." />
+	</item>
+	<item id="30150" article="a" name="thyme sprig" plural="thyme sprigs">
+		<attribute key="weight" value="30" />
+		<attribute key="description" value="A fragrant sprig of thyme." />
+	</item>
+	<item id="30151" article="a" name="rosemary sprig" plural="rosemary sprigs">
+		<attribute key="weight" value="30" />
+		<attribute key="description" value="A fragrant sprig of rosemary." />
+	</item>
+	<item id="30152" article="a" name="mixed berries">
+		<attribute key="weight" value="120" />
+		<attribute key="description" value="A handful of assorted fresh berries." />
+	</item>
+	<item id="30153" article="a" name="bunch of grapes" plural="bunches of grapes">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A bunch of ripe purple grapes." />
+	</item>
+	<item id="30154" article="a" name="fresh herbs">
+		<attribute key="weight" value="80" />
+		<attribute key="description" value="A bundle of assorted fresh herbs." />
+	</item>
+	<item id="30155" article="a" name="mandrake root" plural="mandrake roots">
+		<attribute key="weight" value="150" />
+		<attribute key="description" value="A rare mandrake root pulsing with magical energy." />
+	</item>
+	<item id="30156" article="a" name="starflower" plural="starflowers">
+		<attribute key="weight" value="100" />
+		<attribute key="description" value="A radiant starflower that glows with celestial light." />
+	</item>
+
+	<!-- ==================== Phase 2.3: Cooking System Items ==================== -->
+
+	<!-- Cooked Food (30200-30219) -->
+	<item id="30200" article="a" name="grilled meat">
+		<attribute key="weight" value="250" />
+		<attribute key="description" value="A juicy piece of grilled meat." />
+	</item>
+	<item id="30201" article="a" name="fish stew">
+		<attribute key="weight" value="350" />
+		<attribute key="description" value="A warm bowl of hearty fish stew." />
+	</item>
+	<item id="30202" article="a" name="hearty bread">
+		<attribute key="weight" value="300" />
+		<attribute key="description" value="A thick loaf of nutritious bread." />
+	</item>
+	<item id="30203" article="a" name="cheese omelette" plural="cheese omelettes">
+		<attribute key="weight" value="280" />
+		<attribute key="description" value="A fluffy omelette filled with melted cheese." />
+	</item>
+	<item id="30204" article="a" name="royal feast">
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A lavish meal fit for royalty." />
+	</item>
+	<item id="30205" article="a" name="battle ration" plural="battle rations">
+		<attribute key="weight" value="400" />
+		<attribute key="description" value="A compact meal packed with energy for combat." />
+	</item>
+	<item id="30206" article="a" name="mana brew">
+		<attribute key="weight" value="300" />
+		<attribute key="description" value="A shimmering brew that restores magical energy." />
+	</item>
+	<item id="30207" article="a" name="speed pie" plural="speed pies">
+		<attribute key="weight" value="350" />
+		<attribute key="description" value="A light pie that makes your feet feel swift." />
+	</item>
+	<item id="30208" article="a" name="defense stew">
+		<attribute key="weight" value="400" />
+		<attribute key="description" value="A thick stew that toughens your skin." />
+	</item>
+	<item id="30209" article="a" name="warrior's meal" plural="warrior's meals">
+		<attribute key="weight" value="500" />
+		<attribute key="description" value="A protein-rich meal that strengthens your attacks." />
+	</item>
+	<item id="30210" article="an" name="archer's delight">
+		<attribute key="weight" value="350" />
+		<attribute key="description" value="A light meal that sharpens your aim." />
+	</item>
+	<item id="30211" article="a" name="mystic soup">
+		<attribute key="weight" value="300" />
+		<attribute key="description" value="A magical soup that focuses the mind." />
+	</item>
+	<item id="30212" article="a" name="druid's tea">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A calming herbal tea favored by druids." />
+	</item>
+	<item id="30213" article="a" name="hunter's wrap" plural="hunter's wraps">
+		<attribute key="weight" value="300" />
+		<attribute key="description" value="A portable wrapped meal for long hunts." />
+	</item>
+	<item id="30214" article="an" name="imperial roast">
+		<attribute key="weight" value="600" />
+		<attribute key="description" value="A magnificent roast prepared with imperial spices." />
+	</item>
+	<item id="30215" article="a" name="golden soup">
+		<attribute key="weight" value="350" />
+		<attribute key="description" value="A rich soup with a golden shimmer." />
+	</item>
+	<item id="30216" article="an" name="elixir cake" plural="elixir cakes">
+		<attribute key="weight" value="400" />
+		<attribute key="description" value="A magical cake infused with restorative elixirs." />
+	</item>
+	<item id="30217" article="a" name="stamina jerky">
+		<attribute key="weight" value="150" />
+		<attribute key="description" value="Dried meat strips that restore stamina." />
+	</item>
+	<item id="30218" article="a" name="fortified stew">
+		<attribute key="weight" value="450" />
+		<attribute key="description" value="A thick stew fortified with rare minerals." />
+	</item>
+	<item id="30219" article="an" name="enchanter's pie" plural="enchanter's pies">
+		<attribute key="weight" value="380" />
+		<attribute key="description" value="A mystical pie that enhances magical affinity." />
+	</item>
+
+	<!-- Water Flask (30256) -->
+	<item id="30256" article="a" name="water flask" plural="water flasks">
+		<attribute key="weight" value="400" />
+		<attribute key="description" value="A flask filled with fresh water for watering crops." />
+	</item>
+
+	<!-- ==================== Phase 2.4: Mining System Items ==================== -->
+
+	<!-- Ores (30300-30310) -->
+	<item id="30300" article="a" name="copper ore">
+		<attribute key="weight" value="1200" />
+		<attribute key="description" value="A chunk of raw copper ore." />
+	</item>
+	<item id="30301" article="a" name="tin ore">
+		<attribute key="weight" value="1100" />
+		<attribute key="description" value="A chunk of raw tin ore." />
+	</item>
+	<item id="30302" article="a" name="iron ore">
+		<attribute key="weight" value="1500" />
+		<attribute key="description" value="A chunk of raw iron ore." />
+	</item>
+	<item id="30303" article="a" name="coal">
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A lump of black coal used for smelting." />
+	</item>
+	<item id="30304" article="a" name="silver ore">
+		<attribute key="weight" value="1300" />
+		<attribute key="description" value="A chunk of raw silver ore with a faint gleam." />
+	</item>
+	<item id="30305" article="a" name="gold ore">
+		<attribute key="weight" value="1400" />
+		<attribute key="description" value="A chunk of raw gold ore glinting in the light." />
+	</item>
+	<item id="30306" article="a" name="mithril ore">
+		<attribute key="weight" value="1600" />
+		<attribute key="description" value="A chunk of rare mithril ore radiating faint magic." />
+	</item>
+	<item id="30307" article="a" name="platinum ore">
+		<attribute key="weight" value="1800" />
+		<attribute key="description" value="A chunk of dense platinum ore." />
+	</item>
+	<item id="30308" article="an" name="adamantite ore">
+		<attribute key="weight" value="2000" />
+		<attribute key="description" value="A chunk of incredibly hard adamantite ore." />
+	</item>
+	<item id="30309" article="an" name="orichalcum ore">
+		<attribute key="weight" value="2200" />
+		<attribute key="description" value="A chunk of legendary orichalcum ore that glows faintly." />
+	</item>
+	<item id="30310" article="a" name="painite crystal shard" plural="painite crystal shards">
+		<attribute key="weight" value="500" />
+		<attribute key="description" value="A shard of the ultra-rare painite crystal, used for enchanting." />
+	</item>
+
+	<!-- Pickaxes (30320-30322) -->
+	<item id="30320" article="a" name="basic pickaxe" plural="basic pickaxes">
+		<attribute key="weight" value="3500" />
+		<attribute key="description" value="A simple pickaxe for mining ore veins." />
+	</item>
+	<item id="30321" article="a" name="steel pickaxe" plural="steel pickaxes">
+		<attribute key="weight" value="3800" />
+		<attribute key="description" value="A reinforced steel pickaxe for efficient mining." />
+	</item>
+	<item id="30322" article="a" name="crystal pickaxe" plural="crystal pickaxes">
+		<attribute key="weight" value="3000" />
+		<attribute key="description" value="A pickaxe tipped with enchanted crystal, the finest mining tool." />
+	</item>
+
+	<!-- ==================== Phase 2.4/2.5: Bars and Smelting Items ==================== -->
+
+	<!-- Metal Bars (30400-30410) -->
+	<item id="30400" article="a" name="copper bar" plural="copper bars">
+		<attribute key="weight" value="1800" />
+		<attribute key="description" value="A refined bar of copper." />
+	</item>
+	<item id="30401" article="a" name="tin bar" plural="tin bars">
+		<attribute key="weight" value="1700" />
+		<attribute key="description" value="A refined bar of tin." />
+	</item>
+	<item id="30402" article="a" name="bronze bar" plural="bronze bars">
+		<attribute key="weight" value="2000" />
+		<attribute key="description" value="A refined bar of bronze alloy." />
+	</item>
+	<item id="30403" article="an" name="iron bar" plural="iron bars">
+		<attribute key="weight" value="2200" />
+		<attribute key="description" value="A refined bar of iron." />
+	</item>
+	<item id="30404" article="a" name="steel bar" plural="steel bars">
+		<attribute key="weight" value="2500" />
+		<attribute key="description" value="A refined bar of hardened steel." />
+	</item>
+	<item id="30405" article="a" name="silver bar" plural="silver bars">
+		<attribute key="weight" value="2000" />
+		<attribute key="description" value="A refined bar of gleaming silver." />
+	</item>
+	<item id="30406" article="a" name="gold bar" plural="gold bars">
+		<attribute key="weight" value="2400" />
+		<attribute key="description" value="A refined bar of pure gold." />
+	</item>
+	<item id="30407" article="a" name="mithril bar" plural="mithril bars">
+		<attribute key="weight" value="2800" />
+		<attribute key="description" value="A refined bar of magical mithril." />
+	</item>
+	<item id="30408" article="a" name="platinum bar" plural="platinum bars">
+		<attribute key="weight" value="3000" />
+		<attribute key="description" value="A refined bar of dense platinum." />
+	</item>
+	<item id="30409" article="an" name="adamantite bar" plural="adamantite bars">
+		<attribute key="weight" value="3500" />
+		<attribute key="description" value="A refined bar of nigh-indestructible adamantite." />
+	</item>
+	<item id="30410" article="an" name="orichalcum bar" plural="orichalcum bars">
+		<attribute key="weight" value="4000" />
+		<attribute key="description" value="A refined bar of legendary orichalcum." />
+	</item>
+
+	<!-- Crafting Stations (30420-30421) -->
+	<item id="30420" article="a" name="crafting furnace" plural="crafting furnaces">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A specially designed furnace for smelting ores into bars." />
+	</item>
+	<item id="30421" article="a" name="crafting anvil" plural="crafting anvils">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A sturdy anvil used for smithing equipment." />
+	</item>
+
+	<!-- ==================== Phase 2.5: Smithing System Items ==================== -->
+
+	<!-- Smithing Tools (30422-30423) -->
+	<item id="30422" article="a" name="blacksmith hammer" plural="blacksmith hammers">
+		<attribute key="weight" value="3000" />
+		<attribute key="description" value="A standard blacksmith hammer for forging equipment." />
+	</item>
+	<item id="30423" article="a" name="master hammer" plural="master hammers">
+		<attribute key="weight" value="3200" />
+		<attribute key="description" value="A masterfully crafted hammer that improves forging success." />
+	</item>
+
+	<!-- Tier 1: Bronze Equipment (30500-30507) -->
+	<item id="30500" article="a" name="bronze sword" plural="bronze swords">
+		<attribute key="weight" value="3500" />
+		<attribute key="attack" value="18" />
+		<attribute key="defense" value="12" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="A sturdy sword forged from bronze." />
+	</item>
+	<item id="30501" article="a" name="bronze axe" plural="bronze axes">
+		<attribute key="weight" value="3800" />
+		<attribute key="attack" value="20" />
+		<attribute key="defense" value="10" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A sharp axe forged from bronze." />
+	</item>
+	<item id="30502" article="a" name="bronze mace" plural="bronze maces">
+		<attribute key="weight" value="3600" />
+		<attribute key="attack" value="17" />
+		<attribute key="defense" value="13" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="description" value="A heavy mace forged from bronze." />
+	</item>
+	<item id="30503" article="a" name="bronze helmet" plural="bronze helmets">
+		<attribute key="weight" value="2700" />
+		<attribute key="armor" value="4" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="A protective helmet forged from bronze." />
+	</item>
+	<item id="30504" article="a" name="bronze armor" plural="bronze armors">
+		<attribute key="weight" value="6500" />
+		<attribute key="armor" value="6" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="A suit of armor forged from bronze." />
+	</item>
+	<item id="30505" article="a" name="bronze legs">
+		<attribute key="weight" value="4500" />
+		<attribute key="armor" value="5" />
+		<attribute key="slotType" value="legs" />
+		<attribute key="description" value="Leg armor forged from bronze." />
+	</item>
+	<item id="30506" article="a" name="bronze shield" plural="bronze shields">
+		<attribute key="weight" value="3200" />
+		<attribute key="defense" value="14" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="A reliable shield forged from bronze." />
+	</item>
+	<item id="30507" article="a" name="bronze boots">
+		<attribute key="weight" value="1800" />
+		<attribute key="armor" value="2" />
+		<attribute key="slotType" value="feet" />
+		<attribute key="description" value="Sturdy boots forged from bronze." />
+	</item>
+
+	<!-- Tier 2: Steel Equipment (30508-30515) -->
+	<item id="30508" article="a" name="steel sword" plural="steel swords">
+		<attribute key="weight" value="3500" />
+		<attribute key="attack" value="26" />
+		<attribute key="defense" value="18" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="A keen sword forged from hardened steel." />
+	</item>
+	<item id="30509" article="a" name="steel axe" plural="steel axes">
+		<attribute key="weight" value="3800" />
+		<attribute key="attack" value="28" />
+		<attribute key="defense" value="14" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A sharp axe forged from hardened steel." />
+	</item>
+	<item id="30510" article="a" name="steel mace" plural="steel maces">
+		<attribute key="weight" value="3600" />
+		<attribute key="attack" value="25" />
+		<attribute key="defense" value="18" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="description" value="A crushing mace forged from hardened steel." />
+	</item>
+	<item id="30511" article="a" name="steel helmet" plural="steel helmets">
+		<attribute key="weight" value="2900" />
+		<attribute key="armor" value="6" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="A strong helmet forged from hardened steel." />
+	</item>
+	<item id="30512" article="a" name="steel armor" plural="steel armors">
+		<attribute key="weight" value="7000" />
+		<attribute key="armor" value="9" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="A suit of armor forged from hardened steel." />
+	</item>
+	<item id="30513" article="a" name="steel legs">
+		<attribute key="weight" value="5000" />
+		<attribute key="armor" value="7" />
+		<attribute key="slotType" value="legs" />
+		<attribute key="description" value="Leg armor forged from hardened steel." />
+	</item>
+	<item id="30514" article="a" name="steel shield" plural="steel shields">
+		<attribute key="weight" value="3500" />
+		<attribute key="defense" value="20" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="A strong shield forged from hardened steel." />
+	</item>
+	<item id="30515" article="a" name="steel crossbow" plural="steel crossbows">
+		<attribute key="weight" value="4500" />
+		<attribute key="attack" value="30" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="A powerful crossbow with steel-reinforced limbs." />
+	</item>
+
+	<!-- Tier 3: Silver Equipment (30516-30520) -->
+	<item id="30516" article="a" name="silver sword" plural="silver swords">
+		<attribute key="weight" value="3300" />
+		<attribute key="attack" value="30" />
+		<attribute key="defense" value="22" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="An elegant sword forged from gleaming silver." />
+	</item>
+	<item id="30517" article="a" name="silver mace" plural="silver maces">
+		<attribute key="weight" value="3400" />
+		<attribute key="attack" value="28" />
+		<attribute key="defense" value="24" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="description" value="A radiant mace forged from silver, bane of the undead." />
+	</item>
+	<item id="30518" article="a" name="silver helmet" plural="silver helmets">
+		<attribute key="weight" value="2800" />
+		<attribute key="armor" value="7" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="A gleaming helmet forged from silver." />
+	</item>
+	<item id="30519" article="a" name="silver armor" plural="silver armors">
+		<attribute key="weight" value="6800" />
+		<attribute key="armor" value="10" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="A suit of armor forged from gleaming silver." />
+	</item>
+	<item id="30520" article="a" name="silver shield" plural="silver shields">
+		<attribute key="weight" value="3300" />
+		<attribute key="defense" value="24" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="A polished shield forged from silver." />
+	</item>
+
+	<!-- Tier 4: Gold Equipment (30521-30525) -->
+	<item id="30521" article="a" name="gold axe" plural="gold axes">
+		<attribute key="weight" value="4000" />
+		<attribute key="attack" value="34" />
+		<attribute key="defense" value="18" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A magnificent axe forged from pure gold." />
+	</item>
+	<item id="30522" article="a" name="gold mace" plural="gold maces">
+		<attribute key="weight" value="3800" />
+		<attribute key="attack" value="32" />
+		<attribute key="defense" value="26" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="description" value="A regal mace forged from pure gold." />
+	</item>
+	<item id="30523" article="a" name="gold helmet" plural="gold helmets">
+		<attribute key="weight" value="3000" />
+		<attribute key="armor" value="8" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="A majestic helmet forged from pure gold." />
+	</item>
+	<item id="30524" article="a" name="gold armor" plural="gold armors">
+		<attribute key="weight" value="7500" />
+		<attribute key="armor" value="11" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="A resplendent suit of armor forged from pure gold." />
+	</item>
+	<item id="30525" article="a" name="gold shield" plural="gold shields">
+		<attribute key="weight" value="3600" />
+		<attribute key="defense" value="28" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="A brilliant shield forged from pure gold." />
+	</item>
+
+	<!-- Tier 5: Mithril Equipment (30526-30533) -->
+	<item id="30526" article="a" name="mithril sword" plural="mithril swords">
+		<attribute key="weight" value="2800" />
+		<attribute key="attack" value="38" />
+		<attribute key="defense" value="28" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="A legendary sword forged from magical mithril." />
+	</item>
+	<item id="30527" article="a" name="mithril axe" plural="mithril axes">
+		<attribute key="weight" value="3000" />
+		<attribute key="attack" value="40" />
+		<attribute key="defense" value="24" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A legendary axe forged from magical mithril." />
+	</item>
+	<item id="30528" article="a" name="mithril bow" plural="mithril bows">
+		<attribute key="weight" value="2500" />
+		<attribute key="attack" value="36" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="A graceful bow forged from magical mithril." />
+	</item>
+	<item id="30529" article="a" name="mithril helmet" plural="mithril helmets">
+		<attribute key="weight" value="2200" />
+		<attribute key="armor" value="9" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="A lightweight helmet forged from magical mithril." />
+	</item>
+	<item id="30530" article="a" name="mithril armor" plural="mithril armors">
+		<attribute key="weight" value="5500" />
+		<attribute key="armor" value="13" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="A suit of armor forged from magical mithril, light yet strong." />
+	</item>
+	<item id="30531" article="a" name="mithril legs">
+		<attribute key="weight" value="3800" />
+		<attribute key="armor" value="9" />
+		<attribute key="slotType" value="legs" />
+		<attribute key="description" value="Leg armor forged from magical mithril." />
+	</item>
+	<item id="30532" article="a" name="mithril shield" plural="mithril shields">
+		<attribute key="weight" value="2800" />
+		<attribute key="defense" value="32" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="A strong yet lightweight shield forged from mithril." />
+	</item>
+	<item id="30533" article="a" name="mithril boots">
+		<attribute key="weight" value="1500" />
+		<attribute key="armor" value="4" />
+		<attribute key="slotType" value="feet" />
+		<attribute key="description" value="Lightweight boots forged from magical mithril." />
+	</item>
+
+	<!-- Tier 6: Platinum Equipment (30534-30540) -->
+	<item id="30534" article="a" name="platinum sword" plural="platinum swords">
+		<attribute key="weight" value="3200" />
+		<attribute key="attack" value="42" />
+		<attribute key="defense" value="32" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="A magnificent sword forged from dense platinum." />
+	</item>
+	<item id="30535" article="a" name="platinum axe" plural="platinum axes">
+		<attribute key="weight" value="3500" />
+		<attribute key="attack" value="44" />
+		<attribute key="defense" value="28" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A devastating axe forged from dense platinum." />
+	</item>
+	<item id="30536" article="a" name="platinum crossbow" plural="platinum crossbows">
+		<attribute key="weight" value="4200" />
+		<attribute key="attack" value="40" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="A powerful crossbow forged from platinum." />
+	</item>
+	<item id="30537" article="a" name="platinum helmet" plural="platinum helmets">
+		<attribute key="weight" value="2600" />
+		<attribute key="armor" value="10" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="A superb helmet forged from dense platinum." />
+	</item>
+	<item id="30538" article="a" name="platinum armor" plural="platinum armors">
+		<attribute key="weight" value="6500" />
+		<attribute key="armor" value="14" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="A suit of armor forged from dense platinum." />
+	</item>
+	<item id="30539" article="a" name="platinum legs">
+		<attribute key="weight" value="4500" />
+		<attribute key="armor" value="10" />
+		<attribute key="slotType" value="legs" />
+		<attribute key="description" value="Leg armor forged from dense platinum." />
+	</item>
+	<item id="30540" article="a" name="platinum shield" plural="platinum shields">
+		<attribute key="weight" value="3200" />
+		<attribute key="defense" value="36" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="An imposing shield forged from dense platinum." />
+	</item>
+
+	<!-- Tier 7: Adamantite Equipment (30541-30546) -->
+	<item id="30541" article="an" name="adamantite sword" plural="adamantite swords">
+		<attribute key="weight" value="3500" />
+		<attribute key="attack" value="46" />
+		<attribute key="defense" value="35" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="An indestructible sword forged from adamantite." />
+	</item>
+	<item id="30542" article="an" name="adamantite axe" plural="adamantite axes">
+		<attribute key="weight" value="3800" />
+		<attribute key="attack" value="48" />
+		<attribute key="defense" value="30" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A fearsome axe forged from adamantite." />
+	</item>
+	<item id="30543" article="an" name="adamantite bow" plural="adamantite bows">
+		<attribute key="weight" value="2800" />
+		<attribute key="attack" value="44" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="A powerful bow forged from adamantite." />
+	</item>
+	<item id="30544" article="an" name="adamantite armor" plural="adamantite armors">
+		<attribute key="weight" value="7500" />
+		<attribute key="armor" value="16" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="Nearly indestructible armor forged from adamantite." />
+	</item>
+	<item id="30545" article="an" name="adamantite shield" plural="adamantite shields">
+		<attribute key="weight" value="3800" />
+		<attribute key="defense" value="40" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="An unyielding shield forged from adamantite." />
+	</item>
+	<item id="30546" article="a" name="adamantite boots">
+		<attribute key="weight" value="2200" />
+		<attribute key="armor" value="6" />
+		<attribute key="slotType" value="feet" />
+		<attribute key="description" value="Heavy boots forged from adamantite." />
+	</item>
+
+	<!-- Tier 8: Orichalcum Equipment (30547-30552) -->
+	<item id="30547" article="an" name="orichalcum sword" plural="orichalcum swords">
+		<attribute key="weight" value="3200" />
+		<attribute key="attack" value="50" />
+		<attribute key="defense" value="38" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="The ultimate sword forged from legendary orichalcum." />
+	</item>
+	<item id="30548" article="an" name="orichalcum axe" plural="orichalcum axes">
+		<attribute key="weight" value="3500" />
+		<attribute key="attack" value="52" />
+		<attribute key="defense" value="32" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="The ultimate axe forged from legendary orichalcum." />
+	</item>
+	<item id="30549" article="an" name="orichalcum bow" plural="orichalcum bows">
+		<attribute key="weight" value="2600" />
+		<attribute key="attack" value="48" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="The ultimate bow forged from legendary orichalcum." />
+	</item>
+	<item id="30550" article="an" name="orichalcum armor" plural="orichalcum armors">
+		<attribute key="weight" value="7000" />
+		<attribute key="armor" value="18" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="The ultimate armor forged from legendary orichalcum." />
+	</item>
+	<item id="30551" article="an" name="orichalcum shield" plural="orichalcum shields">
+		<attribute key="weight" value="3500" />
+		<attribute key="defense" value="44" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="The ultimate shield forged from legendary orichalcum." />
+	</item>
+	<item id="30552" article="an" name="orichalcum helmet" plural="orichalcum helmets">
+		<attribute key="weight" value="2400" />
+		<attribute key="armor" value="12" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="The ultimate helmet forged from legendary orichalcum." />
+	</item>
+
+	<!-- ==================== Phase 2.6: Enchanting System Items ==================== -->
+
+	<!-- Painite Crystals (30600-30602) -->
+	<item id="30600" article="a" name="small painite crystal" plural="small painite crystals">
+		<attribute key="weight" value="200" />
+		<attribute key="description" value="A small shard of painite crystal used for enchanting equipment." />
+	</item>
+	<item id="30601" article="a" name="medium painite crystal" plural="medium painite crystals">
+		<attribute key="weight" value="400" />
+		<attribute key="description" value="A medium shard of painite crystal with stronger enchanting power." />
+	</item>
+	<item id="30602" article="a" name="large painite crystal" plural="large painite crystals">
+		<attribute key="weight" value="600" />
+		<attribute key="description" value="A large shard of painite crystal with potent enchanting power." />
+	</item>
+
+	<!-- Enchanting Altar (30610) -->
+	<item id="30610" article="an" name="enchanting altar" plural="enchanting altars">
+		<attribute key="weight" value="0" />
+		<attribute key="description" value="A mystical altar used for enchanting equipment with painite crystals." />
+	</item>
+
+	<!-- Enchanted Crystal Dust (30799) -->
+	<item id="30799" article="an" name="enchanted crystal dust">
+		<attribute key="weight" value="50" />
+		<attribute key="description" value="Fine crystal dust used in advanced enchanting." />
+	</item>
+
+	<!-- ==================== Phase 3: Legendary Items ==================== -->
+
+	<!-- Legendary Swords (30700-30702) -->
+	<item id="30700" article="a" name="blade of the forgotten king">
+		<attribute key="weight" value="4200" />
+		<attribute key="attack" value="52" />
+		<attribute key="defense" value="38" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="Forged in the fires of a forgotten kingdom, this blade hungers for souls." />
+	</item>
+	<item id="30701" article="a" name="shadowfang">
+		<attribute key="weight" value="3800" />
+		<attribute key="attack" value="48" />
+		<attribute key="defense" value="32" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="The fangs of the shadow serpent, reforged into a deadly blade." />
+	</item>
+	<item id="30702" article="a" name="dawnbreaker">
+		<attribute key="weight" value="4000" />
+		<attribute key="attack" value="55" />
+		<attribute key="defense" value="30" />
+		<attribute key="weaponType" value="sword" />
+		<attribute key="description" value="A blade blessed by the dawn, bane of all undead." />
+	</item>
+
+	<!-- Legendary Axes (30710-30711) -->
+	<item id="30710" article="an" name="earthshatter">
+		<attribute key="weight" value="5000" />
+		<attribute key="attack" value="54" />
+		<attribute key="defense" value="28" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="This axe was carved from the bones of the earth itself." />
+	</item>
+	<item id="30711" article="a" name="frostcleaver">
+		<attribute key="weight" value="4500" />
+		<attribute key="attack" value="50" />
+		<attribute key="defense" value="34" />
+		<attribute key="weaponType" value="axe" />
+		<attribute key="description" value="A frozen edge that never thaws, stolen from the lair of an ancient frost wyrm." />
+	</item>
+
+	<!-- Legendary Clubs (30715-30716) -->
+	<item id="30715" article="a" name="thundermaul">
+		<attribute key="weight" value="5500" />
+		<attribute key="attack" value="53" />
+		<attribute key="defense" value="30" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="description" value="Lightning crackles along its surface, eager to be unleashed." />
+	</item>
+	<item id="30716" article="a" name="bonecrusher">
+		<attribute key="weight" value="5200" />
+		<attribute key="attack" value="56" />
+		<attribute key="defense" value="25" />
+		<attribute key="weaponType" value="club" />
+		<attribute key="description" value="Every strike echoes with the sound of shattering bone." />
+	</item>
+
+	<!-- Legendary Distance Weapons (30720-30721) -->
+	<item id="30720" article="an" name="aetherbane crossbow" plural="aetherbane crossbows">
+		<attribute key="weight" value="4800" />
+		<attribute key="attack" value="48" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="Bolts fired from this crossbow pierce not just flesh, but the arcane." />
+	</item>
+	<item id="30721" article="a" name="windrunner bow" plural="windrunner bows">
+		<attribute key="weight" value="3000" />
+		<attribute key="attack" value="45" />
+		<attribute key="weaponType" value="distance" />
+		<attribute key="description" value="Crafted from the branches of the World Tree, light as the wind." />
+	</item>
+
+	<!-- Legendary Wands (30725-30726) -->
+	<item id="30725" article="a" name="staff of the void">
+		<attribute key="weight" value="3500" />
+		<attribute key="attack" value="42" />
+		<attribute key="defense" value="15" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="description" value="Peers into the void between worlds and draws forth its power." />
+	</item>
+	<item id="30726" article="a" name="phoenix scepter" plural="phoenix scepters">
+		<attribute key="weight" value="3200" />
+		<attribute key="attack" value="38" />
+		<attribute key="defense" value="20" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="description" value="Born from phoenix ashes, it burns eternally with arcane fire." />
+	</item>
+
+	<!-- Legendary Armor (30730-30732) -->
+	<item id="30730" article="a" name="dragonscale cuirass">
+		<attribute key="weight" value="8500" />
+		<attribute key="armor" value="18" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="Forged from the scales of an ancient dragon lord." />
+	</item>
+	<item id="30731" article="a" name="robes of the archmage">
+		<attribute key="weight" value="2500" />
+		<attribute key="armor" value="14" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="Woven from threads of pure mana by the last archmage." />
+	</item>
+	<item id="30732" article="a" name="shadowveil armor">
+		<attribute key="weight" value="5000" />
+		<attribute key="armor" value="16" />
+		<attribute key="slotType" value="body" />
+		<attribute key="description" value="Shadows cling to this armor, hiding its wearer from sight." />
+	</item>
+
+	<!-- Legendary Shields (30740-30741) -->
+	<item id="30740" article="an" name="aegis of the ancients">
+		<attribute key="weight" value="5500" />
+		<attribute key="defense" value="42" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="Carried by the guardians of the ancient gates." />
+	</item>
+	<item id="30741" article="a" name="bulwark of the damned">
+		<attribute key="weight" value="6000" />
+		<attribute key="defense" value="38" />
+		<attribute key="weaponType" value="shield" />
+		<attribute key="description" value="The screams of the damned echo from its surface." />
+	</item>
+
+	<!-- Legendary Helmets (30745-30746) -->
+	<item id="30745" article="a" name="crown of the lich king">
+		<attribute key="weight" value="1800" />
+		<attribute key="armor" value="10" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="The phylactery of a lich king, reshaped into a crown of dark power." />
+	</item>
+	<item id="30746" article="a" name="helm of the berserker">
+		<attribute key="weight" value="3500" />
+		<attribute key="armor" value="12" />
+		<attribute key="slotType" value="head" />
+		<attribute key="description" value="Rage fuels the wearer, turning wounds into fury." />
+	</item>
+
+	<!-- Legendary Boots (30750-30751) -->
+	<item id="30750" article="a" name="boots of the windwalker">
+		<attribute key="weight" value="1200" />
+		<attribute key="armor" value="4" />
+		<attribute key="slotType" value="feet" />
+		<attribute key="description" value="The wearer moves as swift as the wind itself." />
+	</item>
+	<item id="30751" article="a" name="treads of the juggernaut">
+		<attribute key="weight" value="4500" />
+		<attribute key="armor" value="7" />
+		<attribute key="slotType" value="feet" />
+		<attribute key="description" value="Each step shakes the ground. Nothing can move the wearer." />
+	</item>
+
+	<!-- Legendary Rings (30755-30756) -->
+	<item id="30755" article="a" name="ring of the phoenix">
+		<attribute key="weight" value="100" />
+		<attribute key="slotType" value="ring" />
+		<attribute key="description" value="The eternal flame of the phoenix burns within this ring." />
+	</item>
+	<item id="30756" article="a" name="band of the vampire lord">
+		<attribute key="weight" value="100" />
+		<attribute key="slotType" value="ring" />
+		<attribute key="description" value="Blood is the currency of power, and this ring is the bank." />
+	</item>
+
+	<!-- Legendary Necklaces (30760-30761) -->
+	<item id="30760" article="an" name="amulet of the arcane">
+		<attribute key="weight" value="150" />
+		<attribute key="slotType" value="necklace" />
+		<attribute key="description" value="Channels raw arcane energy directly into the wearer's spells." />
+	</item>
+	<item id="30761" article="a" name="talisman of fortitude">
+		<attribute key="weight" value="200" />
+		<attribute key="slotType" value="necklace" />
+		<attribute key="description" value="An ancient talisman that hardens the body and spirit." />
+	</item>
 </items>

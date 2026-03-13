@@ -43,7 +43,7 @@ extern Scheduler g_scheduler;
 extern DatabaseTasks g_databaseTasks;
 extern Dispatcher g_dispatcher;
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Actions* g_actions;
 extern Monsters g_monsters;
 extern TalkActions* g_talkActions;
@@ -59,7 +59,7 @@ extern LuaEnvironment g_luaEnvironment;
 
 using ErrorCode = boost::system::error_code;
 
-Signals::Signals(boost::asio::io_service& service) :
+Signals::Signals(boost::asio::io_context& service) :
 	set(service)
 {
 	set.add(SIGINT);

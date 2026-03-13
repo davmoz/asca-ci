@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_ITEMS_H_4E2221634ABA45FE85BA50F710669B3C
-#define FS_ITEMS_H_4E2221634ABA45FE85BA50F710669B3C
+#ifndef FS_ITEMS_H
+#define FS_ITEMS_H
 
 #include "const.h"
 #include "enums.h"
@@ -209,20 +209,20 @@ struct Abilities {
 	uint32_t conditionSuppressions = 0;
 
 	//stats modifiers
-	int32_t stats[STAT_LAST + 1] = { 0 };
-	int32_t statsPercent[STAT_LAST + 1] = { 0 };
+	std::array<int32_t, STAT_LAST + 1> stats = {};
+	std::array<int32_t, STAT_LAST + 1> statsPercent = {};
 
 	//extra skill modifiers
-	int32_t skills[SKILL_LAST + 1] = { 0 };
-	int32_t specialSkills[SPECIALSKILL_LAST + 1] = { 0 };
+	std::array<int32_t, SKILL_LAST + 1> skills = {};
+	std::array<int32_t, SPECIALSKILL_LAST + 1> specialSkills = {};
 
 	int32_t speed = 0;
 
 	// field damage abilities modifiers
-	int16_t fieldAbsorbPercent[COMBAT_COUNT] = { 0 };
+	std::array<int16_t, COMBAT_COUNT> fieldAbsorbPercent = {};
 
 	//damage abilities modifiers
-	int16_t absorbPercent[COMBAT_COUNT] = { 0 };
+	std::array<int16_t, COMBAT_COUNT> absorbPercent = {};
 
 	//elemental damage
 	uint16_t elementDamage = 0;
@@ -299,7 +299,7 @@ public:
 
 	Abilities& getAbilities() {
 		if (!abilities) {
-			abilities.reset(new Abilities());
+			abilities = std::make_unique<Abilities>();
 		}
 		return *abilities;
 	}

@@ -16,6 +16,28 @@ ec.onDropLoot = function(self, corpse)
 			end
 		end
 
+		-- Phase 3: Generate random attributes on equipment loot
+		if ItemAttributes then
+			ItemAttributes.onLootDrop(self, corpse)
+		end
+
+		-- Phase 3: Roll for legendary drops from elite monsters
+		if LegendaryItems and LegendaryItems.isElite(self) then
+			local legendaryItemId = LegendaryItems.rollLegendaryDrop(self)
+			if legendaryItemId then
+				local legendaryItem = LegendaryItems.addLegendaryToCorpse(corpse, legendaryItemId)
+				if legendaryItem and player then
+					local legendaryData = LegendaryItems.items[legendaryItemId]
+					if legendaryData then
+						Game.broadcastMessage(
+							player:getName() .. " has obtained the legendary item: " .. legendaryData.name .. "!",
+							MESSAGE_STATUS_WARNING
+						)
+					end
+				end
+			end
+		end
+
 		if player then
 			local text = ("Loot of %s: %s"):format(mType:getNameDescription(), corpse:getContentDescription())
 			local party = player:getParty()

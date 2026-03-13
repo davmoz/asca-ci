@@ -29,7 +29,7 @@
 #include "ban.h"
 #include "game.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 
 void ProtocolLogin::disconnectClient(const std::string& message, uint16_t version)
@@ -71,9 +71,7 @@ void ProtocolLogin::getCharacterList(const std::string& accountName, const std::
 		//Add MOTD
 		output->addByte(0x14);
 
-		std::ostringstream ss;
-		ss << g_game.getMotdNum() << "\n" << motd;
-		output->addString(ss.str());
+		output->addString(fmt::format("{}\n{}", g_game.getMotdNum(), motd));
 	}
 
 	//Add session key
@@ -153,9 +151,7 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 	 */
 
 	if (version <= 760) {
-		std::ostringstream ss;
-		ss << "Only clients with protocol " << CLIENT_VERSION_STR << " allowed!";
-		disconnectClient(ss.str(), version);
+		disconnectClient(fmt::format("Only clients with protocol {} allowed!", CLIENT_VERSION_STR), version);
 		return;
 	}
 
@@ -173,9 +169,7 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 	setXTEAKey(std::move(key));
 
 	if (version < CLIENT_VERSION_MIN || version > CLIENT_VERSION_MAX) {
-		std::ostringstream ss;
-		ss << "Only clients with protocol " << CLIENT_VERSION_STR << " allowed!";
-		disconnectClient(ss.str(), version);
+		disconnectClient(fmt::format("Only clients with protocol {} allowed!", CLIENT_VERSION_STR), version);
 		return;
 	}
 
@@ -200,9 +194,7 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 			banInfo.reason = "(none)";
 		}
 
-		std::ostringstream ss;
-		ss << "Your IP has been banned until " << formatDateShort(banInfo.expiresAt) << " by " << banInfo.bannedBy << ".\n\nReason specified:\n" << banInfo.reason;
-		disconnectClient(ss.str(), version);
+		disconnectClient(fmt::format("Your IP has been banned until {} by {}.\n\nReason specified:\n{}", formatDateShort(banInfo.expiresAt), banInfo.bannedBy, banInfo.reason), version);
 		return;
 	}
 
@@ -228,5 +220,5 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 	std::string authToken = msg.getString();
 
 	auto thisPtr = std::static_pointer_cast<ProtocolLogin>(shared_from_this());
-	g_dispatcher.addTask(createTask(std::bind(&ProtocolLogin::getCharacterList, thisPtr, accountName, password, authToken, version)));
+	g_dispatcher.addTask(createTask([thisPtr, accountName, password, authToken, version]() { thisPtr->getCharacterList(accountName, password, authToken, version); }));
 }

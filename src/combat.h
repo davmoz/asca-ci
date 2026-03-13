@@ -17,13 +17,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_COMBAT_H_B02CE79230FC43708699EE91FCC8F7CC
-#define FS_COMBAT_H_B02CE79230FC43708699EE91FCC8F7CC
+#ifndef FS_COMBAT_H
+#define FS_COMBAT_H
 
 #include "thing.h"
 #include "condition.h"
 #include "map.h"
 #include "baseevents.h"
+#include "matrixarea.h"
 
 class Condition;
 class Creature;
@@ -75,88 +76,6 @@ struct CombatParams {
 	bool targetCasterOrTopMost = false;
 	bool aggressive = true;
 	bool useCharges = false;
-};
-
-class MatrixArea
-{
-	public:
-		MatrixArea(uint32_t rows, uint32_t cols): centerX(0), centerY(0), rows(rows), cols(cols) {
-			data_ = new bool*[rows];
-
-			for (uint32_t row = 0; row < rows; ++row) {
-				data_[row] = new bool[cols];
-
-				for (uint32_t col = 0; col < cols; ++col) {
-					data_[row][col] = 0;
-				}
-			}
-		}
-
-		MatrixArea(const MatrixArea& rhs) {
-			centerX = rhs.centerX;
-			centerY = rhs.centerY;
-			rows = rhs.rows;
-			cols = rhs.cols;
-
-			data_ = new bool*[rows];
-
-			for (uint32_t row = 0; row < rows; ++row) {
-				data_[row] = new bool[cols];
-
-				for (uint32_t col = 0; col < cols; ++col) {
-					data_[row][col] = rhs.data_[row][col];
-				}
-			}
-		}
-
-		~MatrixArea() {
-			for (uint32_t row = 0; row < rows; ++row) {
-				delete[] data_[row];
-			}
-
-			delete[] data_;
-		}
-
-		// non-assignable
-		MatrixArea& operator=(const MatrixArea&) = delete;
-
-		void setValue(uint32_t row, uint32_t col, bool value) const {
-			data_[row][col] = value;
-		}
-		bool getValue(uint32_t row, uint32_t col) const {
-			return data_[row][col];
-		}
-
-		void setCenter(uint32_t y, uint32_t x) {
-			centerX = x;
-			centerY = y;
-		}
-		void getCenter(uint32_t& y, uint32_t& x) const {
-			x = centerX;
-			y = centerY;
-		}
-
-		uint32_t getRows() const {
-			return rows;
-		}
-		uint32_t getCols() const {
-			return cols;
-		}
-
-		const bool* operator[](uint32_t i) const {
-			return data_[i];
-		}
-		bool* operator[](uint32_t i) {
-			return data_[i];
-		}
-
-	private:
-		uint32_t centerX;
-		uint32_t centerY;
-
-		uint32_t rows;
-		uint32_t cols;
-		bool** data_;
 };
 
 class AreaCombat

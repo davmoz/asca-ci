@@ -1,0 +1,63 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change_me_root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-forgottenserver}
+      MYSQL_USER: ${MYSQL_USER:-forgottenserver}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change_me_password}
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    networks:
+      - tfs-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  tfs:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${LOGIN_PORT:-7171}:7171"
+      - "${GAME_PORT:-7172}:7172"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        if [ ! -f /srv/config.lua ]; then cp /srv/config.lua.dist /srv/config.lua; fi
+        exec /bin/tfs
+    volumes:
+      - ./data:/srv/data:ro
+      - ./key.pem:/srv/key.pem:ro
+      - ./config.lua:/srv/config.lua
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST:-db}
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_USER=${MYSQL_USER:-forgottenserver}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-change_me_password}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-forgottenserver}
+    networks:
+      - tfs-net
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 7171 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  db_data:
+
+networks:
+  tfs-net:
+    driver: bridge

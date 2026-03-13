@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Fisherman Jack" script="fisherman_jack.lua" walkinterval="3000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="129" head="57" body="40" legs="96" feet="76" addons="0" />
+	<parameters>
+		<parameter key="message_greet" value="Ahh, |PLAYERNAME|! The sea is calm today. Come buy some fresh {fish}! Ask for a {trade}." />
+	</parameters>
+</npc>

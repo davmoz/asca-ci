@@ -1,44 +1,42 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 project(tfs)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 add_subdirectory(src)
 add_executable(tfs ${tfs_SRC})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set_target_properties(tfs PROPERTIES CXX_STANDARD 11)
-set_target_properties(tfs PROPERTIES CXX_STANDARD_REQUIRED ON)
-
-if (${CMAKE_VERSION} VERSION_GREATER "3.16.0")
-    target_precompile_headers(tfs PUBLIC src/otpch.h)
-else ()
-    include(cotire)
-    set_target_properties(tfs PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "src/otpch.h")
-    set_target_properties(tfs PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
-    cotire(tfs)
+if (NOT WIN32)
+    target_compile_options(tfs PRIVATE -Wall -Wextra -Werror -pipe -fvisibility=hidden
+        -Wnon-virtual-dtor -Woverloaded-virtual -Wpedantic)
 endif ()
 
-if (NOT WIN32)
-    add_compile_options(-Wall -Werror -pipe -fvisibility=hidden)
+if (CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(tfs PRIVATE -fno-strict-aliasing
+        -Wduplicated-cond -Wlogical-op)
+endif ()
+
+target_precompile_headers(tfs PUBLIC src/otpch.h)
+
+# Issue 232: Unity build support — groups source files to speed compilation
+option(ENABLE_UNITY_BUILD "Enable unity (jumbo) builds" OFF)
+if (ENABLE_UNITY_BUILD)
+    set_target_properties(tfs PROPERTIES UNITY_BUILD ON)
 endif ()
 
 set(CMAKE_CXX_FLAGS_PERFORMANCE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
 
-if (CMAKE_COMPILER_IS_GNUCXX)
-    add_compile_options(-fno-strict-aliasing)
-endif ()
-
 # Find packages.
-find_package(CryptoPP QUIET)
-if (CryptoPP_FOUND)  # vcpkg-provided cmake package called CryptoPP
-    set(Crypto++_LIBRARIES "cryptopp-static")
-else()
-    find_package(Crypto++ REQUIRED)
-endif ()
+find_package(OpenSSL REQUIRED)
+find_package(fmt REQUIRED)
 find_package(MySQL REQUIRED)
 find_package(Threads REQUIRED)
 find_package(PugiXML REQUIRED)
@@ -60,16 +58,16 @@ else ()
     find_package(Lua REQUIRED)
 endif ()
 
-find_package(Boost 1.53.0 REQUIRED COMPONENTS date_time system filesystem iostreams)
+find_package(Boost 1.53.0 REQUIRED COMPONENTS date_time filesystem iostreams)
 
-include_directories(${Boost_INCLUDE_DIRS} ${Crypto++_INCLUDE_DIR} ${LUA_INCLUDE_DIR} ${MYSQL_INCLUDE_DIR} ${PUGIXML_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${MYSQL_INCLUDE_DIR} ${PUGIXML_INCLUDE_DIR})
 target_link_libraries(tfs PRIVATE
         Boost::date_time
-        Boost::system
         Boost::filesystem
         Boost::iostreams
         ${CMAKE_THREAD_LIBS_INIT}
-        ${Crypto++_LIBRARIES}
+        OpenSSL::Crypto
+        fmt::fmt
         ${LUA_LIBRARIES}
         ${MYSQL_CLIENT_LIBS}
         ${PUGIXML_LIBRARIES}
@@ -98,3 +96,12 @@ if (Git_FOUND)
     target_include_directories(tfs PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 ### END  Git Version ###
+
+### Tests ###
+option(BUILD_TESTS "Build unit tests" OFF)
+if (BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests/cpp)
+    add_subdirectory(src/tests)
+endif ()
+### END Tests ###

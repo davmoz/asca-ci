@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Father Aldric" script="father_aldric.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="130" head="0" body="19" legs="19" feet="95" addons="2" />
+	<parameters>
+		<parameter key="message_greet" value="Blessings upon you, |PLAYERNAME|. I offer divine {blessings} and {healing} to the faithful." />
+	</parameters>
+</npc>

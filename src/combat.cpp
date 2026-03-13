@@ -28,7 +28,7 @@
 
 extern Game g_game;
 extern Weapons* g_weapons;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Events* g_events;
 
 CombatDamage Combat::getCombatDamage(Creature* creature, Creature* target) const
@@ -167,7 +167,7 @@ bool Combat::isPlayerCombat(const Creature* target)
 		return true;
 	}
 
-	if (target->isSummon() && target->getMaster()->getPlayer()) {
+	if (target->isSummon() && target->getMaster() && target->getMaster()->getPlayer()) {
 		return true;
 	}
 
@@ -437,22 +437,22 @@ bool Combat::setCallback(CallBackParam_t key)
 {
 	switch (key) {
 		case CALLBACK_PARAM_LEVELMAGICVALUE: {
-			params.valueCallback.reset(new ValueCallback(COMBAT_FORMULA_LEVELMAGIC));
+			params.valueCallback = std::make_unique<ValueCallback>(COMBAT_FORMULA_LEVELMAGIC);
 			return true;
 		}
 
 		case CALLBACK_PARAM_SKILLVALUE: {
-			params.valueCallback.reset(new ValueCallback(COMBAT_FORMULA_SKILL));
+			params.valueCallback = std::make_unique<ValueCallback>(COMBAT_FORMULA_SKILL);
 			return true;
 		}
 
 		case CALLBACK_PARAM_TARGETTILE: {
-			params.tileCallback.reset(new TileCallback());
+			params.tileCallback = std::make_unique<TileCallback>();
 			return true;
 		}
 
 		case CALLBACK_PARAM_TARGETCREATURE: {
-			params.targetCallback.reset(new TargetCallback());
+			params.targetCallback = std::make_unique<TargetCallback>();
 			return true;
 		}
 	}
@@ -753,6 +753,16 @@ void Combat::doTargetCombat(Creature* caster, Creature* target, CombatDamage& da
 	if (casterPlayer) {
 		if (damage.primary.value < 0 || damage.secondary.value < 0) {
 			Player* targetPlayer = target ? target->getPlayer() : nullptr;
+			// TODO (Issue #60): PvP damage halving is applied before crit/leech
+			// checks, which means crit and leech operate on the already-halved
+			// values. Consider restructuring so that:
+			//   1. Raw damage is computed first
+			//   2. Crit multiplier is applied to raw damage
+			//   3. PvP scaling is applied after crit
+			//   4. Leech is computed from the final damage actually dealt
+			// This ordering would be more intuitive and consistent with how
+			// doAreaCombat handles the same sequence. The current behavior
+			// under-values crits and leech in PvP.
 			if (targetPlayer && targetPlayer->getSkull() != SKULL_BLACK) {
 				damage.primary.value /= 2;
 				damage.secondary.value /= 2;
@@ -957,7 +967,7 @@ void Combat::checkCriticalHit(Player* caster, CombatDamage& damage)
 
 	uint16_t chance = caster->getSpecialSkill(SPECIALSKILL_CRITICALHITCHANCE);
 	uint16_t criticalHit = caster->getSpecialSkill(SPECIALSKILL_CRITICALHITAMOUNT);
-	if (criticalHit != 0 && chance != 0 && normal_random(1, 100) <= chance) {
+	if (criticalHit != 0 && chance != 0 && uniform_random(1, 100) <= chance) {
 		damage.primary.value += std::round(damage.primary.value * (criticalHit / 100.));
 		damage.secondary.value += std::round(damage.secondary.value * (criticalHit / 100.));
 		damage.critical = true;

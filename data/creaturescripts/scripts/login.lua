@@ -1,3 +1,5 @@
+nextUseStaminaTime = nextUseStaminaTime or {}
+
 function onLogin(player)
 	local loginStr = "Welcome to " .. configManager.getString(configKeys.SERVER_NAME) .. "!"
 	if player:getLastLoginSaved() <= 0 then
@@ -32,5 +34,31 @@ function onLogin(player)
 	-- Events
 	player:registerEvent("PlayerDeath")
 	player:registerEvent("DropLoot")
+	player:registerEvent("LootAttributes")
+	player:registerEvent("KillTracker")
+
+	-- Check level-based achievements on login
+	if AchievementSystem then
+		AchievementSystem.checkLevelAchievements(player)
+	end
+
+	-- Daily rewards check
+	if DailyRewards and DailyRewards.onLogin then
+		DailyRewards.onLogin(player)
+	end
+
+	-- Register PvP events
+	player:registerEvent("PvPKill")
+	player:registerEvent("PvPDeath")
+	player:registerEvent("TaskKill")
+	player:registerEvent("AchievementCheck")
+
+	-- Check expired cooking buffs
+	if Cooking and Cooking.isBuffActive then
+		if not Cooking.isBuffActive(player) then
+			Cooking.removeBuff(player)
+		end
+	end
+
 	return true
 end

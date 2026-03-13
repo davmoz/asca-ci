@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc name="Gustavo" script="gustavo.lua" walkinterval="2000" floorchange="0">
+	<health now="100" max="100" />
+	<look type="131" head="78" body="87" legs="114" feet="38" addons="0" />
+	<parameters>
+		<parameter key="message_greet" value="Buon giorno, |PLAYERNAME|! Welcome to my kitchen! Ask about my {recipes} or ask for a {trade}." />
+	</parameters>
+</npc>

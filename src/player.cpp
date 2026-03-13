@@ -19,7 +19,7 @@
 
 #include "otpch.h"
 
-#include <bitset>
+#include "player.h"
 
 #include "bed.h"
 #include "chat.h"
@@ -34,7 +34,10 @@
 #include "scheduler.h"
 #include "weapons.h"
 
-extern ConfigManager g_config;
+#include <bitset>
+#include <cmath>
+
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 extern Chat* g_chat;
 extern Vocations g_vocations;
@@ -48,7 +51,7 @@ MuteCountMap Player::muteCountMap;
 uint32_t Player::playerAutoID = 0x10000000;
 
 Player::Player(ProtocolGame_ptr p) :
-	Creature(), lastPing(OTSYS_TIME()), lastPong(lastPing), inbox(new Inbox(ITEM_INBOX)), storeInbox(new StoreInbox(ITEM_STORE_INBOX)), client(std::move(p))
+	Creature(), lastPing(OTSYS_TIME()), lastPong(lastPing), inbox(new Inbox(ITEM_INBOX)), client(std::move(p)), storeInbox(new StoreInbox(ITEM_STORE_INBOX))
 {
 	inbox->incrementReferenceCounter();
 
@@ -65,9 +68,9 @@ Player::~Player()
 		}
 	}
 
-	for (const auto& it : depotLockerMap) {
-		it.second->removeInbox(inbox);
-		it.second->decrementReferenceCounter();
+	for (const auto& [id, depotLocker] : depotLockerMap) {
+		depotLocker->removeInbox(inbox);
+		depotLocker->decrementReferenceCounter();
 	}
 
 	inbox->decrementReferenceCounter();
@@ -306,7 +309,7 @@ int32_t Player::getArmor() const
 			armor += inventoryItem->getArmor();
 		}
 	}
-	return static_cast<int32_t>(armor * vocation->armorMultiplier);
+	return static_cast<int32_t>(std::round(armor * vocation->armorMultiplier));
 }
 
 void Player::getShieldAndWeapon(const Item*& shield, const Item*& weapon) const
@@ -404,7 +407,7 @@ uint16_t Player::getClientIcons() const
 		icons |= ICON_REDSWORDS;
 	}
 
-	if (tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
+	if (tile && tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
 		icons |= ICON_PIGEON;
 
 		// Don't show ICON_SWORDS if player is in protection zone.
@@ -461,9 +464,7 @@ void Player::addSkillAdvance(skills_t skill, uint64_t count)
 		skills[skill].tries = 0;
 		skills[skill].percent = 0;
 
-		std::ostringstream ss;
-		ss << "You advanced to " << getSkillName(skill) << " level " << skills[skill].level << '.';
-		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+		sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You advanced to {} level {}.", getSkillName(skill), skills[skill].level));
 
 		g_creatureEvents->playerAdvance(this, skill, (skills[skill].level - 1), skills[skill].level);
 
@@ -585,7 +586,7 @@ void Player::setContainerIndex(uint8_t cid, uint16_t index)
 	it->second.index = index;
 }
 
-Container* Player::getContainerByID(uint8_t cid)
+Container* Player::getContainerByID(uint8_t cid) const
 {
 	auto it = openContainers.find(cid);
 	if (it == openContainers.end()) {
@@ -596,9 +597,9 @@ Container* Player::getContainerByID(uint8_t cid)
 
 int8_t Player::getContainerID(const Container* container) const
 {
-	for (const auto& it : openContainers) {
-		if (it.second.container == container) {
-			return it.first;
+	for (const auto& [cid, openContainer] : openContainers) {
+		if (openContainer.container == container) {
+			return cid;
 		}
 	}
 	return -1;
@@ -645,8 +646,7 @@ void Player::addStorageValue(const uint32_t key, const int32_t value, const bool
 	}
 
 	if (value != -1) {
-		int32_t oldValue;
-		getStorageValue(key, oldValue);
+		int32_t oldValue = getStorageValue(key).value_or(-1);
 
 		storageMap[key] = value;
 
@@ -662,16 +662,13 @@ void Player::addStorageValue(const uint32_t key, const int32_t value, const bool
 	}
 }
 
-bool Player::getStorageValue(const uint32_t key, int32_t& value) const
+std::optional<int32_t> Player::getStorageValue(const uint32_t key) const
 {
 	auto it = storageMap.find(key);
 	if (it == storageMap.end()) {
-		value = -1;
-		return false;
+		return std::nullopt;
 	}
-
-	value = it->second;
-	return true;
+	return it->second;
 }
 
 bool Player::canSee(const Position& pos) const
@@ -910,8 +907,7 @@ void Player::sendAddContainerItem(const Container* container, const Item* item)
 		return;
 	}
 
-	for (const auto& it : openContainers) {
-		const OpenContainer& openContainer = it.second;
+	for (const auto& [cid, openContainer] : openContainers) {
 		if (openContainer.container != container) {
 			continue;
 		}
@@ -929,7 +925,7 @@ void Player::sendAddContainerItem(const Container* container, const Item* item)
 		} else if (openContainer.index >= container->capacity()) {
 			item = container->getItemByIndex(openContainer.index - 1);
 		}
-		client->sendAddContainerItem(it.first, slot, item);
+		client->sendAddContainerItem(cid, slot, item);
 	}
 }
 
@@ -939,8 +935,7 @@ void Player::sendUpdateContainerItem(const Container* container, uint16_t slot, 
 		return;
 	}
 
-	for (const auto& it : openContainers) {
-		const OpenContainer& openContainer = it.second;
+	for (const auto& [cid, openContainer] : openContainers) {
 		if (openContainer.container != container) {
 			continue;
 		}
@@ -954,7 +949,7 @@ void Player::sendUpdateContainerItem(const Container* container, uint16_t slot, 
 			continue;
 		}
 
-		client->sendUpdateContainerItem(it.first, slot, newItem);
+		client->sendUpdateContainerItem(cid, slot, newItem);
 	}
 }
 
@@ -964,8 +959,7 @@ void Player::sendRemoveContainerItem(const Container* container, uint16_t slot)
 		return;
 	}
 
-	for (auto& it : openContainers) {
-		OpenContainer& openContainer = it.second;
+	for (auto& [cid, openContainer] : openContainers) {
 		if (openContainer.container != container) {
 			continue;
 		}
@@ -973,10 +967,10 @@ void Player::sendRemoveContainerItem(const Container* container, uint16_t slot)
 		uint16_t& firstIndex = openContainer.index;
 		if (firstIndex > 0 && firstIndex >= container->size() - 1) {
 			firstIndex -= container->capacity();
-			sendContainer(it.first, container, false, firstIndex);
+			sendContainer(cid, container, false, firstIndex);
 		}
 
-		client->sendRemoveContainerItem(it.first, std::max<uint16_t>(slot, firstIndex), container->getItemByIndex(container->capacity() + firstIndex));
+		client->sendRemoveContainerItem(cid, std::max<uint16_t>(slot, firstIndex), container->getItemByIndex(container->capacity() + firstIndex));
 	}
 }
 
@@ -1228,7 +1222,7 @@ void Player::onCreatureMove(Creature* creature, const Tile* newTile, const Posit
 
 	if (hasFollowPath && (creature == followCreature || (creature == this && followCreature))) {
 		isUpdatingPath = false;
-		g_dispatcher.addTask(createTask(std::bind(&Game::updateCreatureWalk, &g_game, getID())));
+		g_dispatcher.addTask(createTask([playerId = getID()]() { g_game.updateCreatureWalk(playerId); }));
 	}
 
 	if (creature != this) {
@@ -1313,9 +1307,9 @@ void Player::onCloseContainer(const Container* container)
 		return;
 	}
 
-	for (const auto& it : openContainers) {
-		if (it.second.container == container) {
-			client->sendCloseContainer(it.first);
+	for (const auto& [cid, openContainer] : openContainers) {
+		if (openContainer.container == container) {
+			client->sendCloseContainer(cid);
 		}
 	}
 }
@@ -1327,10 +1321,9 @@ void Player::onSendContainer(const Container* container)
 	}
 
 	bool hasParent = container->hasParent();
-	for (const auto& it : openContainers) {
-		const OpenContainer& openContainer = it.second;
+	for (const auto& [cid, openContainer] : openContainers) {
 		if (openContainer.container == container) {
-			client->sendContainer(it.first, container, hasParent, openContainer.index);
+			client->sendContainer(cid, container, hasParent, openContainer.index);
 		}
 	}
 }
@@ -1444,9 +1437,7 @@ void Player::onThink(uint32_t interval)
 		if (idleTime > (kickAfterMinutes * 60000) + 60000) {
 			kickPlayer(true);
 		} else if (client && idleTime == 60000 * kickAfterMinutes) {
-			std::ostringstream ss;
-			ss << "There was no variation in your behaviour for " << kickAfterMinutes << " minutes. You will be disconnected in one minute if there is no change in your actions until then.";
-			client->sendTextMessage(TextMessage(MESSAGE_STATUS_WARNING, ss.str()));
+			client->sendTextMessage(TextMessage(MESSAGE_STATUS_WARNING, fmt::format("There was no variation in your behaviour for {} minutes. You will be disconnected in one minute if there is no change in your actions until then.", kickAfterMinutes)));
 		}
 	}
 
@@ -1502,9 +1493,7 @@ void Player::removeMessageBuffer()
 			Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_MUTED, muteTime * 1000, 0);
 			addCondition(condition);
 
-			std::ostringstream ss;
-			ss << "You are muted for " << muteTime << " seconds.";
-			sendTextMessage(MESSAGE_STATUS_SMALL, ss.str());
+			sendTextMessage(MESSAGE_STATUS_SMALL, fmt::format("You are muted for {} seconds.", muteTime));
 		}
 	}
 }
@@ -1552,9 +1541,7 @@ void Player::addManaSpent(uint64_t amount)
 		magLevel++;
 		manaSpent = 0;
 
-		std::ostringstream ss;
-		ss << "You advanced to magic level " << magLevel << '.';
-		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+		sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You advanced to magic level {}.", magLevel));
 
 		g_creatureEvents->playerAdvance(this, SKILL_MAGLEVEL, magLevel - 1, magLevel);
 
@@ -1662,9 +1649,7 @@ void Player::addExperience(Creature* source, uint64_t exp, bool sendText/* = fal
 
 		g_creatureEvents->playerAdvance(this, SKILL_LEVEL, prevLevel, level);
 
-		std::ostringstream ss;
-		ss << "You advanced from Level " << prevLevel << " to Level " << level << '.';
-		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+		sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You advanced from Level {} to Level {}.", prevLevel, level));
 	}
 
 	if (nextLevelExp > currLevelExp) {
@@ -1742,9 +1727,7 @@ void Player::removeExperience(uint64_t exp, bool sendText/* = false*/)
 			party->updateSharedExperience();
 		}
 
-		std::ostringstream ss;
-		ss << "You were downgraded from Level " << oldLevel << " to Level " << level << '.';
-		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+		sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You were downgraded from Level {} to Level {}.", oldLevel, level));
 	}
 
 	uint64_t nextLevelExp = Player::getExpForLevel(level + 1);
@@ -1913,10 +1896,9 @@ void Player::death(Creature* lastHitCreature)
 		if (lastHitPlayer) {
 			uint32_t sumLevels = 0;
 			uint32_t inFightTicks = g_config.getNumber(ConfigManager::PZ_LOCKED);
-			for (const auto& it : damageMap) {
-				CountBlock_t cb = it.second;
+			for (const auto& [playerId, cb] : damageMap) {
 				if ((OTSYS_TIME() - cb.ticks) <= inFightTicks) {
-					Player* damageDealer = g_game.getPlayerByID(it.first);
+					Player* damageDealer = g_game.getPlayerByID(playerId);
 					if (damageDealer) {
 						sumLevels += damageDealer->getLevel();
 					}
@@ -2006,9 +1988,7 @@ void Player::death(Creature* lastHitCreature)
 			}
 
 			if (oldLevel != level) {
-				std::ostringstream ss;
-				ss << "You were downgraded from Level " << oldLevel << " to Level " << level << '.';
-				sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+				sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You were downgraded from Level {} to Level {}.", oldLevel, level));
 			}
 
 			uint64_t currLevelExp = Player::getExpForLevel(level);
@@ -2097,14 +2077,11 @@ Item* Player::getCorpse(Creature* lastHitCreature, Creature* mostDamageCreature)
 {
 	Item* corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
 	if (corpse && corpse->getContainer()) {
-		std::ostringstream ss;
 		if (lastHitCreature) {
-			ss << "You recognize " << getNameDescription() << ". " << (getSex() == PLAYERSEX_FEMALE ? "She" : "He") << " was killed by " << lastHitCreature->getNameDescription() << '.';
+			corpse->setSpecialDescription(fmt::format("You recognize {}. {} was killed by {}.", getNameDescription(), (getSex() == PLAYERSEX_FEMALE ? "She" : "He"), lastHitCreature->getNameDescription()));
 		} else {
-			ss << "You recognize " << getNameDescription() << '.';
+			corpse->setSpecialDescription(fmt::format("You recognize {}.", getNameDescription()));
 		}
-
-		corpse->setSpecialDescription(ss.str());
 	}
 	return corpse;
 }
@@ -2127,15 +2104,15 @@ void Player::removeList()
 {
 	g_game.removePlayer(this);
 
-	for (const auto& it : g_game.getPlayers()) {
-		it.second->notifyStatusChange(this, VIPSTATUS_OFFLINE);
+	for (const auto& [id, player] : g_game.getPlayers()) {
+		player->notifyStatusChange(this, VIPSTATUS_OFFLINE);
 	}
 }
 
 void Player::addList()
 {
-	for (const auto& it : g_game.getPlayers()) {
-		it.second->notifyStatusChange(this, VIPSTATUS_ONLINE);
+	for (const auto& [id, player] : g_game.getPlayers()) {
+		player->notifyStatusChange(this, VIPSTATUS_ONLINE);
 	}
 
 	g_game.addPlayer(this);
@@ -2225,11 +2202,11 @@ bool Player::editVIP(uint32_t vipGuid, const std::string& description, uint32_t 
 void Player::autoCloseContainers(const Container* container)
 {
 	std::vector<uint32_t> closeList;
-	for (const auto& it : openContainers) {
-		Container* tmpContainer = it.second.container;
+	for (const auto& [cid, openContainer] : openContainers) {
+		Container* tmpContainer = openContainer.container;
 		while (tmpContainer) {
 			if (tmpContainer->isRemoved() || tmpContainer == container) {
-				closeList.push_back(it.first);
+				closeList.push_back(cid);
 				break;
 			}
 
@@ -2984,8 +2961,8 @@ void Player::postAddNotification(Thing* thing, const Cylinder* oldParent, int32_
 			//check containers
 			std::vector<Container*> containers;
 
-			for (const auto& it : openContainers) {
-				Container* container = it.second.container;
+			for (const auto& [cid, openContainer] : openContainers) {
+				Container* container = openContainer.container;
 				if (!Position::areInRange<1, 1, 0>(container->getPosition(), getPosition())) {
 					containers.push_back(container);
 				}
@@ -3035,8 +3012,8 @@ void Player::postRemoveNotification(Thing* thing, const Cylinder* newParent, int
 				if (const DepotChest* depotChest = dynamic_cast<const DepotChest*>(topContainer)) {
 					bool isOwner = false;
 
-					for (const auto& it : depotChests) {
-						if (it.second == depotChest) {
+					for (const auto& [depotId, chest] : depotChests) {
+						if (chest == depotChest) {
 							isOwner = true;
 							onSendContainer(container);
 						}
@@ -3145,7 +3122,7 @@ bool Player::setAttackedCreature(Creature* creature)
 	}
 
 	if (creature) {
-		g_dispatcher.addTask(createTask(std::bind(&Game::checkCreatureAttack, &g_game, getID())));
+		g_dispatcher.addTask(createTask([creatureId = getID()]() { g_game.checkCreatureAttack(creatureId); }));
 	}
 	return true;
 }
@@ -3201,7 +3178,7 @@ void Player::doAttacking(uint32_t)
 			result = Weapon::useFist(this, attackedCreature);
 		}
 
-		SchedulerTask* task = createSchedulerTask(std::max<uint32_t>(SCHEDULER_MINTICKS, delay), std::bind(&Game::checkCreatureAttack, &g_game, getID()));
+		SchedulerTask* task = createSchedulerTask(std::max<uint32_t>(SCHEDULER_MINTICKS, delay), [creatureId = getID()]() { g_game.checkCreatureAttack(creatureId); });
 		if (!classicSpeed) {
 			setNextActionTask(task, false);
 		} else {
@@ -4122,11 +4099,7 @@ GuildEmblems_t Player::getGuildEmblem(const Player* player) const
 
 uint8_t Player::getCurrentMount() const
 {
-	int32_t value;
-	if (getStorageValue(PSTRG_MOUNTS_CURRENTMOUNT, value)) {
-		return value;
-	}
-	return 0;
+	return getStorageValue(PSTRG_MOUNTS_CURRENTMOUNT).value_or(0);
 }
 
 void Player::setCurrentMount(uint8_t mountId)
@@ -4210,12 +4183,8 @@ bool Player::tameMount(uint8_t mountId)
 	const uint8_t tmpMountId = mountId - 1;
 	const uint32_t key = PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31);
 
-	int32_t value;
-	if (getStorageValue(key, value)) {
-		value |= (1 << (tmpMountId % 31));
-	} else {
-		value = (1 << (tmpMountId % 31));
-	}
+	int32_t value = getStorageValue(key).value_or(0);
+	value |= (1 << (tmpMountId % 31));
 
 	addStorageValue(key, value);
 	return true;
@@ -4230,12 +4199,12 @@ bool Player::untameMount(uint8_t mountId)
 	const uint8_t tmpMountId = mountId - 1;
 	const uint32_t key = PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31);
 
-	int32_t value;
-	if (!getStorageValue(key, value)) {
+	auto optValue = getStorageValue(key);
+	if (!optValue) {
 		return true;
 	}
 
-	value &= ~(1 << (tmpMountId % 31));
+	int32_t value = *optValue & ~(1 << (tmpMountId % 31));
 	addStorageValue(key, value);
 
 	if (getCurrentMount() == mountId) {
@@ -4262,12 +4231,12 @@ bool Player::hasMount(const Mount* mount) const
 
 	const uint8_t tmpMountId = mount->id - 1;
 
-	int32_t value;
-	if (!getStorageValue(PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31), value)) {
+	auto value = getStorageValue(PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31));
+	if (!value) {
 		return false;
 	}
 
-	return ((1 << (tmpMountId % 31)) & value) != 0;
+	return ((1 << (tmpMountId % 31)) & *value) != 0;
 }
 
 void Player::dismount()
@@ -4325,9 +4294,7 @@ bool Player::addOfflineTrainingTries(skills_t skill, uint64_t tries)
 		manaSpent += tries;
 
 		if (magLevel != currMagLevel) {
-			std::ostringstream ss;
-			ss << "You advanced to magic level " << magLevel << '.';
-			sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+			sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You advanced to magic level {}.", magLevel));
 		}
 
 		uint8_t newPercent;
@@ -4380,9 +4347,7 @@ bool Player::addOfflineTrainingTries(skills_t skill, uint64_t tries)
 		skills[skill].tries += tries;
 
 		if (currSkillLevel != skills[skill].level) {
-			std::ostringstream ss;
-			ss << "You advanced to " << getSkillName(skill) << " level " << skills[skill].level << '.';
-			sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+			sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You advanced to {} level {}.", getSkillName(skill), skills[skill].level));
 		}
 
 		uint8_t newPercent;
@@ -4406,9 +4371,7 @@ bool Player::addOfflineTrainingTries(skills_t skill, uint64_t tries)
 		sendSkills();
 	}
 
-	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(2) << "Your " << ucwords(getSkillName(skill)) << " skill changed from level " << oldSkillValue << " (with " << oldPercentToNextLevel << "% progress towards level " << (oldSkillValue + 1) << ") to level " << newSkillValue << " (with " << newPercentToNextLevel << "% progress towards level " << (newSkillValue + 1) << ')';
-	sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+	sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("Your {} skill changed from level {} (with {:.2f}% progress towards level {}) to level {} (with {:.2f}% progress towards level {})", ucwords(getSkillName(skill)), oldSkillValue, oldPercentToNextLevel, oldSkillValue + 1, newSkillValue, newPercentToNextLevel, newSkillValue + 1));
 	return sendUpdate;
 }
 

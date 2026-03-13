@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_PLAYER_H_4083D3D3A05B4EDE891B31BB720CD06F
-#define FS_PLAYER_H_4083D3D3A05B4EDE891B31BB720CD06F
+#ifndef FS_PLAYER_H
+#define FS_PLAYER_H
 
 #include "creature.h"
 #include "container.h"
@@ -128,6 +128,10 @@ class Player final : public Creature, public Cylinder
 
 		void setID() override {
 			if (id == 0) {
+				if (playerAutoID == std::numeric_limits<uint32_t>::max()) {
+					std::cout << "Error: Player auto ID counter overflow!" << std::endl;
+					return;
+				}
 				id = playerAutoID++;
 			}
 		}
@@ -181,8 +185,11 @@ class Player final : public Creature, public Cylinder
 		void kickPlayer(bool displayEffect);
 
 		static uint64_t getExpForLevel(int32_t lv) {
-			lv--;
-			return ((50ULL * lv * lv * lv) - (150ULL * lv * lv) + (400ULL * lv)) / 3ULL;
+			if (lv <= 0) {
+				return 0;
+			}
+			uint64_t ulv = static_cast<uint64_t>(lv - 1);
+			return ((50ULL * ulv * ulv * ulv) - (150ULL * ulv * ulv) + (400ULL * ulv)) / 3ULL;
 		}
 
 		uint16_t getStaminaMinutes() const {
@@ -307,7 +314,7 @@ class Player final : public Creature, public Cylinder
 			return (group->flags & value) != 0;
 		}
 
-		BedItem* getBedItem() {
+		BedItem* getBedItem() const {
 			return bedItem;
 		}
 		void setBedItem(BedItem* b) {
@@ -338,14 +345,14 @@ class Player final : public Creature, public Cylinder
 		void closeContainer(uint8_t cid);
 		void setContainerIndex(uint8_t cid, uint16_t index);
 
-		Container* getContainerByID(uint8_t cid);
+		Container* getContainerByID(uint8_t cid) const;
 		int8_t getContainerID(const Container* container) const;
 		uint16_t getContainerIndex(uint8_t cid) const;
 
 		bool canOpenCorpse(uint32_t ownerId) const;
 
 		void addStorageValue(const uint32_t key, const int32_t value, const bool isLogin = false);
-		bool getStorageValue(const uint32_t key, int32_t& value) const;
+		std::optional<int32_t> getStorageValue(const uint32_t key) const;
 		void genReservedStorageRange();
 
 		void setGroup(Group* newGroup) {
@@ -362,11 +369,15 @@ class Player final : public Creature, public Cylinder
 			return inMarket;
 		}
 
-		void setLastDepotId(int16_t newId) {
+		void setLastDepotId(uint16_t newId) {
 			lastDepotId = newId;
+			hasLastDepotId = true;
 		}
-		int16_t getLastDepotId() const {
+		uint16_t getLastDepotId() const {
 			return lastDepotId;
+		}
+		bool hasVisitedDepot() const {
+			return hasLastDepotId;
 		}
 
 		void resetIdleTime() {
@@ -533,7 +544,7 @@ class Player final : public Creature, public Cylinder
 		tradestate_t getTradeState() const {
 			return tradeState;
 		}
-		Item* getTradeItem() {
+		Item* getTradeItem() const {
 			return tradeItem;
 		}
 
@@ -1274,9 +1285,9 @@ class Player final : public Creature, public Cylinder
 		uint32_t editListId = 0;
 		uint32_t mana = 0;
 		uint32_t manaMax = 0;
-		int32_t varSkills[SKILL_LAST + 1] = {};
+		std::array<int32_t, SKILL_LAST + 1> varSkills = {};
 		int32_t varSpecialSkills[SPECIALSKILL_LAST + 1] = {};
-		int32_t varStats[STAT_LAST + 1] = {};
+		std::array<int32_t, STAT_LAST + 1> varStats = {};
 		int32_t purchaseCallback = -1;
 		int32_t saleCallback = -1;
 		int32_t MessageBufferCount = 0;
@@ -1289,7 +1300,8 @@ class Player final : public Creature, public Cylinder
 		uint16_t lastStatsTrainingTime = 0;
 		uint16_t staminaMinutes = 2520;
 		uint16_t maxWriteLen = 0;
-		int16_t lastDepotId = -1;
+		uint16_t lastDepotId = 0;
+		bool hasLastDepotId = false;
 
 		uint8_t soul = 0;
 		uint8_t blessings = 0;

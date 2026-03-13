@@ -32,7 +32,7 @@
 extern Game g_game;
 extern Spells* g_spells;
 extern Monsters g_monsters;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 spellBlock_t::~spellBlock_t()
 {
@@ -848,7 +848,7 @@ MonsterType* Monsters::loadMonster(const std::string& file, const std::string& m
 
 	if ((attr = monsterNode.attribute("script"))) {
 		if (!scriptInterface) {
-			scriptInterface.reset(new LuaScriptInterface("Monster Interface"));
+			scriptInterface = std::make_unique<LuaScriptInterface>("Monster Interface");
 			scriptInterface->initState();
 		}
 

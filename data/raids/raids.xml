@@ -1,7 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <raids>
+	<!-- Dragon Lord Invasion - every 4 hours, 30 min margin -->
+	<raid name="DragonLordInvasion" file="dragonlord_invasion.xml" interval2="240" margin="30" />
+
+	<!-- Undead Rising - every 3 hours -->
+	<raid name="UndeadRising" file="undead_rising.xml" interval2="180" margin="20" />
+
+	<!-- Orc Horde Attack - every 4 hours -->
+	<raid name="OrcHordeAttack" file="orc_horde.xml" interval2="240" margin="25" />
+
+	<!-- Demon Gate - every 6 hours (rare, dangerous) -->
+	<raid name="DemonGate" file="demon_gate.xml" interval2="360" margin="30" />
+
+	<!-- Ice Witch Coven - every 5 hours -->
+	<raid name="IceWitchCoven" file="ice_witch_coven.xml" interval2="300" margin="25" />
+
+	<!-- Sea Monster Attack - every 4 hours -->
+	<raid name="SeaMonsterAttack" file="sea_monster_attack.xml" interval2="240" margin="20" />
+
+	<!-- Bandit Raid - every 3 hours (common) -->
+	<raid name="BanditRaid" file="bandit_raid.xml" interval2="180" margin="15" />
+
+	<!-- Fire Elemental Storm - every 5 hours -->
+	<raid name="FireElementalStorm" file="fire_elemental_storm.xml" interval2="300" margin="25" />
+
+	<!-- Vampire Night - every 4 hours -->
+	<raid name="VampireNight" file="vampire_night.xml" interval2="240" margin="20" />
+
+	<!-- Giant Spider Infestation - every 3 hours -->
+	<raid name="GiantSpiderInfestation" file="giant_spider_infestation.xml" interval2="180" margin="20" />
+
+	<!-- Cyclops Rampage - every 5 hours -->
+	<raid name="CyclopsRampage" file="cyclops_rampage.xml" interval2="300" margin="25" />
+
+	<!-- War Wolf Pack - every 3 hours (common) -->
+	<raid name="WarWolfPack" file="war_wolf_pack.xml" interval2="180" margin="15" />
+
+	<!-- Necromancer Ritual - every 4 hours -->
+	<raid name="NecromancerRitual" file="necromancer_ritual.xml" interval2="240" margin="20" />
+
+	<!-- Ancient Scarab Swarm - every 5 hours -->
+	<raid name="AncientScarabSwarm" file="ancient_scarab_swarm.xml" interval2="300" margin="25" />
+
+	<!-- Frost Dragon Assault - every 6 hours (rare, dangerous) -->
+	<raid name="FrostDragonAssault" file="frost_dragon_assault.xml" interval2="360" margin="30" />
+
 	<!--
-		<raid name="Testraid" file="testraid.xml" interval2="30" margin="0" />
-		executed on average once every 30 minutes
+		Raid Schedule Summary (minimum 2 raids per day guaranteed via daily_raid.lua):
+		- 3h interval (frequent): Undead Rising, Bandit Raid, Giant Spider, War Wolf Pack
+		- 4h interval (moderate): Dragon Lord, Orc Horde, Sea Monster, Vampire Night, Necromancer
+		- 5h interval (uncommon): Ice Witch, Fire Elemental, Cyclops, Ancient Scarab
+		- 6h interval (rare): Demon Gate, Frost Dragon Assault
 	-->
 </raids>

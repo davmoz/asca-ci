@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_PROTOCOLGAME_H_FACA2A2D1A9348B78E8FD7E8003EBB87
-#define FS_PROTOCOLGAME_H_FACA2A2D1A9348B78E8FD7E8003EBB87
+#ifndef FS_PROTOCOLGAME_H
+#define FS_PROTOCOLGAME_H
 
 #include "protocol.h"
 #include "chat.h"
@@ -307,12 +307,16 @@ class ProtocolGame final : public Protocol
 		// Helpers so we don't need to bind every time
 		template <typename Callable, typename... Args>
 		void addGameTask(Callable function, Args&&... args) {
-			g_dispatcher.addTask(createTask(std::bind(function, &g_game, std::forward<Args>(args)...)));
+			g_dispatcher.addTask(createTask([function, ... capturedArgs = std::forward<Args>(args)]() mutable {
+				(g_game.*function)(capturedArgs...);
+			}));
 		}
 
 		template <typename Callable, typename... Args>
 		void addGameTaskTimed(uint32_t delay, Callable function, Args&&... args) {
-			g_dispatcher.addTask(createTask(delay, std::bind(function, &g_game, std::forward<Args>(args)...)));
+			g_dispatcher.addTask(createTask(delay, [function, ... capturedArgs = std::forward<Args>(args)]() mutable {
+				(g_game.*function)(capturedArgs...);
+			}));
 		}
 
 		std::unordered_set<uint32_t> knownCreatureSet;

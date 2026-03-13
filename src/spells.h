@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_SPELLS_H_D78A7CCB7080406E8CAA6B1D31D3DA71
-#define FS_SPELLS_H_D78A7CCB7080406E8CAA6B1D31D3DA71
+#ifndef FS_SPELLS_H
+#define FS_SPELLS_H
 
 #include "luascript.h"
 #include "player.h"
@@ -207,13 +207,13 @@ class Spell : public BaseSpell
 			vocSpellMap[n] = b;
 		}
 
-		const SpellGroup_t getGroup() const {
+		SpellGroup_t getGroup() const {
 			return group;
 		}
 		void setGroup(SpellGroup_t g) {
 			group = g;
 		}
-		const SpellGroup_t getSecondaryGroup() const {
+		SpellGroup_t getSecondaryGroup() const {
 			return secondaryGroup;
 		}
 		void setSecondaryGroup(SpellGroup_t g) {

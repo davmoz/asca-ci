@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_SPECTATORS_H_D78A7CCB7080406E8CAA6B1D31D3DA71
-#define FS_SPECTATORS_H_D78A7CCB7080406E8CAA6B1D31D3DA71
+#ifndef FS_SPECTATORS_H
+#define FS_SPECTATORS_H
 
 #include <vector>
 
@@ -71,7 +71,7 @@ public:
 	inline Iterator end() { return vec.end(); }
 	inline ConstIterator end() const { return vec.end(); }
 	inline ConstIterator cend() const { return vec.cend(); }
-	inline void emplace_back(Creature* c) { return vec.emplace_back(c); }
+	inline void emplace_back(Creature* c) { vec.emplace_back(c); }
 
 	template<class InputIterator>
 	inline void insert(Iterator pos, InputIterator first, InputIterator last) { vec.insert(pos, first, last); }

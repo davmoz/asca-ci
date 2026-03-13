@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_IOLOGINDATA_H_28B0440BEC594654AC0F4E1A5E42B2EF
-#define FS_IOLOGINDATA_H_28B0440BEC594654AC0F4E1A5E42B2EF
+#ifndef FS_IOLOGINDATA_H
+#define FS_IOLOGINDATA_H
 
 #include "account.h"
 #include "player.h"
@@ -49,7 +49,7 @@ class IOLoginData
 		static bool getGuidByNameEx(uint32_t& guid, bool& specialVip, std::string& name);
 		static std::string getNameByGuid(uint32_t guid);
 		static bool formatPlayerName(std::string& name);
-		static void increaseBankBalance(uint32_t guid, uint64_t bankBalance);
+		static bool increaseBankBalance(uint32_t guid, uint64_t bankBalance);
 		static bool hasBiddedOnHouse(uint32_t guid);
 
 		static std::forward_list<VIPEntry> getVIPEntries(uint32_t accountId);

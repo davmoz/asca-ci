@@ -6,7 +6,10 @@ function onLogin(player)
 			player:addItem(firstItems[i], 1)
 		end
 		player:addItem(player:getSex() == 0 and 2651 or 2650, 1)
-		player:addItem(ITEM_BAG, 1):addItem(2674, 1)
+		local bag = player:addItem(ITEM_BAG, 1)
+		if bag then
+			bag:addItem(2674, 1)
+		end
 	end
 	return true
 end

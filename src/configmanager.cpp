@@ -19,7 +19,7 @@
 
 #include "otpch.h"
 
-#include <luajit/lua.hpp>
+#include <lua.hpp>
 
 #include "configmanager.h"
 #include "game.h"
@@ -32,6 +32,12 @@
 extern Game g_game;
 
 namespace {
+
+std::array<std::string, ConfigManager::LAST_STRING_CONFIG> string = {};
+std::array<int32_t, ConfigManager::LAST_INTEGER_CONFIG> integer = {};
+std::array<bool, ConfigManager::LAST_BOOLEAN_CONFIG> boolean = {};
+
+bool loaded = false;
 
 std::string getGlobalString(lua_State* L, const char* identifier, const char* defaultValue)
 {
@@ -47,6 +53,10 @@ std::string getGlobalString(lua_State* L, const char* identifier, const char* de
 	return ret;
 }
 
+// Returns a numeric config value from Lua state. Caller is responsible for
+// ensuring the value is within a valid range for its intended use.
+// Port numbers should be in [0, 65535], timeouts/delays should be non-negative,
+// rates should typically be >= 0, player counts should be >= 0.
 int32_t getGlobalNumber(lua_State* L, const char* identifier, const int32_t defaultValue = 0)
 {
 	lua_getglobal(L, identifier);
@@ -55,9 +65,22 @@ int32_t getGlobalNumber(lua_State* L, const char* identifier, const int32_t defa
 		return defaultValue;
 	}
 
-	int32_t val = lua_tonumber(L, -1);
+	double raw = lua_tonumber(L, -1);
 	lua_pop(L, 1);
-	return val;
+
+	// Clamp to int32_t range to prevent undefined behavior from out-of-range casts
+	if (raw > static_cast<double>(std::numeric_limits<int32_t>::max())) {
+		std::cout << "[Warning - getGlobalNumber] Value for '" << identifier
+		          << "' exceeds INT32_MAX, clamping." << std::endl;
+		return std::numeric_limits<int32_t>::max();
+	}
+	if (raw < static_cast<double>(std::numeric_limits<int32_t>::min())) {
+		std::cout << "[Warning - getGlobalNumber] Value for '" << identifier
+		          << "' is below INT32_MIN, clamping." << std::endl;
+		return std::numeric_limits<int32_t>::min();
+	}
+
+	return static_cast<int32_t>(raw);
 }
 
 bool getGlobalBoolean(lua_State* L, const char* identifier, const bool defaultValue)
@@ -80,12 +103,7 @@ bool getGlobalBoolean(lua_State* L, const char* identifier, const bool defaultVa
 	return val != 0;
 }
 
-}
-
-ConfigManager::ConfigManager()
-{
-	string[CONFIG_FILE] = "config.lua";
-}
+} // namespace
 
 bool ConfigManager::load()
 {
@@ -96,7 +114,11 @@ bool ConfigManager::load()
 
 	luaL_openlibs(L);
 
-	if (luaL_dofile(L, getString(CONFIG_FILE).c_str())) {
+	if (!loaded) {
+		string[CONFIG_FILE] = "config.lua";
+	}
+
+	if (luaL_dofile(L, string[CONFIG_FILE].data())) {
 		std::cout << "[Error - ConfigManager::load] " << lua_tostring(L, -1) << std::endl;
 		lua_close(L);
 		return false;
@@ -166,6 +188,7 @@ bool ConfigManager::load()
 	boolean[CLEAN_PROTECTION_ZONES] = getGlobalBoolean(L, "cleanProtectionZones", false);
 	boolean[HOUSE_DOOR_SHOW_PRICE] = getGlobalBoolean(L, "houseDoorShowPrice", true);
 	boolean[ONLY_INVITED_CAN_MOVE_HOUSE_ITEMS] = getGlobalBoolean(L, "onlyInvitedCanMoveHouseItems", true);
+	boolean[REMOVE_ON_DESPAWN] = getGlobalBoolean(L, "removeOnDespawn", true);
 
 	string[DEFAULT_PRIORITY] = getGlobalString(L, "defaultPriority", "high");
 	string[SERVER_NAME] = getGlobalString(L, "serverName", "");
@@ -221,7 +244,7 @@ bool ConfigManager::reload()
 
 static std::string dummyStr;
 
-const std::string& ConfigManager::getString(string_config_t what) const
+const std::string& ConfigManager::getString(string_config_t what)
 {
 	if (what >= LAST_STRING_CONFIG) {
 		std::cout << "[Warning - ConfigManager::getString] Accessing invalid index: " << what << std::endl;
@@ -230,7 +253,7 @@ const std::string& ConfigManager::getString(string_config_t what) const
 	return string[what];
 }
 
-int32_t ConfigManager::getNumber(integer_config_t what) const
+int32_t ConfigManager::getNumber(integer_config_t what)
 {
 	if (what >= LAST_INTEGER_CONFIG) {
 		std::cout << "[Warning - ConfigManager::getNumber] Accessing invalid index: " << what << std::endl;
@@ -239,7 +262,7 @@ int32_t ConfigManager::getNumber(integer_config_t what) const
 	return integer[what];
 }
 
-bool ConfigManager::getBoolean(boolean_config_t what) const
+bool ConfigManager::getBoolean(boolean_config_t what)
 {
 	if (what >= LAST_BOOLEAN_CONFIG) {
 		std::cout << "[Warning - ConfigManager::getBoolean] Accessing invalid index: " << what << std::endl;

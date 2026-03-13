@@ -19,32 +19,33 @@
 
 #include "otpch.h"
 
-#include <boost/range/adaptor/reversed.hpp>
-
 #include "luascript.h"
-#include "chat.h"
-#include "player.h"
-#include "game.h"
-#include "protocolstatus.h"
-#include "spells.h"
-#include "iologindata.h"
-#include "configmanager.h"
-#include "teleport.h"
-#include "databasemanager.h"
+
 #include "bed.h"
-#include "monster.h"
-#include "scheduler.h"
+#include "chat.h"
+#include "configmanager.h"
+#include "databasemanager.h"
 #include "databasetasks.h"
 #include "events.h"
-#include "movement.h"
+#include "game.h"
 #include "globalevent.h"
+#include "iologindata.h"
+#include "monster.h"
+#include "movement.h"
+#include "player.h"
+#include "protocolstatus.h"
+#include "scheduler.h"
 #include "script.h"
+#include "spells.h"
+#include "teleport.h"
 #include "weapons.h"
+
+#include <boost/range/adaptor/reversed.hpp>
 
 extern Chat* g_chat;
 extern Game g_game;
 extern Monsters g_monsters;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Vocations g_vocations;
 extern Spells* g_spells;
 extern Events* g_events;
@@ -429,7 +430,7 @@ const std::string& LuaScriptInterface::getFileById(int32_t scriptId)
 
 	auto it = cacheFiles.find(scriptId);
 	if (it == cacheFiles.end()) {
-		static const std::string& unk = "(Unknown scriptfile)";
+		static const std::string unk = "(Unknown scriptfile)";
 		return unk;
 	}
 	return it->second;
@@ -1982,6 +1983,8 @@ void LuaScriptInterface::registerFunctions()
 
 	registerMethod("Game", "getTowns", LuaScriptInterface::luaGameGetTowns);
 	registerMethod("Game", "getHouses", LuaScriptInterface::luaGameGetHouses);
+	registerMethod("Game", "getMountIdByLookType", LuaScriptInterface::luaGameGetMountIdByLookType);
+	registerMethod("Game", "getMounts", LuaScriptInterface::luaGameGetMounts);
 
 	registerMethod("Game", "getGameState", LuaScriptInterface::luaGameGetGameState);
 	registerMethod("Game", "setGameState", LuaScriptInterface::luaGameSetGameState);
@@ -2413,6 +2416,7 @@ void LuaScriptInterface::registerFunctions()
 	registerMethod("Player", "addMount", LuaScriptInterface::luaPlayerAddMount);
 	registerMethod("Player", "removeMount", LuaScriptInterface::luaPlayerRemoveMount);
 	registerMethod("Player", "hasMount", LuaScriptInterface::luaPlayerHasMount);
+	registerMethod("Player", "toggleMount", LuaScriptInterface::luaPlayerToggleMount);
 
 	registerMethod("Player", "getPremiumEndsAt", LuaScriptInterface::luaPlayerGetPremiumEndsAt);
 	registerMethod("Player", "setPremiumEndsAt", LuaScriptInterface::luaPlayerSetPremiumEndsAt);
@@ -3592,8 +3596,9 @@ int LuaScriptInterface::luaAddEvent(lua_State* L)
 	eventDesc.scriptId = getScriptEnv()->getScriptId();
 
 	auto& lastTimerEventId = g_luaEnvironment.lastEventTimerId;
+	auto timerEventId = lastTimerEventId;
 	eventDesc.eventId = g_scheduler.addEvent(createSchedulerTask(
-		delay, std::bind(&LuaEnvironment::executeTimerEvent, &g_luaEnvironment, lastTimerEventId)
+		delay, [timerEventId]() { g_luaEnvironment.executeTimerEvent(timerEventId); }
 	));
 
 	g_luaEnvironment.timerEvents.emplace(lastTimerEventId, std::move(eventDesc));
@@ -4182,6 +4187,44 @@ int LuaScriptInterface::luaGameGetHouses(lua_State* L)
 		setMetatable(L, -1, "House");
 		lua_rawseti(L, -2, ++index);
 	}
+	return 1;
+}
+
+int LuaScriptInterface::luaGameGetMountIdByLookType(lua_State* L)
+{
+	// Game.getMountIdByLookType(lookType)
+	Mount* mount = nullptr;
+	if (isNumber(L, 1)) {
+		mount = g_game.mounts.getMountByClientID(getNumber<uint16_t>(L, 1));
+	}
+
+	if (mount) {
+		lua_pushnumber(L, mount->id);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int LuaScriptInterface::luaGameGetMounts(lua_State* L)
+{
+	// Game.getMounts()
+	const auto& mounts = g_game.mounts.getMounts();
+	lua_createtable(L, mounts.size(), 0);
+
+	int index = 0;
+	for (const auto& mount : mounts) {
+		lua_createtable(L, 0, 5);
+
+		setField(L, "name", mount.name);
+		setField(L, "speed", mount.speed);
+		setField(L, "clientId", mount.clientId);
+		setField(L, "id", mount.id);
+		setField(L, "premium", mount.premium);
+
+		lua_rawseti(L, -2, ++index);
+	}
+
 	return 1;
 }
 
@@ -7777,7 +7820,7 @@ int LuaScriptInterface::luaCreatureGetPathTo(lua_State* L)
 	fpp.clearSight = getBoolean(L, 6, fpp.clearSight);
 	fpp.maxSearchDist = getNumber<int32_t>(L, 7, fpp.maxSearchDist);
 
-	std::forward_list<Direction> dirList;
+	std::vector<Direction> dirList;
 	if (creature->getPathTo(position, dirList, fpp)) {
 		lua_newtable(L);
 
@@ -8843,12 +8886,8 @@ int LuaScriptInterface::luaPlayerGetStorageValue(lua_State* L)
 	}
 
 	uint32_t key = getNumber<uint32_t>(L, 2);
-	int32_t value;
-	if (player->getStorageValue(key, value)) {
-		lua_pushnumber(L, value);
-	} else {
-		lua_pushnumber(L, -1);
-	}
+	auto value = player->getStorageValue(key);
+	lua_pushnumber(L, value.value_or(-1));
 	return 1;
 }
 
@@ -8859,9 +8898,7 @@ int LuaScriptInterface::luaPlayerSetStorageValue(lua_State* L)
 	uint32_t key = getNumber<uint32_t>(L, 2);
 	Player* player = getUserdata<Player>(L, 1);
 	if (IS_IN_KEYRANGE(key, RESERVED_RANGE)) {
-		std::ostringstream ss;
-		ss << "Accessing reserved range: " << key;
-		reportErrorFunc(ss.str());
+		reportErrorFunc(fmt::format("Accessing reserved range: {}", key));
 		pushBoolean(L, false);
 		return 1;
 	}
@@ -9439,6 +9476,19 @@ int LuaScriptInterface::luaPlayerHasMount(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int LuaScriptInterface::luaPlayerToggleMount(lua_State* L) {
+	// player:toggleMount(mount)
+	Player* player = getUserdata<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	bool mount = getBoolean(L, 2);
+	pushBoolean(L, player->toggleMount(mount));
 	return 1;
 }
 

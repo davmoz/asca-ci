@@ -27,7 +27,7 @@
 #include "configmanager.h"
 #include "bed.h"
 
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern Game g_game;
 
 House::House(uint32_t houseId) : id(houseId) {}
@@ -43,9 +43,7 @@ void House::setOwner(uint32_t guid, bool updateDatabase/* = true*/, Player* play
 	if (updateDatabase && owner != guid) {
 		Database& db = Database::getInstance();
 
-		std::ostringstream query;
-		query << "UPDATE `houses` SET `owner` = " << guid << ", `bid` = 0, `bid_end` = 0, `last_bid` = 0, `highest_bidder` = 0  WHERE `id` = " << id;
-		db.executeQuery(query.str());
+		(void)db.executeQuery(fmt::format("UPDATE `houses` SET `owner` = {}, `bid` = 0, `bid_end` = 0, `last_bid` = 0, `highest_bidder` = 0  WHERE `id` = {}", guid, id));
 	}
 
 	if (isLoaded && owner == guid) {
@@ -90,13 +88,13 @@ void House::setOwner(uint32_t guid, bool updateDatabase/* = true*/, Player* play
 		std::string strRentPeriod = asLowerCaseString(g_config.getString(ConfigManager::HOUSE_RENT_PERIOD));
 		time_t currentTime = time(nullptr);
 		if (strRentPeriod == "yearly") {
-		    currentTime += 24 * 60 * 60 * 365;
+		    currentTime += static_cast<time_t>(24) * 60 * 60 * 365;
 		} else if (strRentPeriod == "monthly") {
-		    currentTime += 24 * 60 * 60 * 30;
+		    currentTime += static_cast<time_t>(24) * 60 * 60 * 30;
 		} else if (strRentPeriod == "weekly") {
-		    currentTime += 24 * 60 * 60 * 7;
+		    currentTime += static_cast<time_t>(24) * 60 * 60 * 7;
 		} else if (strRentPeriod == "daily") {
-		    currentTime += 24 * 60 * 60;
+		    currentTime += static_cast<time_t>(24) * 60 * 60;
 		} else {
 		    currentTime = 0;
 		}
@@ -120,20 +118,20 @@ void House::setOwner(uint32_t guid, bool updateDatabase/* = true*/, Player* play
 
 void House::updateDoorDescription() const
 {
-	std::ostringstream ss;
+	std::string description;
 	if (owner != 0) {
-		ss << "It belongs to house '" << houseName << "'. " << ownerName << " owns this house.";
+		description = fmt::format("It belongs to house '{}'. {} owns this house.", houseName, ownerName);
 	} else {
-		ss << "It belongs to house '" << houseName << "'. Nobody owns this house.";
-
 		const int32_t housePrice = g_config.getNumber(ConfigManager::HOUSE_PRICE);
 		if (housePrice != -1 && g_config.getBoolean(ConfigManager::HOUSE_DOOR_SHOW_PRICE)) {
-			ss << " It costs " << (houseTiles.size() * housePrice) << " gold coins.";
+			description = fmt::format("It belongs to house '{}'. Nobody owns this house. It costs {} gold coins.", houseName, houseTiles.size() * housePrice);
+		} else {
+			description = fmt::format("It belongs to house '{}'. Nobody owns this house.", houseName);
 		}
 	}
 
 	for (const auto& it : doorSet) {
-		it->setSpecialDescription(ss.str());
+		it->setSpecialDescription(description);
 	}
 }
 
@@ -381,9 +379,7 @@ HouseTransferItem* HouseTransferItem::createHouseTransferItem(House* house)
 	transferItem->incrementReferenceCounter();
 	transferItem->setID(ITEM_DOCUMENT_RO);
 	transferItem->setSubType(1);
-	std::ostringstream ss;
-	ss << "It is a house transfer document for '" << house->getName() << "'.";
-	transferItem->setSpecialDescription(ss.str());
+	transferItem->setSpecialDescription(fmt::format("It is a house transfer document for '{}'.", house->getName()));
 	return transferItem;
 }
 
@@ -558,7 +554,7 @@ void Door::setHouse(House* house)
 	this->house = house;
 
 	if (!accessList) {
-		accessList.reset(new AccessList());
+		accessList = std::make_unique<AccessList>();
 	}
 }
 
@@ -578,7 +574,7 @@ bool Door::canUse(const Player* player)
 void Door::setAccessList(const std::string& textlist)
 {
 	if (!accessList) {
-		accessList.reset(new AccessList());
+		accessList = std::make_unique<AccessList>();
 	}
 
 	accessList->parseList(textlist);
@@ -695,16 +691,16 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const
 			time_t paidUntil = currentTime;
 			switch (rentPeriod) {
 				case RENTPERIOD_DAILY:
-					paidUntil += 24 * 60 * 60;
+					paidUntil += static_cast<time_t>(24) * 60 * 60;
 					break;
 				case RENTPERIOD_WEEKLY:
-					paidUntil += 24 * 60 * 60 * 7;
+					paidUntil += static_cast<time_t>(24) * 60 * 60 * 7;
 					break;
 				case RENTPERIOD_MONTHLY:
-					paidUntil += 24 * 60 * 60 * 30;
+					paidUntil += static_cast<time_t>(24) * 60 * 60 * 30;
 					break;
 				case RENTPERIOD_YEARLY:
-					paidUntil += 24 * 60 * 60 * 365;
+					paidUntil += static_cast<time_t>(24) * 60 * 60 * 365;
 					break;
 				default:
 					break;
@@ -739,9 +735,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const
 						break;
 				}
 
-				std::ostringstream ss;
-				ss << "Warning! \nThe " << period << " rent of " << house->getRent() << " gold for your house \"" << house->getName() << "\" is payable. Have it within " << daysLeft << " days or you will lose this house.";
-				letter->setText(ss.str());
+				letter->setText(fmt::format("Warning! \nThe {} rent of {} gold for your house \"{}\" is payable. Have it within {} days or you will lose this house.", period, house->getRent(), house->getName(), daysLeft));
 				g_game.internalAddItem(player.getInbox(), letter, INDEX_WHEREEVER, FLAG_NOLIMIT);
 				house->setPayRentWarnings(house->getPayRentWarnings() + 1);
 			} else {

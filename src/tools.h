@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_TOOLS_H_5F9A9742DA194628830AA1C64909AE43
-#define FS_TOOLS_H_5F9A9742DA194628830AA1C64909AE43
+#ifndef FS_TOOLS_H
+#define FS_TOOLS_H
 
 #include <random>
 
@@ -26,23 +26,23 @@
 #include "const.h"
 #include "enums.h"
 
-void printXMLError(const std::string& where, const std::string& fileName, const pugi::xml_parse_result& result);
+void printXMLError(std::string_view where, const std::string& fileName, const pugi::xml_parse_result& result);
 
-std::string transformToSHA1(const std::string& input);
-std::string generateToken(const std::string& key, uint32_t ticks);
+[[nodiscard]] std::string transformToSHA1(std::string_view input);
+[[nodiscard]] std::string generateToken(std::string_view key, uint32_t ticks);
 
-void replaceString(std::string& str, const std::string& sought, const std::string& replacement);
+void replaceString(std::string& str, std::string_view sought, const std::string& replacement);
 void trim_right(std::string& source, char t);
 void trim_left(std::string& source, char t);
 void toLowerCaseString(std::string& source);
-std::string asLowerCaseString(std::string source);
-std::string asUpperCaseString(std::string source);
+[[nodiscard]] std::string asLowerCaseString(std::string source);
+[[nodiscard]] std::string asUpperCaseString(std::string source);
 
 using StringVector = std::vector<std::string>;
 using IntegerVector = std::vector<int32_t>;
 
-StringVector explodeString(const std::string& inString, const std::string& separator, int32_t limit = -1);
-IntegerVector vectorAtoi(const StringVector& stringVector);
+[[nodiscard]] StringVector explodeString(std::string_view inString, std::string_view separator, int32_t limit = -1);
+[[nodiscard]] IntegerVector vectorAtoi(const StringVector& stringVector);
 constexpr bool hasBitSet(uint32_t flag, uint32_t flags) {
 	return (flags & flag) != 0;
 }
@@ -52,14 +52,14 @@ int32_t uniform_random(int32_t minNumber, int32_t maxNumber);
 int32_t normal_random(int32_t minNumber, int32_t maxNumber);
 bool boolean_random(double probability = 0.5);
 
-Direction getDirection(const std::string& string);
+Direction getDirection(std::string_view string);
 Position getNextPosition(Direction direction, Position pos);
 Direction getDirectionTo(const Position& from, const Position& to);
 
-std::string getFirstLine(const std::string& str);
+[[nodiscard]] std::string getFirstLine(std::string_view str);
 
-std::string formatDate(time_t time);
-std::string formatDateShort(time_t time);
+[[nodiscard]] std::string formatDate(time_t time);
+[[nodiscard]] std::string formatDateShort(time_t time);
 std::string convertIPToString(uint32_t ip);
 
 void trimString(std::string& str);
@@ -78,7 +78,7 @@ uint32_t adlerChecksum(const uint8_t* data, size_t length);
 
 std::string ucfirst(std::string str);
 std::string ucwords(std::string str);
-bool booleanString(const std::string& str);
+bool booleanString(std::string_view str);
 
 std::string getWeaponName(WeaponType_t weaponType);
 
@@ -88,12 +88,12 @@ CombatType_t indexToCombatType(size_t v);
 uint8_t serverFluidToClient(uint8_t serverFluid);
 uint8_t clientFluidToServer(uint8_t clientFluid);
 
-itemAttrTypes stringToItemAttribute(const std::string& str);
+itemAttrTypes stringToItemAttribute(std::string_view str);
 
 const char* getReturnMessage(ReturnValue value);
 
 int64_t OTSYS_TIME();
 
-SpellGroup_t stringToSpellGroup(const std::string& value);
+SpellGroup_t stringToSpellGroup(std::string_view value);
 
 #endif

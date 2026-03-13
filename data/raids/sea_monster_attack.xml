@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="Massive waves crash upon the shore! Sea monsters are attacking the coast!" />
+	<announce delay="30000" type="warning" message="Giant sea serpents have been spotted near the harbor!" />
+	<announce delay="90000" type="warning" message="The sea monster attack continues along the coastline!" />
+
+	<areaspawn delay="2000" radius="8" centerx="75" centery="150" centerz="7">
+		<monster name="Sea Serpent" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<areaspawn delay="8000" radius="6" centerx="78" centery="148" centerz="7">
+		<monster name="Water Elemental" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="14000" radius="5" centerx="72" centery="152" centerz="7">
+		<monster name="Quara Predator" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<areaspawn delay="20000" radius="4" centerx="75" centery="150" centerz="7">
+		<monster name="Sea Serpent" minamount="2" maxamount="3" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="28000" name="Quara Predator" x="75" y="150" z="7" />
+
+	<areaspawn delay="35000" radius="7" centerx="75" centery="150" centerz="7">
+		<monster name="Water Elemental" minamount="2" maxamount="4" />
+	</areaspawn>
+</raid>

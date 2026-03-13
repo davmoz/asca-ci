@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="Giant webs appear across the land! A spider infestation has begun!" />
+	<announce delay="25000" type="warning" message="A monstrous Spider Queen emerges from the depths!" />
+	<announce delay="90000" type="warning" message="Spiders continue to swarm from every dark corner!" />
+
+	<areaspawn delay="2000" radius="8" centerx="108" centery="110" centerz="7">
+		<monster name="Spider" minamount="6" maxamount="12" />
+	</areaspawn>
+
+	<areaspawn delay="6000" radius="6" centerx="112" centery="108" centerz="7">
+		<monster name="Giant Spider" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<areaspawn delay="10000" radius="5" centerx="105" centery="113" centerz="7">
+		<monster name="Tarantula" minamount="2" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="16000" radius="4" centerx="108" centery="110" centerz="7">
+		<monster name="Giant Spider" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="25000" name="Giant Spider" x="108" y="110" z="7" />
+	<singlespawn delay="25000" name="Giant Spider" x="109" y="111" z="7" />
+
+	<areaspawn delay="30000" radius="7" centerx="108" centery="110" centerz="7">
+		<monster name="Tarantula" minamount="3" maxamount="5" />
+	</areaspawn>
+</raid>

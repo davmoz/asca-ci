@@ -17,27 +17,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_RSA_H_C4E277DA8E884B578DDBF0566F504E91
-#define FS_RSA_H_C4E277DA8E884B578DDBF0566F504E91
-
-#include <cryptopp/rsa.h>
+#ifndef FS_RSA_H
+#define FS_RSA_H
 
 #include <string>
 
-class RSA
+struct evp_pkey_st;
+typedef struct evp_pkey_st EVP_PKEY;
+
+class RSACipher
 {
 	public:
-		RSA() = default;
+		RSACipher() = default;
+		~RSACipher();
 
-		// non-copyable
-		RSA(const RSA&) = delete;
-		RSA& operator=(const RSA&) = delete;
+		RSACipher(const RSACipher&) = delete;
+		RSACipher& operator=(const RSACipher&) = delete;
 
 		void loadPEM(const std::string& filename);
 		void decrypt(char* msg) const;
 
 	private:
-		CryptoPP::RSA::PrivateKey pk;
+		EVP_PKEY* pkey = nullptr;
 };
 
 #endif

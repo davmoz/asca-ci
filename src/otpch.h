@@ -23,22 +23,29 @@
 #include "definitions.h"
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstdint>
 #include <forward_list>
 #include <functional>
 #include <iomanip>
+#include <limits>
 #include <iostream>
 #include <list>
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <unordered_map>
 #include <vector>
 
 #include <boost/asio.hpp>
+
+#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <pugixml.hpp>

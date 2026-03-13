@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - main
       - v*
 
     tags:
@@ -66,7 +67,7 @@ jobs:
               lua libmariadb pugixml cryptopp
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -117,21 +118,21 @@ jobs:
         shell: bash
 
       - name: Upload artifact binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ runner.workspace }}/build/tfs
         if: "! contains( matrix.os, 'windows')"
 
       - name: Upload artifact binary (exe)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ runner.workspace }}/build/tfs.exe
         if: contains( matrix.os, 'windows')
 
       - name: Upload artifact binary (dlls)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ runner.workspace }}/build/*.dll
@@ -142,7 +143,7 @@ jobs:
         shell: bash
 
       - name: Upload datapack contents
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: tfs-${{ matrix.name }}-${{ matrix.buildtype }}-luajit=${{ matrix.luajit }}-${{ github.sha }}
           path: ${{ github.workspace }}

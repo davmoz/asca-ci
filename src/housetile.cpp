@@ -25,7 +25,7 @@
 #include "configmanager.h"
 
 extern Game g_game;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 
 HouseTile::HouseTile(int32_t x, int32_t y, int32_t z, House* house) :
 	DynamicTile(x, y, z), house(house) {}

@@ -1,4 +1,4 @@
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 shallow_clone: true
 
@@ -39,7 +39,7 @@ cache:
   - c:\tools\vcpkg\installed\
 
 after_build:
-  - 7z a -tzip tfs-win-%PLATFORM%-%CONFIGURATION%.zip -r %APPVEYOR_BUILD_FOLDER%\vc14\%PLATFORM%\%CONFIGURATION%\*.dll %APPVEYOR_BUILD_FOLDER%\vc14\%PLATFORM%\%CONFIGURATION%\theforgottenserver*.exe %APPVEYOR_BUILD_FOLDER%\data %APPVEYOR_BUILD_FOLDER%\config.lua.dist %APPVEYOR_BUILD_FOLDER%\key.pem %APPVEYOR_BUILD_FOLDER%\LICENSE %APPVEYOR_BUILD_FOLDER%\README.md %APPVEYOR_BUILD_FOLDER%\schema.sql
+  - 7z a -tzip tfs-win-%PLATFORM%-%CONFIGURATION%.zip -r %APPVEYOR_BUILD_FOLDER%\vc14\%PLATFORM%\%CONFIGURATION%\*.dll %APPVEYOR_BUILD_FOLDER%\vc14\%PLATFORM%\%CONFIGURATION%\theforgottenserver*.exe %APPVEYOR_BUILD_FOLDER%\data %APPVEYOR_BUILD_FOLDER%\config.lua.dist %APPVEYOR_BUILD_FOLDER%\LICENSE %APPVEYOR_BUILD_FOLDER%\README.md %APPVEYOR_BUILD_FOLDER%\schema.sql
 
 artifacts:
   - path: vc14\%PLATFORM%\%CONFIGURATION%\theforgottenserver*.exe

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<raid>
+	<announce delay="1000" type="warning" message="Dark energy pulses from the cemetery! Necromancers are performing a forbidden ritual!" />
+	<announce delay="25000" type="warning" message="The ritual strengthens! Risen dead claw their way from the earth!" />
+	<announce delay="90000" type="warning" message="The necromantic ritual continues to raise the fallen!" />
+
+	<areaspawn delay="2000" radius="6" centerx="125" centery="145" centerz="7">
+		<monster name="Necromancer" minamount="3" maxamount="5" />
+	</areaspawn>
+
+	<areaspawn delay="6000" radius="8" centerx="122" centery="148" centerz="7">
+		<monster name="Skeleton" minamount="6" maxamount="10" />
+	</areaspawn>
+
+	<areaspawn delay="10000" radius="5" centerx="128" centery="143" centerz="7">
+		<monster name="Ghoul" minamount="3" maxamount="6" />
+	</areaspawn>
+
+	<areaspawn delay="15000" radius="6" centerx="125" centery="145" centerz="7">
+		<monster name="Bonebeast" minamount="2" maxamount="3" />
+	</areaspawn>
+
+	<areaspawn delay="20000" radius="4" centerx="125" centery="145" centerz="7">
+		<monster name="Necromancer" minamount="2" maxamount="4" />
+	</areaspawn>
+
+	<!-- Boss spawn -->
+	<singlespawn delay="25000" name="Necromancer" x="125" y="145" z="7" />
+	<singlespawn delay="25000" name="Lich" x="126" y="146" z="7" />
+
+	<areaspawn delay="32000" radius="7" centerx="125" centery="145" centerz="7">
+		<monster name="Skeleton" minamount="5" maxamount="8" />
+	</areaspawn>
+</raid>

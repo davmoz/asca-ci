@@ -30,7 +30,7 @@ extern Game g_game;
 extern Spells* g_spells;
 extern Monsters g_monsters;
 extern Vocations g_vocations;
-extern ConfigManager g_config;
+extern ConfigManagerCompat g_config;
 extern LuaEnvironment g_luaEnvironment;
 
 Spells::Spells()
@@ -221,9 +221,9 @@ RuneSpell* Spells::getRuneSpell(uint32_t id)
 
 RuneSpell* Spells::getRuneSpellByName(const std::string& name)
 {
-	for (auto& it : runes) {
-		if (strcasecmp(it.second.getName().c_str(), name.c_str()) == 0) {
-			return &it.second;
+	for (auto& [runeId, rune] : runes) {
+		if (strcasecmp(rune.getName().c_str(), name.c_str()) == 0) {
+			return &rune;
 		}
 	}
 	return nullptr;
@@ -233,12 +233,12 @@ InstantSpell* Spells::getInstantSpell(const std::string& words)
 {
 	InstantSpell* result = nullptr;
 
-	for (auto& it : instants) {
-		const std::string& instantSpellWords = it.second.getWords();
+	for (auto& [name, spell] : instants) {
+		const std::string& instantSpellWords = spell.getWords();
 		size_t spellLen = instantSpellWords.length();
 		if (strncasecmp(instantSpellWords.c_str(), words.c_str(), spellLen) == 0) {
 			if (!result || spellLen > result->getWords().length()) {
-				result = &it.second;
+				result = &spell;
 				if (words.length() == spellLen) {
 					break;
 				}
@@ -266,9 +266,9 @@ InstantSpell* Spells::getInstantSpell(const std::string& words)
 
 InstantSpell* Spells::getInstantSpellById(uint32_t spellId)
 {
-	for (auto& it : instants) {
-		if (it.second.getId() == spellId) {
-			return &it.second;
+	for (auto& [spellName, spell] : instants) {
+		if (spell.getId() == spellId) {
+			return &spell;
 		}
 	}
 	return nullptr;
@@ -276,9 +276,9 @@ InstantSpell* Spells::getInstantSpellById(uint32_t spellId)
 
 InstantSpell* Spells::getInstantSpellByName(const std::string& name)
 {
-	for (auto& it : instants) {
-		if (strcasecmp(it.second.getName().c_str(), name.c_str()) == 0) {
-			return &it.second;
+	for (auto& [spellWords, spell] : instants) {
+		if (strcasecmp(spell.getName().c_str(), name.c_str()) == 0) {
+			return &spell;
 		}
 	}
 	return nullptr;
@@ -337,6 +337,10 @@ bool CombatSpell::castSpell(Creature* creature)
 
 bool CombatSpell::castSpell(Creature* creature, Creature* target)
 {
+	if (!target) {
+		return false;
+	}
+
 	if (scripted) {
 		LuaVariant var;
 
@@ -1034,6 +1038,10 @@ bool InstantSpell::playerCastInstant(Player* player, std::string& param)
 
 bool InstantSpell::canThrowSpell(const Creature* creature, const Creature* target) const
 {
+	if (!creature || !target) {
+		return false;
+	}
+
 	const Position& fromPos = creature->getPosition();
 	const Position& toPos = target->getPosition();
 	if (fromPos.z != toPos.z ||
@@ -1075,6 +1083,10 @@ bool InstantSpell::castSpell(Creature* creature)
 bool InstantSpell::castSpell(Creature* creature, Creature* target)
 {
 	if (needTarget) {
+		if (!target) {
+			return false;
+		}
+
 		LuaVariant var;
 		var.type = VARIANT_NUMBER;
 		var.number = target->getID();
@@ -1223,7 +1235,11 @@ bool RuneSpell::executeUse(Player* player, Item* item, const Position&, Thing* t
 				}
 			}
 		} else {
-			var.number = target->getCreature()->getID();
+			const Creature* targetCreature = target->getCreature();
+			if (!targetCreature) {
+				return false;
+			}
+			var.number = targetCreature->getID();
 		}
 	} else {
 		var.type = VARIANT_POSITION;
@@ -1258,6 +1274,10 @@ bool RuneSpell::castSpell(Creature* creature)
 
 bool RuneSpell::castSpell(Creature* creature, Creature* target)
 {
+	if (!target) {
+		return false;
+	}
+
 	LuaVariant var;
 	var.type = VARIANT_NUMBER;
 	var.number = target->getID();

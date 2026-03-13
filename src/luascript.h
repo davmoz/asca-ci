@@ -17,10 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_LUASCRIPT_H_5344B2BC907E46E3943EA78574A212D8
-#define FS_LUASCRIPT_H_5344B2BC907E46E3943EA78574A212D8
+#ifndef FS_LUASCRIPT_H
+#define FS_LUASCRIPT_H
 
-#include <luajit/lua.hpp>
+#include <lua.hpp>
 
 #if LUA_VERSION_NUM >= 502
 #ifndef LUA_COMPAT_ALL
@@ -161,7 +161,11 @@ class ScriptEnvironment
 		//for npc scripts
 		Npc* curNpc = nullptr;
 
-		//temporary item list
+		// WARNING: tempItems is a static multimap shared across all ScriptEnvironment
+		// instances. TFS 1.3 runs Lua scripts on the main dispatcher thread only, so
+		// concurrent access does not occur in practice. However, if the architecture
+		// ever moves to multi-threaded script execution, this static member will need
+		// synchronization (e.g., a std::mutex guard) to avoid data races.
 		static std::multimap<ScriptEnvironment*, Item*> tempItems;
 
 		//local item map
@@ -533,6 +537,9 @@ class LuaScriptInterface
 
 		static int luaGameGetTowns(lua_State* L);
 		static int luaGameGetHouses(lua_State* L);
+
+		static int luaGameGetMountIdByLookType(lua_State* L);
+		static int luaGameGetMounts(lua_State* L);
 
 		static int luaGameGetGameState(lua_State* L);
 		static int luaGameSetGameState(lua_State* L);
@@ -955,6 +962,7 @@ class LuaScriptInterface
 		static int luaPlayerAddMount(lua_State* L);
 		static int luaPlayerRemoveMount(lua_State* L);
 		static int luaPlayerHasMount(lua_State* L);
+		static int luaPlayerToggleMount(lua_State* L);
 
 		static int luaPlayerGetPremiumEndsAt(lua_State* L);
 		static int luaPlayerSetPremiumEndsAt(lua_State* L);

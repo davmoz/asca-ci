@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - main
       - v*
 
     tags:
@@ -25,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: >
@@ -47,7 +48,7 @@ jobs:
           parallel: 2
 
       - name: Upload binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ubuntu-tfs-amd64-${{ github.sha }}
           path: ${{ runner.workspace }}/build/tfs
