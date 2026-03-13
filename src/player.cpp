@@ -19,8 +19,7 @@
 
 #include "otpch.h"
 
-#include <bitset>
-#include <cmath>
+#include "player.h"
 
 #include "bed.h"
 #include "chat.h"
@@ -34,6 +33,9 @@
 #include "movement.h"
 #include "scheduler.h"
 #include "weapons.h"
+
+#include <bitset>
+#include <cmath>
 
 extern ConfigManagerCompat g_config;
 extern Game g_game;

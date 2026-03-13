@@ -19,27 +19,28 @@
 
 #include "otpch.h"
 
-#include <boost/range/adaptor/reversed.hpp>
-
 #include "luascript.h"
-#include "chat.h"
-#include "player.h"
-#include "game.h"
-#include "protocolstatus.h"
-#include "spells.h"
-#include "iologindata.h"
-#include "configmanager.h"
-#include "teleport.h"
-#include "databasemanager.h"
+
 #include "bed.h"
-#include "monster.h"
-#include "scheduler.h"
+#include "chat.h"
+#include "configmanager.h"
+#include "databasemanager.h"
 #include "databasetasks.h"
 #include "events.h"
-#include "movement.h"
+#include "game.h"
 #include "globalevent.h"
+#include "iologindata.h"
+#include "monster.h"
+#include "movement.h"
+#include "player.h"
+#include "protocolstatus.h"
+#include "scheduler.h"
 #include "script.h"
+#include "spells.h"
+#include "teleport.h"
 #include "weapons.h"
+
+#include <boost/range/adaptor/reversed.hpp>
 
 extern Chat* g_chat;
 extern Game g_game;

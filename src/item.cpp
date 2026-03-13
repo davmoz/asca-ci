@@ -20,16 +20,16 @@
 #include "otpch.h"
 
 #include "item.h"
-#include "container.h"
-#include "teleport.h"
-#include "trashholder.h"
-#include "mailbox.h"
-#include "house.h"
-#include "game.h"
-#include "bed.h"
 
 #include "actions.h"
+#include "bed.h"
+#include "container.h"
+#include "game.h"
+#include "house.h"
+#include "mailbox.h"
 #include "spells.h"
+#include "teleport.h"
+#include "trashholder.h"
 
 extern Game g_game;
 extern Spells* g_spells;

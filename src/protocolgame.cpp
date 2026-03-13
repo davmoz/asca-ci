@@ -19,21 +19,19 @@
 
 #include "otpch.h"
 
-#include <boost/range/adaptor/reversed.hpp>
-
 #include "protocolgame.h"
 
-#include "outputmessage.h"
-
-#include "player.h"
-
-#include "configmanager.h"
 #include "actions.h"
+#include "ban.h"
+#include "configmanager.h"
 #include "game.h"
 #include "iologindata.h"
 #include "iomarket.h"
-#include "ban.h"
+#include "outputmessage.h"
+#include "player.h"
 #include "scheduler.h"
+
+#include <boost/range/adaptor/reversed.hpp>
 
 extern ConfigManagerCompat g_config;
 extern Actions actions;
