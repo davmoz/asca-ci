@@ -9,6 +9,7 @@ set(boost_tests_SRC
     ${CMAKE_CURRENT_LIST_DIR}/test_tools.cpp
     ${CMAKE_CURRENT_LIST_DIR}/test_sha1.cpp
     ${CMAKE_CURRENT_LIST_DIR}/test_xtea.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/test_base64.cpp
 )
 
 foreach(test_src ${boost_tests_SRC})
@@ -25,3 +26,7 @@ endforeach()
 
 # test_xtea needs the actual xtea.cpp implementation
 target_sources(boost_test_xtea PRIVATE ${TFS_SRC_DIR}/xtea.cpp)
+
+# test_base64 needs base64.cpp and OpenSSL
+target_sources(boost_test_base64 PRIVATE ${TFS_SRC_DIR}/base64.cpp)
+target_link_libraries(boost_test_base64 PRIVATE OpenSSL::Crypto)
