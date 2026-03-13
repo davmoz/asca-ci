@@ -40,7 +40,7 @@ jobs:
             triplet: x64-windows
             packages: >
               boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua luajit libmariadb pugixml cryptopp
+              lua luajit libmariadb pugixml fmt
           - name: ubuntu-gcc
             os: ubuntu
             cxx: g++
@@ -48,7 +48,7 @@ jobs:
             triplet: x64-linux
             packages: >
               boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua libmariadb pugixml cryptopp
+              lua libmariadb pugixml fmt
           - name: ubuntu-clang
             os: ubuntu
             cxx: clang++
@@ -56,7 +56,7 @@ jobs:
             triplet: x64-linux
             packages: >
               boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua libmariadb pugixml cryptopp
+              lua libmariadb pugixml fmt
           - name: macos-clang
             os: macos
             cxx: clang++
@@ -64,7 +64,7 @@ jobs:
             triplet: x64-osx
             packages: >
               boost-asio boost-iostreams boost-system boost-filesystem boost-variant boost-lockfree
-              lua libmariadb pugixml cryptopp
+              lua libmariadb pugixml fmt
 
     steps:
       - uses: actions/checkout@v4
@@ -103,7 +103,7 @@ jobs:
           vcpkgArguments: ${{ matrix.packages }}
           vcpkgDirectory: ${{ runner.workspace }}/vcpkg/
           vcpkgTriplet: ${{ matrix.triplet }}
-          vcpkgGitCommitId: 7db401cb1ef1fc559ec9f9ce814d064c328fd767
+          vcpkgGitCommitId: a2f9e4c8605b3501b70e1c71178c57eada1bbcbe
 
       - name: Build with CMake
         uses: lukka/run-cmake@main
