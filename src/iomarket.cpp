@@ -247,20 +247,20 @@ MarketOfferEx IOMarket::getOfferByCounter(uint32_t timestamp, uint16_t counter)
 
 void IOMarket::createOffer(uint32_t playerId, MarketAction_t action, uint32_t itemId, uint16_t amount, uint32_t price, bool anonymous)
 {
-	Database::getInstance().executeQuery(fmt::format(
+	(void)Database::getInstance().executeQuery(fmt::format(
 		"INSERT INTO `market_offers` (`player_id`, `sale`, `itemtype`, `amount`, `price`, `created`, `anonymous`) VALUES ({},{},{},{},{},{},{})",
 		playerId, static_cast<int>(action), itemId, amount, price, time(nullptr), static_cast<int>(anonymous)));
 }
 
 void IOMarket::acceptOffer(uint32_t offerId, uint16_t amount)
 {
-	Database::getInstance().executeQuery(fmt::format(
+	(void)Database::getInstance().executeQuery(fmt::format(
 		"UPDATE `market_offers` SET `amount` = `amount` - {} WHERE `id` = {}", amount, offerId));
 }
 
 void IOMarket::deleteOffer(uint32_t offerId)
 {
-	Database::getInstance().executeQuery(fmt::format(
+	(void)Database::getInstance().executeQuery(fmt::format(
 		"DELETE FROM `market_offers` WHERE `id` = {}", offerId));
 }
 

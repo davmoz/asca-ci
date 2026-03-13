@@ -28,21 +28,21 @@
 
 void printXMLError(std::string_view where, const std::string& fileName, const pugi::xml_parse_result& result);
 
-std::string transformToSHA1(std::string_view input);
-std::string generateToken(std::string_view key, uint32_t ticks);
+[[nodiscard]] std::string transformToSHA1(std::string_view input);
+[[nodiscard]] std::string generateToken(std::string_view key, uint32_t ticks);
 
 void replaceString(std::string& str, std::string_view sought, const std::string& replacement);
 void trim_right(std::string& source, char t);
 void trim_left(std::string& source, char t);
 void toLowerCaseString(std::string& source);
-std::string asLowerCaseString(std::string source);
-std::string asUpperCaseString(std::string source);
+[[nodiscard]] std::string asLowerCaseString(std::string source);
+[[nodiscard]] std::string asUpperCaseString(std::string source);
 
 using StringVector = std::vector<std::string>;
 using IntegerVector = std::vector<int32_t>;
 
-StringVector explodeString(std::string_view inString, std::string_view separator, int32_t limit = -1);
-IntegerVector vectorAtoi(const StringVector& stringVector);
+[[nodiscard]] StringVector explodeString(std::string_view inString, std::string_view separator, int32_t limit = -1);
+[[nodiscard]] IntegerVector vectorAtoi(const StringVector& stringVector);
 constexpr bool hasBitSet(uint32_t flag, uint32_t flags) {
 	return (flags & flag) != 0;
 }
@@ -56,10 +56,10 @@ Direction getDirection(std::string_view string);
 Position getNextPosition(Direction direction, Position pos);
 Direction getDirectionTo(const Position& from, const Position& to);
 
-std::string getFirstLine(std::string_view str);
+[[nodiscard]] std::string getFirstLine(std::string_view str);
 
-std::string formatDate(time_t time);
-std::string formatDateShort(time_t time);
+[[nodiscard]] std::string formatDate(time_t time);
+[[nodiscard]] std::string formatDateShort(time_t time);
 std::string convertIPToString(uint32_t ip);
 
 void trimString(std::string& str);

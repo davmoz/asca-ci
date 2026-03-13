@@ -70,8 +70,8 @@ int32_t DatabaseManager::getDatabaseVersion()
 {
 	if (!tableExists("server_config")) {
 		Database& db = Database::getInstance();
-		db.executeQuery("CREATE TABLE `server_config` (`config` VARCHAR(50) NOT NULL, `value` VARCHAR(256) NOT NULL DEFAULT '', UNIQUE(`config`)) ENGINE = InnoDB");
-		db.executeQuery("INSERT INTO `server_config` VALUES ('db_version', 0)");
+		(void)db.executeQuery("CREATE TABLE `server_config` (`config` VARCHAR(50) NOT NULL, `value` VARCHAR(256) NOT NULL DEFAULT '', UNIQUE(`config`)) ENGINE = InnoDB");
+		(void)db.executeQuery("INSERT INTO `server_config` VALUES ('db_version', 0)");
 		return 0;
 	}
 
@@ -157,10 +157,10 @@ void DatabaseManager::registerDatabaseConfig(const std::string& config, int32_t 
 	int32_t tmp;
 
 	if (!getDatabaseConfig(config, tmp)) {
-		db.executeQuery(fmt::format(
+		(void)db.executeQuery(fmt::format(
 			"INSERT INTO `server_config` VALUES ({}, '{}')", db.escapeString(config), value));
 	} else {
-		db.executeQuery(fmt::format(
+		(void)db.executeQuery(fmt::format(
 			"UPDATE `server_config` SET `value` = '{}' WHERE `config` = {}", value, db.escapeString(config)));
 	}
 }

@@ -132,9 +132,9 @@ enum integer_config_t
 bool load();
 bool reload();
 
-const std::string& getString(string_config_t what);
-int32_t getNumber(integer_config_t what);
-bool getBoolean(boolean_config_t what);
+[[nodiscard]] const std::string& getString(string_config_t what);
+[[nodiscard]] int32_t getNumber(integer_config_t what);
+[[nodiscard]] bool getBoolean(boolean_config_t what);
 
 bool setString(string_config_t what, const std::string& value);
 bool setNumber(integer_config_t what, int32_t value);

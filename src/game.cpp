@@ -4728,7 +4728,7 @@ void Game::loadMotdNum()
 	if (result) {
 		motdNum = result->getNumber<uint32_t>("value");
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_num', '0')");
+		(void)db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_num', '0')");
 	}
 
 	result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'motd_hash'");
@@ -4738,7 +4738,7 @@ void Game::loadMotdNum()
 			++motdNum;
 		}
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_hash', '')");
+		(void)db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_hash', '')");
 	}
 }
 
@@ -4746,8 +4746,8 @@ void Game::saveMotdNum() const
 {
 	Database& db = Database::getInstance();
 
-	db.executeQuery(fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'motd_num'", motdNum));
-	db.executeQuery(fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'motd_hash'", transformToSHA1(g_config.getString(ConfigManager::MOTD))));
+	(void)db.executeQuery(fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'motd_num'", motdNum));
+	(void)db.executeQuery(fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'motd_hash'", transformToSHA1(g_config.getString(ConfigManager::MOTD))));
 }
 
 void Game::checkPlayersRecord()
@@ -4768,7 +4768,7 @@ void Game::updatePlayersRecord() const
 {
 	Database& db = Database::getInstance();
 
-	db.executeQuery(fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'players_record'", playersRecord));
+	(void)db.executeQuery(fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'players_record'", playersRecord));
 }
 
 void Game::loadPlayersRecord()
@@ -4779,7 +4779,7 @@ void Game::loadPlayersRecord()
 	if (result) {
 		playersRecord = result->getNumber<uint32_t>("value");
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('players_record', '0')");
+		(void)db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('players_record', '0')");
 	}
 }
 

@@ -173,7 +173,7 @@ AccountType_t IOLoginData::getAccountType(uint32_t accountId)
 
 void IOLoginData::setAccountType(uint32_t accountId, AccountType_t accountType)
 {
-	Database::getInstance().executeQuery(fmt::format("UPDATE `accounts` SET `type` = {} WHERE `id` = {}", static_cast<uint16_t>(accountType), accountId));
+	(void)Database::getInstance().executeQuery(fmt::format("UPDATE `accounts` SET `type` = {} WHERE `id` = {}", static_cast<uint16_t>(accountType), accountId));
 }
 
 void IOLoginData::updateOnlineStatus(uint32_t guid, bool login)
@@ -183,9 +183,9 @@ void IOLoginData::updateOnlineStatus(uint32_t guid, bool login)
 	}
 
 	if (login) {
-		Database::getInstance().executeQuery(fmt::format("INSERT INTO `players_online` VALUES ({})", guid));
+		(void)Database::getInstance().executeQuery(fmt::format("INSERT INTO `players_online` VALUES ({})", guid));
 	} else {
-		Database::getInstance().executeQuery(fmt::format("DELETE FROM `players_online` WHERE `player_id` = {}", guid));
+		(void)Database::getInstance().executeQuery(fmt::format("DELETE FROM `players_online` WHERE `player_id` = {}", guid));
 	}
 }
 
@@ -963,21 +963,21 @@ std::forward_list<VIPEntry> IOLoginData::getVIPEntries(uint32_t accountId)
 void IOLoginData::addVIPEntry(uint32_t accountId, uint32_t guid, const std::string& description, uint32_t icon, bool notify)
 {
 	Database& db = Database::getInstance();
-	db.executeQuery(fmt::format("INSERT INTO `account_viplist` (`account_id`, `player_id`, `description`, `icon`, `notify`) VALUES ({},{},{},{},{})", accountId, guid, db.escapeString(description), icon, notify));
+	(void)db.executeQuery(fmt::format("INSERT INTO `account_viplist` (`account_id`, `player_id`, `description`, `icon`, `notify`) VALUES ({},{},{},{},{})", accountId, guid, db.escapeString(description), icon, notify));
 }
 
 void IOLoginData::editVIPEntry(uint32_t accountId, uint32_t guid, const std::string& description, uint32_t icon, bool notify)
 {
 	Database& db = Database::getInstance();
-	db.executeQuery(fmt::format("UPDATE `account_viplist` SET `description` = {}, `icon` = {}, `notify` = {} WHERE `account_id` = {} AND `player_id` = {}", db.escapeString(description), icon, notify, accountId, guid));
+	(void)db.executeQuery(fmt::format("UPDATE `account_viplist` SET `description` = {}, `icon` = {}, `notify` = {} WHERE `account_id` = {} AND `player_id` = {}", db.escapeString(description), icon, notify, accountId, guid));
 }
 
 void IOLoginData::removeVIPEntry(uint32_t accountId, uint32_t guid)
 {
-	Database::getInstance().executeQuery(fmt::format("DELETE FROM `account_viplist` WHERE `account_id` = {} AND `player_id` = {}", accountId, guid));
+	(void)Database::getInstance().executeQuery(fmt::format("DELETE FROM `account_viplist` WHERE `account_id` = {} AND `player_id` = {}", accountId, guid));
 }
 
 void IOLoginData::updatePremiumTime(uint32_t accountId, time_t endTime)
 {
-	Database::getInstance().executeQuery(fmt::format("UPDATE `accounts` SET `premium_ends_at` = {} WHERE `id` = {}", endTime, accountId));
+	(void)Database::getInstance().executeQuery(fmt::format("UPDATE `accounts` SET `premium_ends_at` = {} WHERE `id` = {}", endTime, accountId));
 }

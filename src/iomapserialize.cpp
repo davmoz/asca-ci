@@ -313,9 +313,9 @@ bool IOMapSerialize::saveHouseInfo()
 		House* house = it.second;
 		DBResult_ptr result = db.storeQuery(fmt::format("SELECT `id` FROM `houses` WHERE `id` = {}", house->getId()));
 		if (result) {
-			db.executeQuery(fmt::format("UPDATE `houses` SET `owner` = {}, `paid` = {}, `warnings` = {}, `name` = {}, `town_id` = {}, `rent` = {}, `size` = {}, `beds` = {} WHERE `id` = {}", house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(), db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(), house->getBedCount(), house->getId()));
+			(void)db.executeQuery(fmt::format("UPDATE `houses` SET `owner` = {}, `paid` = {}, `warnings` = {}, `name` = {}, `town_id` = {}, `rent` = {}, `size` = {}, `beds` = {} WHERE `id` = {}", house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(), db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(), house->getBedCount(), house->getId()));
 		} else {
-			db.executeQuery(fmt::format("INSERT INTO `houses` (`id`, `owner`, `paid`, `warnings`, `name`, `town_id`, `rent`, `size`, `beds`) VALUES ({},{},{},{},{},{},{},{},{})", house->getId(), house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(), db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(), house->getBedCount()));
+			(void)db.executeQuery(fmt::format("INSERT INTO `houses` (`id`, `owner`, `paid`, `warnings`, `name`, `town_id`, `rent`, `size`, `beds`) VALUES ({},{},{},{},{},{},{},{},{})", house->getId(), house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(), db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getTiles().size(), house->getBedCount()));
 		}
 	}
 

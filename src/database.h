@@ -63,7 +63,7 @@ class Database
 		 * @param query command
 		 * @return true on success, false on error
 		 */
-		bool executeQuery(const std::string& query);
+		[[nodiscard]] bool executeQuery(const std::string& query);
 
 		/**
 		 * Queries database.
@@ -72,7 +72,7 @@ class Database
 		 *
 		 * @return results object (nullptr on error)
 		 */
-		DBResult_ptr storeQuery(const std::string& query);
+		[[nodiscard]] DBResult_ptr storeQuery(const std::string& query);
 
 		/**
 		 * Escapes string for query.
@@ -82,7 +82,7 @@ class Database
 		 * @param s string to be escaped
 		 * @return quoted string
 		 */
-		std::string escapeString(const std::string& s) const;
+		[[nodiscard]] std::string escapeString(const std::string& s) const;
 
 		/**
 		 * Escapes binary stream for query.
@@ -93,7 +93,7 @@ class Database
 		 * @param length stream length
 		 * @return quoted string
 		 */
-		std::string escapeBlob(const char* s, uint32_t length) const;
+		[[nodiscard]] std::string escapeBlob(const char* s, uint32_t length) const;
 
 		/**
 		 * Retrieve id of last inserted row
@@ -190,8 +190,8 @@ class DBInsert
 {
 	public:
 		explicit DBInsert(std::string query);
-		bool addRow(const std::string& row);
-		bool execute();
+		[[nodiscard]] bool addRow(const std::string& row);
+		[[nodiscard]] bool execute();
 
 	private:
 		std::string query;

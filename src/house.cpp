@@ -43,7 +43,7 @@ void House::setOwner(uint32_t guid, bool updateDatabase/* = true*/, Player* play
 	if (updateDatabase && owner != guid) {
 		Database& db = Database::getInstance();
 
-		db.executeQuery(fmt::format("UPDATE `houses` SET `owner` = {}, `bid` = 0, `bid_end` = 0, `last_bid` = 0, `highest_bidder` = 0  WHERE `id` = {}", guid, id));
+		(void)db.executeQuery(fmt::format("UPDATE `houses` SET `owner` = {}, `bid` = 0, `bid_end` = 0, `last_bid` = 0, `highest_bidder` = 0  WHERE `id` = {}", guid, id));
 	}
 
 	if (isLoaded && owner == guid) {
