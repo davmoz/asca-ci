@@ -15,11 +15,13 @@ add_executable(tfs ${tfs_SRC})
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if (NOT WIN32)
-    target_compile_options(tfs PRIVATE -Wall -Werror -pipe -fvisibility=hidden)
+    target_compile_options(tfs PRIVATE -Wall -Wextra -Werror -pipe -fvisibility=hidden
+        -Wnon-virtual-dtor -Woverloaded-virtual -Wpedantic)
 endif ()
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    target_compile_options(tfs PRIVATE -fno-strict-aliasing)
+    target_compile_options(tfs PRIVATE -fno-strict-aliasing
+        -Wduplicated-cond -Wlogical-op)
 endif ()
 
 target_precompile_headers(tfs PUBLIC src/otpch.h)
