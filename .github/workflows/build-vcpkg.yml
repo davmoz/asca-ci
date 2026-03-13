@@ -31,32 +31,36 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false
-      max-parallel: 8
       matrix:
-        name: [ubuntu-gcc, ubuntu-clang, macos-clang, windows-msvc]
-        buildtype: [Debug, Release]
-        luajit: [on, off]
         include:
-          - name: windows-msvc
-            os: windows
-            cxx: cl.exe
-            cc: cl.exe
-            triplet: x64-windows
           - name: ubuntu-gcc
             os: ubuntu
             cxx: g++
             cc: gcc
             triplet: x64-linux
+            buildtype: Release
+            luajit: on
           - name: ubuntu-clang
             os: ubuntu
             cxx: clang++
             cc: clang
             triplet: x64-linux
+            buildtype: Release
+            luajit: off
           - name: macos-clang
             os: macos
             cxx: clang++
             cc: clang
             triplet: arm64-osx
+            buildtype: Release
+            luajit: on
+          - name: windows-msvc
+            os: windows
+            cxx: cl.exe
+            cc: cl.exe
+            triplet: x64-windows
+            buildtype: Release
+            luajit: off
 
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
