@@ -131,8 +131,8 @@ void Game::setGameState(GameState_t newState)
 			{
 				std::vector<Player*> playersToKick;
 				playersToKick.reserve(players.size());
-				for (const auto& it : players) {
-					playersToKick.push_back(it.second);
+				for (const auto& [id, player] : players) {
+					playersToKick.push_back(player);
 				}
 				for (Player* player : playersToKick) {
 					player->kickPlayer(true);
@@ -155,9 +155,9 @@ void Game::setGameState(GameState_t newState)
 			/* kick all players without the CanAlwaysLogin flag */
 			{
 				std::vector<Player*> playersToKick;
-				for (const auto& it : players) {
-					if (!it.second->hasFlag(PlayerFlag_CanAlwaysLogin)) {
-						playersToKick.push_back(it.second);
+				for (const auto& [id, player] : players) {
+					if (!player->hasFlag(PlayerFlag_CanAlwaysLogin)) {
+						playersToKick.push_back(player);
 					}
 				}
 				for (Player* player : playersToKick) {
@@ -182,9 +182,9 @@ void Game::saveGameState()
 
 	std::cout << "Saving server..." << std::endl;
 
-	for (const auto& it : players) {
-		it.second->loginPosition = it.second->getPosition();
-		IOLoginData::savePlayer(it.second);
+	for (const auto& [id, player] : players) {
+		player->loginPosition = player->getPosition();
+		IOLoginData::savePlayer(player);
 	}
 
 	Map::save();
@@ -444,15 +444,15 @@ Creature* Game::getCreatureByName(const std::string& s)
 		return m_it->second;
 	}
 
-	for (const auto& it : npcs) {
-		if (lowerCaseName == asLowerCaseString(it.second->getName())) {
-			return it.second;
+	for (const auto& [id, npc] : npcs) {
+		if (lowerCaseName == asLowerCaseString(npc->getName())) {
+			return npc;
 		}
 	}
 
-	for (const auto& it : monsters) {
-		if (lowerCaseName == asLowerCaseString(it.second->getName())) {
-			return it.second;
+	for (const auto& [id, monster] : monsters) {
+		if (lowerCaseName == asLowerCaseString(monster->getName())) {
+			return monster;
 		}
 	}
 	return nullptr;
@@ -465,9 +465,9 @@ Npc* Game::getNpcByName(const std::string& s)
 	}
 
 	const char* npcName = s.c_str();
-	for (const auto& it : npcs) {
-		if (strcasecmp(npcName, it.second->getName().c_str()) == 0) {
-			return it.second;
+	for (const auto& [id, npc] : npcs) {
+		if (strcasecmp(npcName, npc->getName().c_str()) == 0) {
+			return npc;
 		}
 	}
 	return nullptr;
@@ -528,9 +528,9 @@ ReturnValue Game::getPlayerByNameWildcard(const std::string& s, Player*& player)
 
 Player* Game::getPlayerByAccount(uint32_t acc)
 {
-	for (const auto& it : players) {
-		if (it.second->getAccount() == acc) {
-			return it.second;
+	for (const auto& [id, player] : players) {
+		if (player->getAccount() == acc) {
+			return player;
 		}
 	}
 	return nullptr;
@@ -1844,8 +1844,8 @@ bool Game::playerBroadcastMessage(Player* player, const std::string& text) const
 
 	std::cout << "> " << player->getName() << " broadcasted: \"" << text << "\"." << std::endl;
 
-	for (const auto& it : players) {
-		it.second->sendPrivateMessage(player, TALKTYPE_BROADCAST, text);
+	for (const auto& [id, recipient] : players) {
+		recipient->sendPrivateMessage(player, TALKTYPE_BROADCAST, text);
 	}
 
 	return true;
@@ -2624,8 +2624,7 @@ void Game::playerRequestTrade(uint32_t playerId, const Position& pos, uint8_t st
 
 	Container* tradeItemContainer = tradeItem->getContainer();
 	if (tradeItemContainer) {
-		for (const auto& it : tradeItems) {
-			Item* item = it.first;
+		for (const auto& [item, tradePlayer] : tradeItems) {
 			if (tradeItem == item) {
 				player->sendTextMessage(MESSAGE_INFO_DESCR, "This item is already being traded.");
 				return;
@@ -2643,8 +2642,7 @@ void Game::playerRequestTrade(uint32_t playerId, const Position& pos, uint8_t st
 			}
 		}
 	} else {
-		for (const auto& it : tradeItems) {
-			Item* item = it.first;
+		for (const auto& [item, tradePlayer] : tradeItems) {
 			if (tradeItem == item) {
 				player->sendTextMessage(MESSAGE_INFO_DESCR, "This item is already being traded.");
 				return;
@@ -4565,8 +4563,8 @@ void Game::checkLight()
 	if (lightChange) {
 		LightInfo lightInfo = getWorldLightInfo();
 
-		for (const auto& it : players) {
-			it.second->sendWorldLight(lightInfo);
+		for (const auto& [id, player] : players) {
+			player->sendWorldLight(lightInfo);
 		}
 	}
 }
@@ -4634,8 +4632,8 @@ void Game::ReleaseItem(Item* item)
 void Game::broadcastMessage(const std::string& text, MessageClasses type) const
 {
 	std::cout << "> Broadcasted message: \"" << text << "\"." << std::endl;
-	for (const auto& it : players) {
-		it.second->sendTextMessage(type, text);
+	for (const auto& [id, player] : players) {
+		player->sendTextMessage(type, text);
 	}
 }
 

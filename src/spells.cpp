@@ -221,9 +221,9 @@ RuneSpell* Spells::getRuneSpell(uint32_t id)
 
 RuneSpell* Spells::getRuneSpellByName(const std::string& name)
 {
-	for (auto& it : runes) {
-		if (strcasecmp(it.second.getName().c_str(), name.c_str()) == 0) {
-			return &it.second;
+	for (auto& [runeId, rune] : runes) {
+		if (strcasecmp(rune.getName().c_str(), name.c_str()) == 0) {
+			return &rune;
 		}
 	}
 	return nullptr;
@@ -233,12 +233,12 @@ InstantSpell* Spells::getInstantSpell(const std::string& words)
 {
 	InstantSpell* result = nullptr;
 
-	for (auto& it : instants) {
-		const std::string& instantSpellWords = it.second.getWords();
+	for (auto& [name, spell] : instants) {
+		const std::string& instantSpellWords = spell.getWords();
 		size_t spellLen = instantSpellWords.length();
 		if (strncasecmp(instantSpellWords.c_str(), words.c_str(), spellLen) == 0) {
 			if (!result || spellLen > result->getWords().length()) {
-				result = &it.second;
+				result = &spell;
 				if (words.length() == spellLen) {
 					break;
 				}
@@ -266,9 +266,9 @@ InstantSpell* Spells::getInstantSpell(const std::string& words)
 
 InstantSpell* Spells::getInstantSpellById(uint32_t spellId)
 {
-	for (auto& it : instants) {
-		if (it.second.getId() == spellId) {
-			return &it.second;
+	for (auto& [spellName, spell] : instants) {
+		if (spell.getId() == spellId) {
+			return &spell;
 		}
 	}
 	return nullptr;
@@ -276,9 +276,9 @@ InstantSpell* Spells::getInstantSpellById(uint32_t spellId)
 
 InstantSpell* Spells::getInstantSpellByName(const std::string& name)
 {
-	for (auto& it : instants) {
-		if (strcasecmp(it.second.getName().c_str(), name.c_str()) == 0) {
-			return &it.second;
+	for (auto& [spellWords, spell] : instants) {
+		if (strcasecmp(spell.getName().c_str(), name.c_str()) == 0) {
+			return &spell;
 		}
 	}
 	return nullptr;
