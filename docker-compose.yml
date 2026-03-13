@@ -30,16 +30,9 @@ services:
     ports:
       - "${LOGIN_PORT:-7171}:7171"
       - "${GAME_PORT:-7172}:7172"
-    entrypoint:
-      - /bin/sh
-      - -c
-      - |
-        if [ ! -f /srv/config.lua ]; then cp /srv/config.lua.dist /srv/config.lua; fi
-        exec /bin/tfs
     volumes:
       - ./data:/srv/data:ro
       - ./key.pem:/srv/key.pem:ro
-      - ./config.lua:/srv/config.lua
     environment:
       - MYSQL_HOST=${MYSQL_HOST:-db}
       - MYSQL_PORT=${MYSQL_PORT:-3306}

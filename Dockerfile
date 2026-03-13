@@ -6,6 +6,7 @@ RUN apk add --no-cache \
   build-base \
   clang \
   cmake \
+  fmt-dev \
   openssl-dev \
   gcc \
   gmp-dev \
@@ -25,6 +26,7 @@ FROM alpine:3.21
 RUN apk add --no-cache \
   boost-iostreams \
   boost-filesystem \
+  fmt \
   libssl3 \
   libcrypto3 \
   gmp \
@@ -37,6 +39,8 @@ RUN apk add --no-cache \
 RUN addgroup -S tfs && adduser -S tfs -G tfs
 
 COPY --from=build /usr/src/forgottenserver/build/tfs /bin/tfs
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 COPY data /srv/data/
 COPY LICENSE README.md *.dist *.sql /srv/
 
@@ -51,4 +55,4 @@ WORKDIR /srv
 HEALTHCHECK --interval=30s --timeout=3s CMD nc -z localhost 7171 || exit 1
 
 USER tfs
-ENTRYPOINT ["/bin/tfs"]
+ENTRYPOINT ["docker-entrypoint.sh"]

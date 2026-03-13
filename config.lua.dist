@@ -236,6 +236,9 @@ rateSpawn = 1
 deSpawnRange = 2
 deSpawnRadius = 50
 
+-- removeOnDespawn: Remove monster corpses when they despawn.
+removeOnDespawn = true
+
 -- ============================================================================
 -- Stamina
 -- ============================================================================
@@ -275,6 +278,10 @@ location = "Sweden"
 -- ============================================================================
 -- Custom Systems Configuration
 -- ============================================================================
+-- NOTE: These settings are read directly by the Lua game systems in data/lib/.
+-- Each system loads its own defaults and these values serve as overrides.
+-- To disable a system entirely, comment out its dofile() line in data/lib/lib.lua.
+
 dailyRewardsEnabled = true
 preySystemEnabled = true
 imbuingSystemEnabled = true
