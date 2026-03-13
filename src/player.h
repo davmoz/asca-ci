@@ -1285,9 +1285,9 @@ class Player final : public Creature, public Cylinder
 		uint32_t editListId = 0;
 		uint32_t mana = 0;
 		uint32_t manaMax = 0;
-		int32_t varSkills[SKILL_LAST + 1] = {};
+		std::array<int32_t, SKILL_LAST + 1> varSkills = {};
 		int32_t varSpecialSkills[SPECIALSKILL_LAST + 1] = {};
-		int32_t varStats[STAT_LAST + 1] = {};
+		std::array<int32_t, STAT_LAST + 1> varStats = {};
 		int32_t purchaseCallback = -1;
 		int32_t saleCallback = -1;
 		int32_t MessageBufferCount = 0;

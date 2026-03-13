@@ -520,7 +520,7 @@ class Creature : virtual public Thing
 		Direction direction = DIRECTION_SOUTH;
 		Skulls_t skull = SKULL_NONE;
 
-		bool localMapCache[mapWalkHeight][mapWalkWidth] = {{ false }};
+		std::array<std::array<bool, mapWalkWidth>, mapWalkHeight> localMapCache = {};
 		bool isInternalRemoved = false;
 		bool isMapLoaded = false;
 		bool isUpdatingPath = false;

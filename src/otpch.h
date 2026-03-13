@@ -23,6 +23,7 @@
 #include "definitions.h"
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstdint>
 #include <forward_list>

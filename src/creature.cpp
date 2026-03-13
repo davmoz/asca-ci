@@ -502,7 +502,7 @@ void Creature::onCreatureMove(Creature* creature, const Tile* newTile, const Pos
 				if (oldPos.y > newPos.y) { //north
 					//shift y south
 					for (int32_t y = mapWalkHeight - 1; --y >= 0;) {
-						memcpy(localMapCache[y + 1], localMapCache[y], sizeof(localMapCache[y]));
+						localMapCache[y + 1] = localMapCache[y];
 					}
 
 					//update 0
@@ -513,7 +513,7 @@ void Creature::onCreatureMove(Creature* creature, const Tile* newTile, const Pos
 				} else if (oldPos.y < newPos.y) { // south
 					//shift y north
 					for (int32_t y = 0; y <= mapWalkHeight - 2; ++y) {
-						memcpy(localMapCache[y], localMapCache[y + 1], sizeof(localMapCache[y]));
+						localMapCache[y] = localMapCache[y + 1];
 					}
 
 					//update mapWalkHeight - 1
