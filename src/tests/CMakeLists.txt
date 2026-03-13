@@ -11,6 +11,7 @@ set(boost_tests_SRC
     ${CMAKE_CURRENT_LIST_DIR}/test_xtea.cpp
     ${CMAKE_CURRENT_LIST_DIR}/test_base64.cpp
     ${CMAKE_CURRENT_LIST_DIR}/test_item.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/test_networkmessage.cpp
 )
 
 foreach(test_src ${boost_tests_SRC})
