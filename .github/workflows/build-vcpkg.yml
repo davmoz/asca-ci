@@ -56,7 +56,7 @@ jobs:
             os: macos
             cxx: clang++
             cc: clang
-            triplet: x64-osx
+            triplet: arm64-osx
 
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
@@ -67,8 +67,8 @@ jobs:
       - name: Get latest CMake
         uses: lukka/get-cmake@latest
 
-      - name: Ubuntu - install luajit
-        run: sudo apt-get update && sudo apt-get install -y libluajit-5.1-dev
+      - name: Ubuntu - install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libluajit-5.1-dev libmysqlclient-dev
         if: contains( matrix.os, 'ubuntu')
 
       - name: MacOS - install luajit pkgconfig
@@ -86,18 +86,18 @@ jobs:
           vcpkgGitCommitId: 62159a45e18f3a9ac0548628dcaf74fcb60c6ff9
 
       - name: Configure CMake
-        run: >
-          cmake -B ${{ runner.workspace }}/build
-          -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }}
-          -DUSE_LUAJIT=${{ matrix.luajit }}
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+        run: |
+          cmake -B "${{ runner.workspace }}/build" \
+            -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} \
+            -DUSE_LUAJIT=${{ matrix.luajit }} \
+            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
         shell: bash
         env:
           CXX: ${{ matrix.cxx }}
           CC: ${{ matrix.cc }}
 
       - name: Build
-        run: cmake --build ${{ runner.workspace }}/build --config ${{ matrix.buildtype }}
+        run: cmake --build "${{ runner.workspace }}/build" --config ${{ matrix.buildtype }}
         shell: bash
 
       - name: Upload artifact binary
