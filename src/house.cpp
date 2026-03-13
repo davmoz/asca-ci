@@ -554,7 +554,7 @@ void Door::setHouse(House* house)
 	this->house = house;
 
 	if (!accessList) {
-		accessList.reset(new AccessList());
+		accessList = std::make_unique<AccessList>();
 	}
 }
 
@@ -574,7 +574,7 @@ bool Door::canUse(const Player* player)
 void Door::setAccessList(const std::string& textlist)
 {
 	if (!accessList) {
-		accessList.reset(new AccessList());
+		accessList = std::make_unique<AccessList>();
 	}
 
 	accessList->parseList(textlist);

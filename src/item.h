@@ -1012,7 +1012,7 @@ class Item : virtual public Thing
 
 		std::unique_ptr<ItemAttributes>& getAttributes() {
 			if (!attributes) {
-				attributes.reset(new ItemAttributes());
+				attributes = std::make_unique<ItemAttributes>();
 			}
 			return attributes;
 		}

@@ -367,7 +367,7 @@ class StaticTile final : public Tile
 		}
 		TileItemVector* makeItemList() override {
 			if (!items) {
-				items.reset(new TileItemVector);
+				items = std::make_unique<TileItemVector>();
 			}
 			return items.get();
 		}
@@ -380,7 +380,7 @@ class StaticTile final : public Tile
 		}
 		CreatureVector* makeCreatures() override {
 			if (!creatures) {
-				creatures.reset(new CreatureVector);
+				creatures = std::make_unique<CreatureVector>();
 			}
 			return creatures.get();
 		}

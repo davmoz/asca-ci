@@ -299,7 +299,7 @@ public:
 
 	Abilities& getAbilities() {
 		if (!abilities) {
-			abilities.reset(new Abilities());
+			abilities = std::make_unique<Abilities>();
 		}
 		return *abilities;
 	}

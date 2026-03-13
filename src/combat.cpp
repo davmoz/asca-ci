@@ -437,22 +437,22 @@ bool Combat::setCallback(CallBackParam_t key)
 {
 	switch (key) {
 		case CALLBACK_PARAM_LEVELMAGICVALUE: {
-			params.valueCallback.reset(new ValueCallback(COMBAT_FORMULA_LEVELMAGIC));
+			params.valueCallback = std::make_unique<ValueCallback>(COMBAT_FORMULA_LEVELMAGIC);
 			return true;
 		}
 
 		case CALLBACK_PARAM_SKILLVALUE: {
-			params.valueCallback.reset(new ValueCallback(COMBAT_FORMULA_SKILL));
+			params.valueCallback = std::make_unique<ValueCallback>(COMBAT_FORMULA_SKILL);
 			return true;
 		}
 
 		case CALLBACK_PARAM_TARGETTILE: {
-			params.tileCallback.reset(new TileCallback());
+			params.tileCallback = std::make_unique<TileCallback>();
 			return true;
 		}
 
 		case CALLBACK_PARAM_TARGETCREATURE: {
-			params.targetCallback.reset(new TargetCallback());
+			params.targetCallback = std::make_unique<TargetCallback>();
 			return true;
 		}
 	}

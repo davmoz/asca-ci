@@ -848,7 +848,7 @@ MonsterType* Monsters::loadMonster(const std::string& file, const std::string& m
 
 	if ((attr = monsterNode.attribute("script"))) {
 		if (!scriptInterface) {
-			scriptInterface.reset(new LuaScriptInterface("Monster Interface"));
+			scriptInterface = std::make_unique<LuaScriptInterface>("Monster Interface");
 			scriptInterface->initState();
 		}
 

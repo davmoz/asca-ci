@@ -172,7 +172,7 @@ Item::Item(const Item& i) :
 	Thing(), id(i.id), count(i.count), loadedFromMap(i.loadedFromMap)
 {
 	if (i.attributes) {
-		attributes.reset(new ItemAttributes(*i.attributes));
+		attributes = std::make_unique<ItemAttributes>(*i.attributes);
 	}
 }
 
@@ -180,7 +180,7 @@ Item* Item::clone() const
 {
 	Item* item = Item::CreateItem(id, count);
 	if (attributes) {
-		item->attributes.reset(new ItemAttributes(*attributes));
+		item->attributes = std::make_unique<ItemAttributes>(*attributes);
 		if (item->getDuration() > 0) {
 			item->incrementReferenceCounter();
 			item->setDecaying(DECAYING_TRUE);
