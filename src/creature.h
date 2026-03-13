@@ -264,7 +264,7 @@ class Creature : virtual public Thing
 		virtual void onFollowCreatureComplete(const Creature*) {}
 
 		//combat functions
-		Creature* getAttackedCreature() {
+		Creature* getAttackedCreature() const {
 			return attackedCreature;
 		}
 		virtual bool setAttackedCreature(Creature* creature);

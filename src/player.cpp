@@ -584,7 +584,7 @@ void Player::setContainerIndex(uint8_t cid, uint16_t index)
 	it->second.index = index;
 }
 
-Container* Player::getContainerByID(uint8_t cid)
+Container* Player::getContainerByID(uint8_t cid) const
 {
 	auto it = openContainers.find(cid);
 	if (it == openContainers.end()) {

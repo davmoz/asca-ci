@@ -428,6 +428,15 @@ class ItemAttributes
 		const Attribute* getExistingAttr(itemAttrTypes type) const;
 		Attribute& getAttr(itemAttrTypes type);
 
+		const CustomAttributeMap* getCustomAttributeMap() const {
+			if (!hasAttribute(ITEM_ATTRIBUTE_CUSTOM)) {
+				return nullptr;
+			}
+
+			const Attribute* attr = getExistingAttr(ITEM_ATTRIBUTE_CUSTOM);
+			return attr ? attr->value.custom : nullptr;
+		}
+
 		CustomAttributeMap* getCustomAttributeMap() {
 			if (!hasAttribute(ITEM_ATTRIBUTE_CUSTOM)) {
 				return nullptr;
@@ -468,12 +477,12 @@ class ItemAttributes
 			getAttr(ITEM_ATTRIBUTE_CUSTOM).value.custom->insert(std::make_pair(std::move(key), std::move(value)));
 		}
 
-		const CustomAttribute* getCustomAttribute(int64_t key) {
+		const CustomAttribute* getCustomAttribute(int64_t key) const {
 			std::string tmp = boost::lexical_cast<std::string>(key);
 			return getCustomAttribute(tmp);
 		}
 
-		const CustomAttribute* getCustomAttribute(const std::string& key) {
+		const CustomAttribute* getCustomAttribute(const std::string& key) const {
 			if (const CustomAttributeMap* customAttrMap = getCustomAttributeMap()) {
 				auto it = customAttrMap->find(asLowerCaseString(key));
 				if (it != customAttrMap->end()) {
@@ -634,18 +643,18 @@ class Item : virtual public Thing
 			getAttributes()->setCustomAttribute(key, value);
 		}
 
-		const ItemAttributes::CustomAttribute* getCustomAttribute(int64_t key) {
+		const ItemAttributes::CustomAttribute* getCustomAttribute(int64_t key) const {
 			if (!attributes) {
 				return nullptr;
 			}
-			return getAttributes()->getCustomAttribute(key);
+			return attributes->getCustomAttribute(key);
 		}
 
-		const ItemAttributes::CustomAttribute* getCustomAttribute(const std::string& key) {
+		const ItemAttributes::CustomAttribute* getCustomAttribute(const std::string& key) const {
 			if (!attributes) {
 				return nullptr;
 			}
-			return getAttributes()->getCustomAttribute(key);
+			return attributes->getCustomAttribute(key);
 		}
 
 		bool removeCustomAttribute(int64_t key) {

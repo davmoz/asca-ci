@@ -314,7 +314,7 @@ class Player final : public Creature, public Cylinder
 			return (group->flags & value) != 0;
 		}
 
-		BedItem* getBedItem() {
+		BedItem* getBedItem() const {
 			return bedItem;
 		}
 		void setBedItem(BedItem* b) {
@@ -345,7 +345,7 @@ class Player final : public Creature, public Cylinder
 		void closeContainer(uint8_t cid);
 		void setContainerIndex(uint8_t cid, uint16_t index);
 
-		Container* getContainerByID(uint8_t cid);
+		Container* getContainerByID(uint8_t cid) const;
 		int8_t getContainerID(const Container* container) const;
 		uint16_t getContainerIndex(uint8_t cid) const;
 
@@ -544,7 +544,7 @@ class Player final : public Creature, public Cylinder
 		tradestate_t getTradeState() const {
 			return tradeState;
 		}
-		Item* getTradeItem() {
+		Item* getTradeItem() const {
 			return tradeItem;
 		}
 
