@@ -28,6 +28,14 @@
 
 extern ConfigManagerCompat g_config;
 
+Connection::Connection(boost::asio::io_context& ioContext, ConstServicePort_ptr service_port) :
+    readTimer(ioContext),
+    writeTimer(ioContext),
+    service_port(std::move(service_port)),
+    socket(ioContext),
+    timeConnected(time(nullptr))
+{}
+
 Connection_ptr ConnectionManager::createConnection(boost::asio::io_context& ioContext, ConstServicePort_ptr servicePort)
 {
 	std::lock_guard<std::mutex> lockClass(connectionManagerLock);
@@ -67,10 +75,7 @@ void Connection::close(bool force)
 	ConnectionManager::getInstance().releaseConnection(shared_from_this());
 
 	std::lock_guard<std::recursive_mutex> lockClass(connectionLock);
-	if (connectionState == CONNECTION_STATE_CLOSED) {
-		return;
-	}
-	connectionState = CONNECTION_STATE_CLOSED;
+	connectionState = CONNECTION_STATE_DISCONNECTED;
 
 	if (protocol) {
 		g_dispatcher.addTask(
@@ -108,13 +113,23 @@ void Connection::accept(Protocol_ptr protocol)
 {
 	this->protocol = protocol;
 	g_dispatcher.addTask(createTask([protocol]() { protocol->onConnect(); }));
-
+	connectionState = CONNECTION_STATE_GAMEWORLD_AUTH;
 	accept();
 }
 
 void Connection::accept()
 {
+	if (connectionState == CONNECTION_STATE_PENDING) {
+		connectionState = CONNECTION_STATE_REQUEST_CHARLIST;
+	}
+
 	std::lock_guard<std::recursive_mutex> lockClass(connectionLock);
+
+	boost::system::error_code error;
+	if (auto endpoint = socket.remote_endpoint(error); !error) {
+		remoteAddress = endpoint.address();
+	}
+
 	try {
 		readTimer.expires_after(std::chrono::seconds(CONNECTION_READ_TIMEOUT));
 		readTimer.async_wait([weak = std::weak_ptr<Connection>(shared_from_this())](const boost::system::error_code& error) {
@@ -141,7 +156,7 @@ void Connection::parseHeader(const boost::system::error_code& error)
 	if (error) {
 		close(FORCE_CLOSE);
 		return;
-	} else if (connectionState == CONNECTION_STATE_CLOSED) {
+	} else if (connectionState == CONNECTION_STATE_DISCONNECTED) {
 		return;
 	}
 
@@ -194,7 +209,7 @@ void Connection::parsePacket(const boost::system::error_code& error)
 	if (error) {
 		close(FORCE_CLOSE);
 		return;
-	} else if (connectionState == CONNECTION_STATE_CLOSED) {
+	} else if (connectionState == CONNECTION_STATE_DISCONNECTED) {
 		return;
 	}
 
@@ -254,7 +269,7 @@ void Connection::parsePacket(const boost::system::error_code& error)
 void Connection::send(const OutputMessage_ptr& msg)
 {
 	std::lock_guard<std::recursive_mutex> lockClass(connectionLock);
-	if (connectionState == CONNECTION_STATE_CLOSED) {
+	if (connectionState == CONNECTION_STATE_DISCONNECTED) {
 		return;
 	}
 
@@ -289,14 +304,11 @@ uint32_t Connection::getIP()
 {
 	std::lock_guard<std::recursive_mutex> lockClass(connectionLock);
 
-	// IP-address is expressed in network byte order
-	boost::system::error_code error;
-	const boost::asio::ip::tcp::endpoint endpoint = socket.remote_endpoint(error);
-	if (error) {
+	if (remoteAddress.is_unspecified()) {
 		return 0;
 	}
 
-	return htonl(endpoint.address().to_v4().to_uint());
+	return htonl(remoteAddress.to_v4().to_uint());
 }
 
 void Connection::onWriteOperation(const boost::system::error_code& error)
@@ -313,7 +325,7 @@ void Connection::onWriteOperation(const boost::system::error_code& error)
 
 	if (!messageQueue.empty()) {
 		internalSend(messageQueue.front());
-	} else if (connectionState == CONNECTION_STATE_CLOSED) {
+	} else if (connectionState == CONNECTION_STATE_DISCONNECTED) {
 		closeSocket();
 	}
 }

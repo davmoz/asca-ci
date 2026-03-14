@@ -29,7 +29,8 @@
 void printXMLError(std::string_view where, const std::string& fileName, const pugi::xml_parse_result& result);
 
 [[nodiscard]] std::string transformToSHA1(std::string_view input);
-[[nodiscard]] std::string generateToken(std::string_view key, uint32_t ticks);
+[[nodiscard]] std::string hmac(std::string_view algorithm, std::string_view key, std::string_view message);
+[[nodiscard]] std::string generateToken(std::string_view key, uint64_t counter, size_t length = AUTHENTICATOR_DIGITS);
 
 void replaceString(std::string& str, std::string_view sought, const std::string& replacement);
 void trim_right(std::string& source, char t);

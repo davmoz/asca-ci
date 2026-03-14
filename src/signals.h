@@ -17,26 +17,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_SIGNALHANDLINGTHREAD_H
-#define FS_SIGNALHANDLINGTHREAD_H
-
-#include <boost/asio.hpp>
+#ifndef FS_SIGNALS_H
+#define FS_SIGNALS_H
 
 class Signals
 {
 	boost::asio::signal_set set;
-	public:
-		explicit Signals(boost::asio::io_context& service);
 
-	private:
-		void asyncWait();
-		static void dispatchSignalHandler(int signal);
+public:
+	explicit Signals(boost::asio::io_context& ioc);
 
-		static void sigbreakHandler();
-		static void sigintHandler();
-		static void sighupHandler();
-		static void sigtermHandler();
-		static void sigusr1Handler();
+private:
+	void asyncWait();
 };
 
-#endif
+#endif // FS_SIGNALS_H

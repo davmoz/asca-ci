@@ -32,3 +32,6 @@ target_sources(boost_test_xtea PRIVATE ${TFS_SRC_DIR}/xtea.cpp)
 # test_base64 needs base64.cpp and OpenSSL
 target_sources(boost_test_base64 PRIVATE ${TFS_SRC_DIR}/base64.cpp)
 target_link_libraries(boost_test_base64 PRIVATE OpenSSL::Crypto)
+
+# test_sha1 needs OpenSSL for EVP digest
+target_link_libraries(boost_test_sha1 PRIVATE OpenSSL::Crypto)
