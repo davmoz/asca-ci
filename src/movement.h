@@ -48,7 +48,7 @@ struct MoveEventList {
 	std::list<MoveEvent> moveEvent[MOVE_EVENT_LAST];
 };
 
-using VocEquipMap = std::map<uint16_t, bool>;
+using VocEquipSet = std::unordered_set<uint16_t>;
 
 class MoveEvents final : public BaseEvents
 {
@@ -145,13 +145,13 @@ class MoveEvent final : public Event
 		uint32_t getWieldInfo() const {
 			return wieldInfo;
 		}
-		const VocEquipMap& getVocEquipMap() const {
-			return vocEquipMap;
+		const VocEquipSet& getVocEquipSet() const {
+			return vocEquipSet;
 		}
 		void addVocEquipMap(std::string vocName) {
 			int32_t vocationId = g_vocations.getVocationId(vocName);
 			if (vocationId != -1) {
-				vocEquipMap[vocationId] = true;
+				vocEquipSet.insert(static_cast<uint16_t>(vocationId));
 			}
 		}
 		bool getTileItem() const {
@@ -160,27 +160,31 @@ class MoveEvent final : public Event
 		void setTileItem(bool b) {
 			tileItem = b;
 		}
-		std::vector<uint32_t> getItemIdRange() {
+		const std::vector<uint32_t>& getItemIdRange() const {
 			return itemIdRange;
 		}
+		void clearItemIdRange() { itemIdRange.clear(); }
 		void addItemId(uint32_t id) {
 			itemIdRange.emplace_back(id);
 		}
-		std::vector<uint32_t> getActionIdRange() {
+		const std::vector<uint32_t>& getActionIdRange() const {
 			return actionIdRange;
 		}
+		void clearActionIdRange() { actionIdRange.clear(); }
 		void addActionId(uint32_t id) {
 			actionIdRange.emplace_back(id);
 		}
-		std::vector<uint32_t> getUniqueIdRange() {
+		const std::vector<uint32_t>& getUniqueIdRange() const {
 			return uniqueIdRange;
 		}
+		void clearUniqueIdRange() { uniqueIdRange.clear(); }
 		void addUniqueId(uint32_t id) {
 			uniqueIdRange.emplace_back(id);
 		}
-		std::vector<Position> getPosList() {
+		const std::vector<Position>& getPosList() const {
 			return posList;
 		}
+		void clearPosList() { posList.clear(); }
 		void addPosList(Position pos) {
 			posList.emplace_back(pos);
 		}
@@ -237,7 +241,7 @@ class MoveEvent final : public Event
 		bool premium = false;
 		std::string vocationString;
 		uint32_t wieldInfo = 0;
-		VocEquipMap vocEquipMap;
+		VocEquipSet vocEquipSet;
 		bool tileItem = false;
 
 		std::vector<uint32_t> itemIdRange;

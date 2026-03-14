@@ -596,14 +596,14 @@ bool MoveEvent::configureEvent(const pugi::xml_node& node)
 
 			int32_t vocationId = g_vocations.getVocationId(vocationNameAttribute.as_string());
 			if (vocationId != -1) {
-				vocEquipMap[vocationId] = true;
+				vocEquipSet.insert(static_cast<uint16_t>(vocationId));
 				if (vocationNode.attribute("showInDescription").as_bool(true)) {
 					vocStringList.push_back(asLowerCaseString(vocationNameAttribute.as_string()));
 				}
 			}
 		}
 
-		if (!vocEquipMap.empty()) {
+		if (!vocEquipSet.empty()) {
 			wieldInfo |= WIELDINFO_VOCREQ;
 		}
 
@@ -662,8 +662,8 @@ uint32_t MoveEvent::RemoveItemField(Item*, Item*, const Position&)
 ReturnValue MoveEvent::EquipItem(MoveEvent* moveEvent, Player* player, Item* item, slots_t slot, bool isCheck)
 {
 	if (!player->hasFlag(PlayerFlag_IgnoreWeaponCheck) && moveEvent->getWieldInfo() != 0) {
-		const VocEquipMap& vocEquipMap = moveEvent->getVocEquipMap();
-		if (!vocEquipMap.empty() && vocEquipMap.find(player->getVocationId()) == vocEquipMap.end()) {
+		const VocEquipSet& vocEquipSet = moveEvent->getVocEquipSet();
+		if (!vocEquipSet.empty() && vocEquipSet.find(player->getVocationId()) == vocEquipSet.end()) {
 			return RETURNVALUE_YOUDONTHAVEREQUIREDPROFESSION;
 		}
 
