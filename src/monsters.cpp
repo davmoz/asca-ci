@@ -203,9 +203,9 @@ bool Monsters::deserializeSpell(const pugi::xml_node& node, spellBlock_t& sb, co
 					spread = std::max<int32_t>(0, pugi::cast<int32_t>(attr.value()));
 				}
 
-				AreaCombat* area = new AreaCombat();
+				auto area = std::make_unique<AreaCombat>();
 				area->setupArea(length, spread);
-				combat->setArea(area);
+				combat->setArea(std::move(area));
 
 				needDirection = true;
 			}
@@ -219,9 +219,9 @@ bool Monsters::deserializeSpell(const pugi::xml_node& node, spellBlock_t& sb, co
 				needTarget = attr.as_bool();
 			}
 
-			AreaCombat* area = new AreaCombat();
+			auto area = std::make_unique<AreaCombat>();
 			area->setupArea(radius);
-			combat->setArea(area);
+			combat->setArea(std::move(area));
 		}
 
 		std::string tmpName = asLowerCaseString(name);
@@ -587,17 +587,17 @@ bool Monsters::deserializeSpell(MonsterSpell* spell, spellBlock_t& sb, const std
 		if (spell->length > 0) {
 			spell->spread = std::max<int32_t>(0, spell->spread);
 
-			AreaCombat* area = new AreaCombat();
+			auto area = std::make_unique<AreaCombat>();
 			area->setupArea(spell->length, spell->spread);
-			combat->setArea(area);
+			combat->setArea(std::move(area));
 
 			spell->needDirection = true;
 		}
 
 		if (spell->radius > 0) {
-			AreaCombat* area = new AreaCombat();
+			auto area = std::make_unique<AreaCombat>();
 			area->setupArea(spell->radius);
-			combat->setArea(area);
+			combat->setArea(std::move(area));
 		}
 
 		std::string tmpName = asLowerCaseString(spell->name);

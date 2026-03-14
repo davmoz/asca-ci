@@ -26,7 +26,7 @@
 #include "const.h"
 #include "enums.h"
 
-void printXMLError(std::string_view where, const std::string& fileName, const pugi::xml_parse_result& result);
+void printXMLError(std::string_view where, std::string_view fileName, const pugi::xml_parse_result& result);
 
 [[nodiscard]] std::string transformToSHA1(std::string_view input);
 [[nodiscard]] std::string hmac(std::string_view algorithm, std::string_view key, std::string_view message);

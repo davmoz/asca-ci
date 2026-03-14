@@ -11933,7 +11933,7 @@ int LuaScriptInterface::luaCombatSetArea(lua_State* L)
 
 	Combat* combat = getUserdata<Combat>(L, 1);
 	if (combat) {
-		combat->setArea(new AreaCombat(*area));
+		combat->setArea(std::make_unique<AreaCombat>(*area));
 		pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);
@@ -16278,12 +16278,12 @@ AreaCombat* LuaEnvironment::getAreaObject(uint32_t id) const
 	if (it == areaMap.end()) {
 		return nullptr;
 	}
-	return it->second;
+	return it->second.get();
 }
 
 uint32_t LuaEnvironment::createAreaObject(LuaScriptInterface* interface)
 {
-	areaMap[++lastAreaId] = new AreaCombat;
+	areaMap[++lastAreaId] = std::make_unique<AreaCombat>();
 	areaIdMap[interface].push_back(lastAreaId);
 	return lastAreaId;
 }
@@ -16296,11 +16296,7 @@ void LuaEnvironment::clearAreaObjects(LuaScriptInterface* interface)
 	}
 
 	for (uint32_t id : it->second) {
-		auto itt = areaMap.find(id);
-		if (itt != areaMap.end()) {
-			delete itt->second;
-			areaMap.erase(itt);
-		}
+		areaMap.erase(id);
 	}
 	it->second.clear();
 }

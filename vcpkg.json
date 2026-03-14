@@ -1,25 +1,44 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "asca",
-  "version-string": "1.3.0",
   "description": "ASCA - TFS 1.3 based Tibia server",
   "dependencies": [
     "boost-asio",
-    "boost-date-time",
-    "boost-filesystem",
     "boost-iostreams",
-    "boost-lexical-cast",
     "boost-lockfree",
-    "boost-range",
     "boost-system",
     "boost-variant",
     "fmt",
-    "lua",
-    "luajit",
-    "openssl",
-    "pugixml",
     {
-      "name": "libmysql",
-      "platform": "!linux"
+      "name": "libiconv",
+      "platform": "osx"
+    },
+    "libmariadb",
+    "openssl",
+    "pugixml"
+  ],
+  "features": {
+    "lua": {
+      "description": "Use Lua instead of LuaJIT",
+      "dependencies": [
+        "lua"
+      ]
+    },
+    "luajit": {
+      "description": "Use LuaJIT instead of Lua",
+      "dependencies": [
+        "luajit"
+      ]
+    },
+    "unit-tests": {
+      "description": "Build unit tests",
+      "dependencies": [
+        "boost-test"
+      ]
     }
-  ]
+  },
+  "default-features": [
+    "lua"
+  ],
+  "builtin-baseline": "215a2535590f1f63788ac9bd2ed58ad15e6afdff"
 }

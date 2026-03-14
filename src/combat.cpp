@@ -1172,22 +1172,6 @@ void TargetCallback::onTargetCombat(Creature* creature, Creature* target) const
 
 //**********************************************************//
 
-void AreaCombat::clear()
-{
-	for (const auto& it : areas) {
-		delete it.second;
-	}
-	areas.clear();
-}
-
-AreaCombat::AreaCombat(const AreaCombat& rhs)
-{
-	hasExtArea = rhs.hasExtArea;
-	for (const auto& it : rhs.areas) {
-		areas[it.first] = new MatrixArea(*it.second);
-	}
-}
-
 void AreaCombat::getList(const Position& centerPos, const Position& targetPos, std::forward_list<Tile*>& list) const
 {
 	const MatrixArea* area = getArea(centerPos, targetPos);
@@ -1219,41 +1203,41 @@ void AreaCombat::getList(const Position& centerPos, const Position& targetPos, s
 	}
 }
 
-void AreaCombat::copyArea(const MatrixArea* input, MatrixArea* output, MatrixOperation_t op)
+void AreaCombat::copyArea(const MatrixArea& input, MatrixArea& output, MatrixOperation_t op)
 {
 	uint32_t centerY, centerX;
-	input->getCenter(centerY, centerX);
+	input.getCenter(centerY, centerX);
 
 	if (op == MATRIXOPERATION_COPY) {
-		for (uint32_t y = 0; y < input->getRows(); ++y) {
-			for (uint32_t x = 0; x < input->getCols(); ++x) {
-				(*output)[y][x] = (*input)[y][x];
+		for (uint32_t y = 0; y < input.getRows(); ++y) {
+			for (uint32_t x = 0; x < input.getCols(); ++x) {
+				output[y][x] = input[y][x];
 			}
 		}
 
-		output->setCenter(centerY, centerX);
+		output.setCenter(centerY, centerX);
 	} else if (op == MATRIXOPERATION_MIRROR) {
-		for (uint32_t y = 0; y < input->getRows(); ++y) {
+		for (uint32_t y = 0; y < input.getRows(); ++y) {
 			uint32_t rx = 0;
-			for (int32_t x = input->getCols(); --x >= 0;) {
-				(*output)[y][rx++] = (*input)[y][x];
+			for (int32_t x = input.getCols(); --x >= 0;) {
+				output[y][rx++] = input[y][x];
 			}
 		}
 
-		output->setCenter(centerY, (input->getRows() - 1) - centerX);
+		output.setCenter(centerY, (input.getRows() - 1) - centerX);
 	} else if (op == MATRIXOPERATION_FLIP) {
-		for (uint32_t x = 0; x < input->getCols(); ++x) {
+		for (uint32_t x = 0; x < input.getCols(); ++x) {
 			uint32_t ry = 0;
-			for (int32_t y = input->getRows(); --y >= 0;) {
-				(*output)[ry++][x] = (*input)[y][x];
+			for (int32_t y = input.getRows(); --y >= 0;) {
+				output[ry++][x] = input[y][x];
 			}
 		}
 
-		output->setCenter((input->getCols() - 1) - centerY, centerX);
+		output.setCenter((input.getCols() - 1) - centerY, centerX);
 	} else {
 		// rotation
-		int32_t rotateCenterX = (output->getCols() / 2) - 1;
-		int32_t rotateCenterY = (output->getRows() / 2) - 1;
+		int32_t rotateCenterX = (output.getCols() / 2) - 1;
+		int32_t rotateCenterY = (output.getRows() / 2) - 1;
 		int32_t angle;
 
 		switch (op) {
@@ -1281,8 +1265,8 @@ void AreaCombat::copyArea(const MatrixArea* input, MatrixArea* output, MatrixOpe
 		double c = std::sin(angleRad);
 		double d = std::cos(angleRad);
 
-		const uint32_t rows = input->getRows();
-		for (uint32_t x = 0, cols = input->getCols(); x < cols; ++x) {
+		const uint32_t rows = input.getRows();
+		for (uint32_t x = 0, cols = input.getCols(); x < cols; ++x) {
 			for (uint32_t y = 0; y < rows; ++y) {
 				//calculate new coordinates using rotation center
 				int32_t newX = x - centerX;
@@ -1293,15 +1277,15 @@ void AreaCombat::copyArea(const MatrixArea* input, MatrixArea* output, MatrixOpe
 				int32_t rotatedY = static_cast<int32_t>(round(newX * c + newY * d));
 
 				//write in the output matrix using rotated coordinates
-				(*output)[rotatedY + rotateCenterY][rotatedX + rotateCenterX] = (*input)[y][x];
+				output[rotatedY + rotateCenterY][rotatedX + rotateCenterX] = input[y][x];
 			}
 		}
 
-		output->setCenter(rotateCenterY, rotateCenterX);
+		output.setCenter(rotateCenterY, rotateCenterX);
 	}
 }
 
-MatrixArea* AreaCombat::createArea(const std::list<uint32_t>& list, uint32_t rows)
+MatrixArea AreaCombat::createArea(const std::list<uint32_t>& list, uint32_t rows)
 {
 	uint32_t cols;
 	if (rows == 0) {
@@ -1310,18 +1294,18 @@ MatrixArea* AreaCombat::createArea(const std::list<uint32_t>& list, uint32_t row
 		cols = list.size() / rows;
 	}
 
-	MatrixArea* area = new MatrixArea(rows, cols);
+	MatrixArea area(rows, cols);
 
 	uint32_t x = 0;
 	uint32_t y = 0;
 
 	for (uint32_t value : list) {
 		if (value == 1 || value == 3) {
-			area->setValue(y, x, true);
+			area.setValue(y, x, true);
 		}
 
 		if (value == 2 || value == 3) {
-			area->setCenter(y, x);
+			area.setCenter(y, x);
 		}
 
 		++x;
@@ -1336,27 +1320,27 @@ MatrixArea* AreaCombat::createArea(const std::list<uint32_t>& list, uint32_t row
 
 void AreaCombat::setupArea(const std::list<uint32_t>& list, uint32_t rows)
 {
-	MatrixArea* area = createArea(list, rows);
+	MatrixArea area = createArea(list, rows);
 
-	//NORTH
-	areas[DIRECTION_NORTH] = area;
-
-	uint32_t maxOutput = std::max<uint32_t>(area->getCols(), area->getRows()) * 2;
+	uint32_t maxOutput = std::max<uint32_t>(area.getCols(), area.getRows()) * 2;
 
 	//SOUTH
-	MatrixArea* southArea = new MatrixArea(maxOutput, maxOutput);
-	AreaCombat::copyArea(area, southArea, MATRIXOPERATION_ROTATE180);
-	areas[DIRECTION_SOUTH] = southArea;
+	MatrixArea southArea(maxOutput, maxOutput);
+	copyArea(area, southArea, MATRIXOPERATION_ROTATE180);
+	areas[DIRECTION_SOUTH] = std::move(southArea);
 
 	//EAST
-	MatrixArea* eastArea = new MatrixArea(maxOutput, maxOutput);
-	AreaCombat::copyArea(area, eastArea, MATRIXOPERATION_ROTATE90);
-	areas[DIRECTION_EAST] = eastArea;
+	MatrixArea eastArea(maxOutput, maxOutput);
+	copyArea(area, eastArea, MATRIXOPERATION_ROTATE90);
+	areas[DIRECTION_EAST] = std::move(eastArea);
 
 	//WEST
-	MatrixArea* westArea = new MatrixArea(maxOutput, maxOutput);
-	AreaCombat::copyArea(area, westArea, MATRIXOPERATION_ROTATE270);
-	areas[DIRECTION_WEST] = westArea;
+	MatrixArea westArea(maxOutput, maxOutput);
+	copyArea(area, westArea, MATRIXOPERATION_ROTATE270);
+	areas[DIRECTION_WEST] = std::move(westArea);
+
+	//NORTH
+	areas[DIRECTION_NORTH] = std::move(area);
 }
 
 void AreaCombat::setupArea(int32_t length, int32_t spread)
@@ -1436,27 +1420,28 @@ void AreaCombat::setupExtArea(const std::list<uint32_t>& list, uint32_t rows)
 	}
 
 	hasExtArea = true;
-	MatrixArea* area = createArea(list, rows);
+	MatrixArea area = createArea(list, rows);
 
-	//NORTH-WEST
-	areas[DIRECTION_NORTHWEST] = area;
-
-	uint32_t maxOutput = std::max<uint32_t>(area->getCols(), area->getRows()) * 2;
+	uint32_t maxOutput = std::max<uint32_t>(area.getCols(), area.getRows()) * 2;
 
 	//NORTH-EAST
-	MatrixArea* neArea = new MatrixArea(maxOutput, maxOutput);
-	AreaCombat::copyArea(area, neArea, MATRIXOPERATION_MIRROR);
-	areas[DIRECTION_NORTHEAST] = neArea;
+	MatrixArea neArea(maxOutput, maxOutput);
+	copyArea(area, neArea, MATRIXOPERATION_MIRROR);
+	areas[DIRECTION_NORTHEAST] = std::move(neArea);
 
 	//SOUTH-WEST
-	MatrixArea* swArea = new MatrixArea(maxOutput, maxOutput);
-	AreaCombat::copyArea(area, swArea, MATRIXOPERATION_FLIP);
-	areas[DIRECTION_SOUTHWEST] = swArea;
+	MatrixArea swArea(maxOutput, maxOutput);
+	copyArea(area, swArea, MATRIXOPERATION_FLIP);
 
 	//SOUTH-EAST
-	MatrixArea* seArea = new MatrixArea(maxOutput, maxOutput);
-	AreaCombat::copyArea(swArea, seArea, MATRIXOPERATION_MIRROR);
-	areas[DIRECTION_SOUTHEAST] = seArea;
+	MatrixArea seArea(maxOutput, maxOutput);
+	copyArea(swArea, seArea, MATRIXOPERATION_MIRROR);
+	areas[DIRECTION_SOUTHEAST] = std::move(seArea);
+
+	areas[DIRECTION_SOUTHWEST] = std::move(swArea);
+
+	//NORTH-WEST
+	areas[DIRECTION_NORTHWEST] = std::move(area);
 }
 
 //**********************************************************//

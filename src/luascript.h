@@ -1525,7 +1525,7 @@ class LuaEnvironment : public LuaScriptInterface
 
 		std::unordered_map<uint32_t, LuaTimerEventDesc> timerEvents;
 		std::unordered_map<uint32_t, Combat*> combatMap;
-		std::unordered_map<uint32_t, AreaCombat*> areaMap;
+		std::unordered_map<uint32_t, std::unique_ptr<AreaCombat>> areaMap;
 
 		std::unordered_map<LuaScriptInterface*, std::vector<uint32_t>> combatIdMap;
 		std::unordered_map<LuaScriptInterface*, std::vector<uint32_t>> areaIdMap;

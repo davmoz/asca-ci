@@ -82,14 +82,11 @@ class AreaCombat
 {
 	public:
 		AreaCombat() = default;
-
-		AreaCombat(const AreaCombat& rhs);
-		~AreaCombat() {
-			clear();
-		}
-
-		// non-assignable
-		AreaCombat& operator=(const AreaCombat&) = delete;
+		AreaCombat(const AreaCombat&) = default;
+		AreaCombat(AreaCombat&&) = default;
+		AreaCombat& operator=(const AreaCombat&) = default;
+		AreaCombat& operator=(AreaCombat&&) = default;
+		~AreaCombat() = default;
 
 		void getList(const Position& centerPos, const Position& targetPos, std::forward_list<Tile*>& list) const;
 
@@ -97,7 +94,6 @@ class AreaCombat
 		void setupArea(int32_t length, int32_t spread);
 		void setupArea(int32_t radius);
 		void setupExtArea(const std::list<uint32_t>& list, uint32_t rows);
-		void clear();
 
 	private:
 		enum MatrixOperation_t {
@@ -109,10 +105,10 @@ class AreaCombat
 			MATRIXOPERATION_ROTATE270,
 		};
 
-		MatrixArea* createArea(const std::list<uint32_t>& list, uint32_t rows);
-		static void copyArea(const MatrixArea* input, MatrixArea* output, MatrixOperation_t op);
+		static MatrixArea createArea(const std::list<uint32_t>& list, uint32_t rows);
+		static void copyArea(const MatrixArea& input, MatrixArea& output, MatrixOperation_t op);
 
-		MatrixArea* getArea(const Position& centerPos, const Position& targetPos) const {
+		const MatrixArea* getArea(const Position& centerPos, const Position& targetPos) const {
 			int32_t dx = Position::getOffsetX(targetPos, centerPos);
 			int32_t dy = Position::getOffsetY(targetPos, centerPos);
 
@@ -143,10 +139,10 @@ class AreaCombat
 			if (it == areas.end()) {
 				return nullptr;
 			}
-			return it->second;
+			return &it->second;
 		}
 
-		std::map<Direction, MatrixArea*> areas;
+		std::map<Direction, MatrixArea> areas;
 		bool hasExtArea = false;
 };
 
@@ -186,8 +182,8 @@ class Combat
 		CallBack* getCallback(CallBackParam_t key);
 
 		bool setParam(CombatParam_t param, uint32_t value);
-		void setArea(AreaCombat* area) {
-			this->area.reset(area);
+		void setArea(std::unique_ptr<AreaCombat> area) {
+			this->area = std::move(area);
 		}
 		bool hasArea() const {
 			return area != nullptr;

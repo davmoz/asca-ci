@@ -110,88 +110,84 @@ bool Player::isPushable() const
 
 std::string Player::getDescription(int32_t lookDistance) const
 {
-	std::ostringstream s;
+	std::string s;
 
 	if (lookDistance == -1) {
-		s << "yourself.";
+		s += "yourself.";
 
 		if (group->access) {
-			s << " You are " << group->name << '.';
+			s += fmt::format(" You are {}.", group->name);
 		} else if (vocation->getId() != VOCATION_NONE) {
-			s << " You are " << vocation->getVocDescription() << '.';
+			s += fmt::format(" You are {}.", vocation->getVocDescription());
 		} else {
-			s << " You have no vocation.";
+			s += " You have no vocation.";
 		}
 	} else {
-		s << name;
 		if (!group->access) {
-			s << " (Level " << level << ')';
-		}
-		s << '.';
-
-		if (sex == PLAYERSEX_FEMALE) {
-			s << " She";
+			s += fmt::format("{} (Level {}).", name, level);
 		} else {
-			s << " He";
+			s += fmt::format("{}.", name);
 		}
+
+		const char* pronoun = sex == PLAYERSEX_FEMALE ? " She" : " He";
 
 		if (group->access) {
-			s << " is " << group->name << '.';
+			s += fmt::format("{} is {}.", pronoun, group->name);
 		} else if (vocation->getId() != VOCATION_NONE) {
-			s << " is " << vocation->getVocDescription() << '.';
+			s += fmt::format("{} is {}.", pronoun, vocation->getVocDescription());
 		} else {
-			s << " has no vocation.";
+			s += fmt::format("{} has no vocation.", pronoun);
 		}
 	}
 
 	if (party) {
 		if (lookDistance == -1) {
-			s << " Your party has ";
+			s += " Your party has ";
 		} else if (sex == PLAYERSEX_FEMALE) {
-			s << " She is in a party with ";
+			s += " She is in a party with ";
 		} else {
-			s << " He is in a party with ";
+			s += " He is in a party with ";
 		}
 
 		size_t memberCount = party->getMemberCount() + 1;
 		if (memberCount == 1) {
-			s << "1 member and ";
+			s += "1 member and ";
 		} else {
-			s << memberCount << " members and ";
+			s += fmt::format("{} members and ", memberCount);
 		}
 
 		size_t invitationCount = party->getInvitationCount();
 		if (invitationCount == 1) {
-			s << "1 pending invitation.";
+			s += "1 pending invitation.";
 		} else {
-			s << invitationCount << " pending invitations.";
+			s += fmt::format("{} pending invitations.", invitationCount);
 		}
 	}
 
 	if (!guild || !guildRank) {
-		return s.str();
+		return s;
 	}
 
 	if (lookDistance == -1) {
-		s << " You are ";
+		s += " You are ";
 	} else if (sex == PLAYERSEX_FEMALE) {
-		s << " She is ";
+		s += " She is ";
 	} else {
-		s << " He is ";
+		s += " He is ";
 	}
 
-	s << guildRank->name << " of the " << guild->getName();
+	s += fmt::format("{} of the {}", guildRank->name, guild->getName());
 	if (!guildNick.empty()) {
-		s << " (" << guildNick << ')';
+		s += fmt::format(" ({})", guildNick);
 	}
 
 	size_t memberCount = guild->getMemberCount();
 	if (memberCount == 1) {
-		s << ", which has 1 member, " << guild->getMembersOnline().size() << " of them online.";
+		s += fmt::format(", which has 1 member, {} of them online.", guild->getMembersOnline().size());
 	} else {
-		s << ", which has " << memberCount << " members, " << guild->getMembersOnline().size() << " of them online.";
+		s += fmt::format(", which has {} members, {} of them online.", memberCount, guild->getMembersOnline().size());
 	}
-	return s.str();
+	return s;
 }
 
 Item* Player::getInventoryItem(slots_t slot) const
