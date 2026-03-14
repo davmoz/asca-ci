@@ -245,8 +245,6 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 	}
 	version = msg.get<uint16_t>();
 
-	msg.skipBytes(7); // U32 client version, U8 client type, U16 dat revision
-
 	if (!Protocol::RSA_decrypt(msg)) {
 		disconnect();
 		return;
@@ -269,34 +267,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 	}
 
 	msg.skipBytes(1); // gamemaster flag
-
-	std::string sessionKey = msg.getString();
-
-	auto sessionArgs = explodeString(sessionKey, "\n", 4);
-	if (sessionArgs.size() != 4) {
-		disconnect();
-		return;
-	}
-
-	std::string& accountName = sessionArgs[0];
-	std::string& password = sessionArgs[1];
-	std::string& token = sessionArgs[2];
-	uint32_t tokenTime = 0;
-	try {
-		tokenTime = std::stoul(sessionArgs[3]);
-	} catch (const std::invalid_argument&) {
-		disconnectClient("Malformed token packet.");
-		return;
-	} catch (const std::out_of_range&) {
-		disconnectClient("Token time is too long.");
-		return;
-	}
-
-	if (accountName.empty()) {
-		disconnectClient("You must enter your account name.");
-		return;
-	}
-
+	std::string accountName = msg.getString();
 	std::string characterName = msg.getString();
 
 	uint32_t timeStamp = msg.get<uint32_t>();
@@ -331,7 +302,14 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
-	uint32_t accountId = IOLoginData::gameworldAuthentication(accountName, password, characterName, token, tokenTime);
+	if (accountName.empty()) {
+		disconnectClient("You must enter your account name.");
+		return;
+	}
+
+	std::string emptyPassword;
+	std::string emptyToken;
+	uint32_t accountId = IOLoginData::gameworldAuthentication(accountName, emptyPassword, characterName, emptyToken, 0);
 	if (accountId == 0) {
 		disconnectClient("Account name or password is not correct.");
 		return;
