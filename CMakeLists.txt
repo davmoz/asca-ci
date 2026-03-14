@@ -27,7 +27,7 @@ endif ()
 target_precompile_headers(tfs PUBLIC src/otpch.h)
 
 # Issue 232: Unity build support — groups source files to speed compilation
-option(ENABLE_UNITY_BUILD "Enable unity (jumbo) builds" OFF)
+option(ENABLE_UNITY_BUILD "Enable unity (jumbo) builds" ON)
 if (ENABLE_UNITY_BUILD)
     set_target_properties(tfs PROPERTIES UNITY_BUILD ON)
 endif ()
@@ -35,7 +35,7 @@ endif ()
 set(CMAKE_CXX_FLAGS_PERFORMANCE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
 
 # Find packages.
-find_package(OpenSSL REQUIRED)
+find_package(OpenSSL 3.0.0 REQUIRED)
 find_package(fmt REQUIRED)
 find_package(MySQL REQUIRED)
 find_package(Threads REQUIRED)
@@ -98,8 +98,8 @@ endif()
 ### END  Git Version ###
 
 ### Tests ###
-option(BUILD_TESTS "Build unit tests" OFF)
-if (BUILD_TESTS)
+option(BUILD_TESTING "Build unit tests" OFF)
+if (BUILD_TESTING)
     enable_testing()
     add_subdirectory(tests/cpp)
     add_subdirectory(src/tests)

@@ -27,11 +27,23 @@
 class DBResult;
 using DBResult_ptr = std::shared_ptr<DBResult>;
 
+namespace tfs::detail {
+
+struct MysqlDeleter
+{
+	void operator()(MYSQL* handle) const { mysql_close(handle); }
+	void operator()(MYSQL_RES* handle) const { mysql_free_result(handle); }
+};
+
+using Mysql_ptr = std::unique_ptr<MYSQL, MysqlDeleter>;
+using MysqlResult_ptr = std::unique_ptr<MYSQL_RES, MysqlDeleter>;
+
+} // namespace tfs::detail
+
 class Database
 {
 	public:
 		Database() = default;
-		~Database();
 
 		// non-copyable
 		Database(const Database&) = delete;
@@ -101,7 +113,7 @@ class Database
 		 * @return id on success, 0 if last query did not result on any rows with auto_increment keys
 		 */
 		uint64_t getLastInsertId() const {
-			return static_cast<uint64_t>(mysql_insert_id(handle));
+			return static_cast<uint64_t>(mysql_insert_id(handle.get()));
 		}
 
 		/**
@@ -129,9 +141,11 @@ class Database
 		bool rollback();
 		bool commit();
 
-		MYSQL* handle = nullptr;
+		tfs::detail::Mysql_ptr handle = nullptr;
 		std::recursive_mutex databaseLock;
 		uint64_t maxPacketSize = 1048576;
+		// Do not retry queries if we are in the middle of a transaction
+		bool retryQueries = true;
 
 	friend class DBTransaction;
 };
@@ -139,8 +153,7 @@ class Database
 class DBResult
 {
 	public:
-		explicit DBResult(MYSQL_RES* res);
-		~DBResult();
+		explicit DBResult(tfs::detail::MysqlResult_ptr&& res);
 
 		// non-copyable
 		DBResult(const DBResult&) = delete;
@@ -177,7 +190,7 @@ class DBResult
 		bool next();
 
 	private:
-		MYSQL_RES* handle;
+		tfs::detail::MysqlResult_ptr handle;
 		MYSQL_ROW row;
 
 		std::map<std::string, size_t> listNames;
