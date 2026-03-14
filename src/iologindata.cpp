@@ -120,21 +120,23 @@ uint32_t IOLoginData::gameworldAuthentication(const std::string& accountName, co
 		return 0;
 	}
 
-	std::string secret = decodeSecret(result->getString("secret"));
-	if (!secret.empty()) {
-		if (token.empty()) {
-			return 0;
-		}
-
-		bool tokenValid = token == generateToken(secret, tokenTime) || token == generateToken(secret, tokenTime - 1) || token == generateToken(secret, tokenTime + 1);
-		if (!tokenValid) {
-			return 0;
+	// In protocol 8.6, the game login packet does not include a password or token
+	// (already verified by the login server), so skip validation when empty.
+	if (!token.empty()) {
+		std::string secret = decodeSecret(result->getString("secret"));
+		if (!secret.empty()) {
+			bool tokenValid = token == generateToken(secret, tokenTime) || token == generateToken(secret, tokenTime - 1) || token == generateToken(secret, tokenTime + 1);
+			if (!tokenValid) {
+				return 0;
+			}
 		}
 	}
 
-	// TODO (Issue #101): SHA1 is cryptographically weak -- see loginserverAuthentication above.
-	if (transformToSHA1(password) != result->getString("password")) {
-		return 0;
+	if (!password.empty()) {
+		// TODO (Issue #101): SHA1 is cryptographically weak -- see loginserverAuthentication above.
+		if (transformToSHA1(password) != result->getString("password")) {
+			return 0;
+		}
 	}
 
 	uint32_t accountId = result->getNumber<uint32_t>("id");
