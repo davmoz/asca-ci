@@ -1,6 +1,6 @@
 # ASCA - Custom MMORPG Server
 
-ASCA is a custom MMORPG server based on The Forgotten Server (TFS) 1.3, built with C++20 for Tibia protocol 10.98. It features extensive custom gameplay systems including crafting, factions, prey, imbuing, achievements, bestiary, and PvP.
+ASCA is a custom MMORPG server based on The Forgotten Server (TFS) 1.3, built with C++20 for Tibia protocol 8.6. It features extensive custom gameplay systems including crafting, factions, prey, imbuing, achievements, bestiary, and PvP.
 
 ## Quick Start (Docker)
 
@@ -24,7 +24,7 @@ docker compose up -d
 docker compose logs -f tfs
 ```
 
-The server will be available on ports 7171 (login) and 7172 (game). See [Connecting a Client](#connecting-a-client) below.
+The server will be available on ports 7171 (login) and 7172 (game). Connect with a Tibia 8.6 compatible client — see [Connecting a Client](#connecting-a-client) below.
 
 ### Creating an Account
 
@@ -181,7 +181,7 @@ See `config.lua.dist` for all available settings with documentation. Key section
 
 ## Connecting a Client
 
-ASCA uses Tibia protocol 10.98. You need a compatible client with the matching data files.
+ASCA uses Tibia protocol 8.6. You need a compatible client with the matching data files.
 
 ### Using OTClient Redemption (ascaclient)
 
@@ -192,23 +192,21 @@ cd ascaclient
 cmake --preset macos-release   # or linux-release / windows-release
 cmake --build build/macos-release
 
-# 2. Add Tibia 10.98 data files
-mkdir -p data/things/1098/
-# Place Tibia.dat and Tibia.spr (from a Tibia 10.98 client) into data/things/1098/
+# 2. Add Tibia 8.6 data files
+mkdir -p data/things/860/
+# Place Tibia.dat and Tibia.spr (from a Tibia 8.6 client) into data/things/860/
 
 # 3. Run the client
 ./otclient
 ```
 
-In the login screen, set the server to `127.0.0.1`, port `7171`, and select protocol version **1098**.
-
-Optionally, preconfigure the server list in `init.lua`:
+The client is preconfigured to connect to `127.0.0.1:7171` with protocol 860. The server list is set in `init.lua`:
 
 ```lua
 Servers_init = {
     ["127.0.0.1"] = {
         ["port"] = 7171,
-        ["protocol"] = 1098,
+        ["protocol"] = 860,
         ["httpLogin"] = false
     },
 }

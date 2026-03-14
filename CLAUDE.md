@@ -1,7 +1,7 @@
 # ASCA - Project Guide
 
 ## Overview
-ASCA is a TFS 1.3 (The Forgotten Server) fork — a C++20 MMORPG server emulator for the Tibia protocol 10.98. It includes extensive custom game systems built in Lua on top of the C++ engine.
+ASCA is a TFS 1.3 (The Forgotten Server) fork — a C++20 MMORPG server emulator for the Tibia protocol 8.6. It includes extensive custom game systems built in Lua on top of the C++ engine.
 
 ## Build
 
