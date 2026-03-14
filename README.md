@@ -24,7 +24,7 @@ docker compose up -d
 docker compose logs -f tfs
 ```
 
-The server will be available on ports 7171 (login) and 7172 (game). Connect with any Tibia 10.98 client.
+The server will be available on ports 7171 (login) and 7172 (game). See [Connecting a Client](#connecting-a-client) below.
 
 ### Creating an Account
 
@@ -86,6 +86,9 @@ ctest --test-dir build --output-on-failure
 
 # Lua tests
 lua tests/lua/run_tests.lua
+
+# Integration tests (requires running server on localhost:7171/7172)
+python3 tests/integration/test_server.py
 ```
 
 ### Database Setup
@@ -175,6 +178,41 @@ See `config.lua.dist` for all available settings with documentation. Key section
 - **Database** -- MySQL credentials
 - **Rates** -- Experience, skill, loot multipliers
 - **Custom Systems** -- Toggle and configure crafting, factions, prey, etc.
+
+## Connecting a Client
+
+ASCA uses Tibia protocol 10.98. You need a compatible client with the matching data files.
+
+### Using OTClient Redemption (ascaclient)
+
+```bash
+# 1. Clone and build the client
+git clone https://github.com/DocKarma1/ascaclient.git
+cd ascaclient
+cmake --preset macos-release   # or linux-release / windows-release
+cmake --build build/macos-release
+
+# 2. Add Tibia 10.98 data files
+mkdir -p data/things/1098/
+# Place Tibia.dat and Tibia.spr (from a Tibia 10.98 client) into data/things/1098/
+
+# 3. Run the client
+./otclient
+```
+
+In the login screen, set the server to `127.0.0.1`, port `7171`, and select protocol version **1098**.
+
+Optionally, preconfigure the server list in `init.lua`:
+
+```lua
+Servers_init = {
+    ["127.0.0.1"] = {
+        ["port"] = 7171,
+        ["protocol"] = 1098,
+        ["httpLogin"] = false
+    },
+}
+```
 
 ## Roadmap
 
