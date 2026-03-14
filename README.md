@@ -11,8 +11,8 @@ The fastest way to get the server running:
 git clone https://github.com/DocKarma1/asca.git
 cd asca
 
-# 2. Generate an RSA key for protocol encryption
-openssl genrsa -out key.pem 2048
+# 2. Copy the standard OTServ RSA key (required for OTClient)
+cp key.pem.dist key.pem
 
 # 3. Create a .env file (optional - defaults work out of the box)
 cp .env.example .env
@@ -108,11 +108,15 @@ cp config.lua.dist config.lua
 # Edit config.lua — set mysqlPass, ip, and other settings
 ```
 
-### Generate RSA Key
+### RSA Key
+
+Copy the standard OTServ RSA key (required for OTClient compatibility):
 
 ```bash
-openssl genrsa -out key.pem 2048
+cp key.pem.dist key.pem
 ```
+
+The `key.pem.dist` file contains the well-known OTServ RSA key pair that all OTClient builds expect. For production, you can generate a custom key with `openssl genrsa -out key.pem 1024` but you must also update the client's RSA public key to match.
 
 ### Run
 
