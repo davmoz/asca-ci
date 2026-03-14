@@ -2173,7 +2173,7 @@ bool Player::addVIP(uint32_t vipGuid, const std::string& vipName, VipStatus_t st
 
 	IOLoginData::addVIPEntry(accountNumber, vipGuid, "", 0, false);
 	if (client) {
-		client->sendVIP(vipGuid, vipName, "", 0, false, status);
+		client->sendVIP(vipGuid, vipName, status);
 	}
 	return true;
 }
@@ -4385,14 +4385,9 @@ void Player::onModalWindowHandled(uint32_t modalWindowId)
 	modalWindows.remove(modalWindowId);
 }
 
-void Player::sendModalWindow(const ModalWindow& modalWindow)
+void Player::sendModalWindow(const ModalWindow& /*modalWindow*/)
 {
-	if (!client) {
-		return;
-	}
-
-	modalWindows.push_front(modalWindow.id);
-	client->sendModalWindow(modalWindow);
+	// Protocol 8.6 does not have modal windows
 }
 
 void Player::clearModalWindows()

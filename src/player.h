@@ -1013,46 +1013,29 @@ class Player final : public Creature, public Cylinder
 				client->sendCloseShop();
 			}
 		}
-		void sendMarketEnter(uint32_t depotId) const {
-			if (client) {
-				client->sendMarketEnter(depotId);
-			}
+		void sendMarketEnter(uint32_t /*depotId*/) const {
+			// Protocol 8.6 does not have market system
 		}
 		void sendMarketLeave() {
 			inMarket = false;
-			if (client) {
-				client->sendMarketLeave();
-			}
 		}
-		void sendMarketBrowseItem(uint16_t itemId, const MarketOfferList& buyOffers, const MarketOfferList& sellOffers) const {
-			if (client) {
-				client->sendMarketBrowseItem(itemId, buyOffers, sellOffers);
-			}
+		void sendMarketBrowseItem(uint16_t /*itemId*/, const MarketOfferList& /*buyOffers*/, const MarketOfferList& /*sellOffers*/) const {
+			// Protocol 8.6 does not have market system
 		}
-		void sendMarketBrowseOwnOffers(const MarketOfferList& buyOffers, const MarketOfferList& sellOffers) const {
-			if (client) {
-				client->sendMarketBrowseOwnOffers(buyOffers, sellOffers);
-			}
+		void sendMarketBrowseOwnOffers(const MarketOfferList& /*buyOffers*/, const MarketOfferList& /*sellOffers*/) const {
+			// Protocol 8.6 does not have market system
 		}
-		void sendMarketBrowseOwnHistory(const HistoryMarketOfferList& buyOffers, const HistoryMarketOfferList& sellOffers) const {
-			if (client) {
-				client->sendMarketBrowseOwnHistory(buyOffers, sellOffers);
-			}
+		void sendMarketBrowseOwnHistory(const HistoryMarketOfferList& /*buyOffers*/, const HistoryMarketOfferList& /*sellOffers*/) const {
+			// Protocol 8.6 does not have market system
 		}
-		void sendMarketDetail(uint16_t itemId) const {
-			if (client) {
-				client->sendMarketDetail(itemId);
-			}
+		void sendMarketDetail(uint16_t /*itemId*/) const {
+			// Protocol 8.6 does not have market system
 		}
-		void sendMarketAcceptOffer(const MarketOfferEx& offer) const {
-			if (client) {
-				client->sendMarketAcceptOffer(offer);
-			}
+		void sendMarketAcceptOffer(const MarketOfferEx& /*offer*/) const {
+			// Protocol 8.6 does not have market system
 		}
-		void sendMarketCancelOffer(const MarketOfferEx& offer) const {
-			if (client) {
-				client->sendMarketCancelOffer(offer);
-			}
+		void sendMarketCancelOffer(const MarketOfferEx& /*offer*/) const {
+			// Protocol 8.6 does not have market system
 		}
 		void sendTradeItemRequest(const std::string& traderName, const Item* item, bool ack) const {
 			if (client) {
