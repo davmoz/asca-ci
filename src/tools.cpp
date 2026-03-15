@@ -282,10 +282,17 @@ std::string convertIPToString(uint32_t ip)
 std::string formatDate(time_t time)
 {
 	tm tms_buf;
+#ifdef _MSC_VER
+	if (localtime_s(&tms_buf, &time) != 0) {
+		return {};
+	}
+	const tm* tms = &tms_buf;
+#else
 	const tm* tms = localtime_r(&time, &tms_buf);
 	if (!tms) {
 		return {};
 	}
+#endif
 
 	char buffer[20];
 	int res = snprintf(buffer, sizeof(buffer), "%02d/%02d/%04d %02d:%02d:%02d", tms->tm_mday, tms->tm_mon + 1, tms->tm_year + 1900, tms->tm_hour, tms->tm_min, tms->tm_sec);
@@ -298,10 +305,17 @@ std::string formatDate(time_t time)
 std::string formatDateShort(time_t time)
 {
 	tm tms_buf;
+#ifdef _MSC_VER
+	if (localtime_s(&tms_buf, &time) != 0) {
+		return {};
+	}
+	const tm* tms = &tms_buf;
+#else
 	const tm* tms = localtime_r(&time, &tms_buf);
 	if (!tms) {
 		return {};
 	}
+#endif
 
 	char buffer[12];
 	size_t res = strftime(buffer, 12, "%d %b %Y", tms);

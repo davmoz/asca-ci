@@ -68,7 +68,7 @@ IF (WIN32)
 				 $ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}
 				 $ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist})
 ELSE (WIN32)
-	FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient mariadbclient libmariadb libmariadbclient
+	FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient mariadb mariadbclient libmariadb libmariadbclient
 				 PATHS
 				 $ENV{MYSQL_DIR}/libmysql/.libs
 				 $ENV{MYSQL_DIR}/lib
@@ -80,7 +80,8 @@ ELSE (WIN32)
 				 /opt/local/mysql5/lib
 				 /opt/local/lib/mysql5/mysql
 				 /opt/mysql/mysql/lib/mysql
-				 /opt/mysql/lib/mysql)
+				 /opt/mysql/lib/mysql
+				 /opt/homebrew/lib)
 ENDIF (WIN32)
 
 IF(MYSQL_LIB)
