@@ -66,7 +66,7 @@ void ProtocolOld::onRecvFirstMessage(NetworkMessage& msg)
 	setXTEAKey(std::move(key));
 
 	if (version <= 822) {
-		disableChecksum();
+		setChecksumMode(CHECKSUM_DISABLED);
 	}
 
 	disconnectClient(fmt::format("Only clients with protocol {} allowed!", CLIENT_VERSION_STR));

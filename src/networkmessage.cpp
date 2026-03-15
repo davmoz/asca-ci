@@ -34,7 +34,7 @@ std::string NetworkMessage::getString(uint16_t stringLen/* = 0*/)
 		return std::string();
 	}
 
-	char* v = reinterpret_cast<char*>(buffer) + info.position; //does not break strict aliasing
+	char* v = reinterpret_cast<char*>(buffer.data()) + info.position; //does not break strict aliasing
 	info.position += stringLen;
 	return std::string(v, stringLen);
 }
@@ -48,15 +48,15 @@ Position NetworkMessage::getPosition()
 	return pos;
 }
 
-void NetworkMessage::addString(const std::string& value)
+void NetworkMessage::addString(std::string_view value)
 {
-	size_t stringLen = value.length();
+	size_t stringLen = value.size();
 	if (!canAdd(stringLen + 2) || stringLen > 8192) {
 		return;
 	}
 
 	add<uint16_t>(stringLen);
-	memcpy(buffer + info.position, value.c_str(), stringLen);
+	std::memcpy(buffer.data() + info.position, value.data(), stringLen);
 	info.position += stringLen;
 	info.length += stringLen;
 }
@@ -73,7 +73,7 @@ void NetworkMessage::addBytes(const char* bytes, size_t size)
 		return;
 	}
 
-	memcpy(buffer + info.position, bytes, size);
+	std::memcpy(buffer.data() + info.position, bytes, size);
 	info.position += size;
 	info.length += size;
 }
@@ -84,7 +84,7 @@ void NetworkMessage::addPaddingBytes(size_t n)
 		return;
 	}
 
-	memset(buffer + info.position, 0x33, n);
+	std::fill_n(buffer.data() + info.position, n, 0x33);
 	info.position += n;
 	info.length += n;
 }

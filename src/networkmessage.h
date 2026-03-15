@@ -66,13 +66,15 @@ class NetworkMessage
 		}
 
 		template<typename T>
-		T get() {
+		std::enable_if_t<std::is_trivially_copyable_v<T>, T> get() noexcept {
+			static_assert(std::is_trivially_constructible_v<T>, "Destination type must be trivially constructible");
+
 			if (!canRead(sizeof(T))) {
 				return 0;
 			}
 
 			T v;
-			memcpy(&v, buffer + info.position, sizeof(T));
+			std::memcpy(&v, buffer.data() + info.position, sizeof(T));
 			info.position += sizeof(T);
 			return v;
 		}
@@ -96,12 +98,12 @@ class NetworkMessage
 		}
 
 		template<typename T>
-		void add(T value) {
+		std::enable_if_t<std::is_trivially_copyable_v<T>> add(T value) noexcept {
 			if (!canAdd(sizeof(T))) {
 				return;
 			}
 
-			memcpy(buffer + info.position, &value, sizeof(T));
+			std::memcpy(buffer.data() + info.position, &value, sizeof(T));
 			info.position += sizeof(T);
 			info.length += sizeof(T);
 		}
@@ -109,7 +111,7 @@ class NetworkMessage
 		void addBytes(const char* bytes, size_t size);
 		void addPaddingBytes(size_t n);
 
-		void addString(const std::string& value);
+		void addString(std::string_view value);
 
 		void addDouble(double value, uint8_t precision = 2);
 
@@ -123,12 +125,20 @@ class NetworkMessage
 			return info.length;
 		}
 
+		bool isEmpty() const {
+			return info.length == 0;
+		}
+
 		void setLength(MsgSize_t newLength) {
 			info.length = newLength;
 		}
 
 		MsgSize_t getBufferPosition() const {
 			return info.position;
+		}
+
+		MsgSize_t getRemainingBufferLength() const {
+			return info.length - info.position;
 		}
 
 		uint16_t getLengthHeader() const {
@@ -140,16 +150,16 @@ class NetworkMessage
 		}
 
 		uint8_t* getBuffer() {
-			return buffer;
+			return buffer.data();
 		}
 
 		const uint8_t* getBuffer() const {
-			return buffer;
+			return buffer.data();
 		}
 
 		uint8_t* getBodyBuffer() {
 			info.position = 2;
-			return buffer + HEADER_LENGTH;
+			return buffer.data() + HEADER_LENGTH;
 		}
 
 	protected:
@@ -160,7 +170,7 @@ class NetworkMessage
 		};
 
 		NetworkMessageInfo info;
-		uint8_t buffer[NETWORKMESSAGE_MAXSIZE];
+		std::array<uint8_t, NETWORKMESSAGE_MAXSIZE> buffer;
 
 	private:
 		bool canAdd(size_t size) const {

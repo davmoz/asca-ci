@@ -75,8 +75,8 @@ class Protocol : public std::enable_shared_from_this<Protocol>
 		void setXTEAKey(xtea::key key) {
 			this->key = std::move(key);
 		}
-		void disableChecksum() {
-			checksumEnabled = false;
+		void setChecksumMode(checksumMode_t newMode) {
+			checksumMode = newMode;
 		}
 
 		static bool RSA_decrypt(NetworkMessage& msg);
@@ -98,7 +98,7 @@ class Protocol : public std::enable_shared_from_this<Protocol>
 		const ConnectionWeak_ptr connection;
 		xtea::key key;
 		bool encryptionEnabled = false;
-		bool checksumEnabled = true;
+		checksumMode_t checksumMode = CHECKSUM_ADLER;
 		bool rawMessages = false;
 };
 
