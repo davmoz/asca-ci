@@ -67,11 +67,20 @@ target_link_libraries(tfs PRIVATE
         Boost::iostreams
         ${CMAKE_THREAD_LIBS_INIT}
         OpenSSL::Crypto
+        OpenSSL::SSL
         fmt::fmt
         ${LUA_LIBRARIES}
         ${MYSQL_CLIENT_LIBS}
         ${PUGIXML_LIBRARIES}
         )
+
+# Static libmariadb on macOS needs zlib for compression support
+if (APPLE)
+    find_package(ZLIB)
+    if (ZLIB_FOUND)
+        target_link_libraries(tfs PRIVATE ZLIB::ZLIB)
+    endif ()
+endif ()
 
 ### INTERPROCEDURAL_OPTIMIZATION ###
 cmake_policy(SET CMP0069 NEW)
