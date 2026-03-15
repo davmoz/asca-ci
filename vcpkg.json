@@ -4,6 +4,8 @@
   "description": "ASCA - TFS 1.3 based Tibia server",
   "dependencies": [
     "boost-asio",
+    "boost-date-time",
+    "boost-filesystem",
     "boost-iostreams",
     "boost-lockfree",
     "boost-system",

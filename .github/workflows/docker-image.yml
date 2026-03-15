@@ -29,8 +29,10 @@ jobs:
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        continue-on-error: true
 
       - name: Push image
+        continue-on-error: true
         run: |
           IMAGE_ID=$(echo "ghcr.io/${{ github.repository }}/$IMAGE_NAME" | awk '{print tolower($0)}')
 
